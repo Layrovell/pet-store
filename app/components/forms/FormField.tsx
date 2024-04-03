@@ -18,6 +18,7 @@ interface Props {
   numberOfLines?: number;
   multiline?: boolean;
   width?: DimensionValue;
+  hideIcon?: string;
 }
 
 const AppFormField: React.FC<Props> = ({ name, width, ...otherProps }) => {

@@ -38,6 +38,7 @@ const LoginScreen: React.FC = () => {
             <FormField
               name='password'
               icon={'lock'}
+              hideIcon={'lock-open'}
               placeholder={'Password'}
               autoCapitalize='none'
               textContentType='password' // iOS

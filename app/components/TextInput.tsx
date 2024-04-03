@@ -16,6 +16,7 @@ interface Props {
   onChangeText: (text: string) => void;
   onBlur?: any;
   width?: DimensionValue;
+  hideIcon?: string;
 }
 
 const AppTextInput: React.FC<Props> = ({ icon, width = '100%', ...otherProps }) => {
@@ -31,7 +32,7 @@ const AppTextInput: React.FC<Props> = ({ icon, width = '100%', ...otherProps }) 
         <TouchableWithoutFeedback onPress={() => {}}>
           <MaterialIcons
             onPress={() => otherProps?.secureTextEntry && toggleFieldVisibility()}
-            name={icon}
+            name={!isFieldVisible && otherProps?.hideIcon ? otherProps?.hideIcon : icon}
             size={20}
             color={defaultStyles.colors.medium}
             style={styles.icon}
