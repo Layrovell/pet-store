@@ -9,17 +9,18 @@ import colors from '../config/colors';
 const WelcomeScreen: React.FC = ({ navigation }: any) => {
   return (
     <ImageBackground
-      source={{
-        uri: 'https://images.unsplash.com/photo-1615233500022-01d251f3eb33?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njh8fGdvbGRlbiUyMHJldHJpZXZlcnxlbnwwfHwwfHx8MA%3D%3D',
-        // uri: 'https://images.unsplash.com/photo-1581888227599-779811939961?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGV0fGVufDB8fDB8fHww',
-      }}
+      source={require('../assets/bg.jpg')}
+      // source={{
+      //   // uri: 'https://images.unsplash.com/photo-1615233500022-01d251f3eb33?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njh8fGdvbGRlbiUyMHJldHJpZXZlcnxlbnwwfHwwfHx8MA%3D%3D',
+      //   // uri: 'https://images.unsplash.com/photo-1581888227599-779811939961?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGV0fGVufDB8fDB8fHww',
+      // }}
       style={styles.background}
       blurRadius={0}
       resizeMode='cover'
     >
       <View style={styles.logoContainer}>
         <Icon name={'pets'} iconColor={'white'} size={80} backgroundColor={colors?.primary} />
-        <Text style={styles.tagline}>Find something for your pet!</Text>
+        <Text style={[styles.tagline, { fontFamily: 'SpaceMono' }]}>Find something for your pet!</Text>
       </View>
 
       {/* the size of View determined by the size of the content */}
@@ -53,7 +54,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   tagline: {
-    fontSize: 24,
+    fontSize: 28,
+    textAlign: 'center',
     fontWeight: '600',
     paddingVertical: 20,
   },
