@@ -45,7 +45,7 @@ const AppTextInput: React.FC<Props> = ({ icon, width = '100%', ...otherProps }) 
         placeholderTextColor={defaultStyles.colors.medium}
         style={defaultStyles.text} // styles.textInput
         {...otherProps}
-        secureTextEntry={isFieldVisible}
+        secureTextEntry={otherProps?.secureTextEntry ? isFieldVisible : false}
       />
     </View>
   );
