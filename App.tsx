@@ -6,10 +6,11 @@ import { StatusBar } from 'expo-status-bar';
 import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
+import * as SplashScreen from 'expo-splash-screen';
+
 import AuthNavigator from './app/navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigationTheme';
 import { navigationRef } from './app/navigation/rootNavigation';
-import * as SplashScreen from 'expo-splash-screen';
 import colors from './app/config/colors';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
