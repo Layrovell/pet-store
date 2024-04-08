@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 
 import Screen from '../components/Screen';
 import { StatusBar } from 'expo-status-bar';
 import colors from '../config/colors';
 import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms';
+import { ActivityIndicator } from '../components';
+import Logo from '../components/Logo';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('User name'),
@@ -26,6 +28,10 @@ function RegisterScreen() {
   return (
     <>
       <Screen style={styles.container}>
+        <View style={styles.logo}>
+          <Logo backgroundColor={colors.secondary} />
+        </View>
+
         <Form
           initialValues={{ username: '', firstname: '', lastName: '', email: '', phone: '', password: '' }}
           onSubmit={handleSubmit}
@@ -60,9 +66,9 @@ function RegisterScreen() {
 
       <StatusBar backgroundColor={colors.secondary} />
 
-      {/* <View style={{ flex: 1 }}>
-        <ActivityIndicator visible={registerApi.loading || loginApi.loading} />
-      </View> */}
+      <View style={{ flex: 1 }}>
+        <ActivityIndicator visible={true} />
+      </View>
     </>
   );
 }
@@ -71,6 +77,10 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
   },
+  logo: {
+    alignItems: 'center',
+    padding: 10,
+  }
 });
 
 export default RegisterScreen;

@@ -3,7 +3,7 @@ import { Platform, SafeAreaView, StatusBar } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 interface Props {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
   style?: any;
 }
 
