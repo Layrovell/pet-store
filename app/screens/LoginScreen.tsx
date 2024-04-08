@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 
 import Screen from '../components/Screen';
 import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms';
+import { ActivityIndicator } from '../components';
+import Logo from '../components/Logo';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('User name'),
@@ -18,8 +20,12 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <Screen style={styles.container}>
-      <>
+    <>
+      <Screen style={styles.container}>
+        <View style={styles.logo}>
+          <Logo />
+        </View>
+
         <Form
           initialValues={{ username: '', password: '' }}
           onSubmit={handleSubmit}
@@ -47,13 +53,21 @@ const LoginScreen: React.FC = () => {
             <SubmitButton title={'Login'} />
           </>
         </Form>
-      </>
-    </Screen>
+      </Screen>
+
+      <View style={{ flex: 1 }}>
+        <ActivityIndicator visible={true} />
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    padding: 10,
+  },
+  logo: {
+    alignItems: 'center',
     padding: 10,
   },
 });

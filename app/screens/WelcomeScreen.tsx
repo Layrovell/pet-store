@@ -1,10 +1,11 @@
 import React from 'react';
-import { ImageBackground, View, StyleSheet, Text, Image, Button } from 'react-native';
+import { ImageBackground, View, StyleSheet, Text } from 'react-native';
 
 import AppButton from '../components/Button';
 import routes from '../navigation/routes';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
+import Logo from '../components/Logo';
 
 const WelcomeScreen: React.FC = ({ navigation }: any) => {
   return (
@@ -19,7 +20,7 @@ const WelcomeScreen: React.FC = ({ navigation }: any) => {
       resizeMode='cover'
     >
       <View style={styles.logoContainer}>
-        <Icon name={'pets'} iconColor={'white'} size={80} backgroundColor={colors?.primary} />
+        <Logo size={80} />
         <Text style={[styles.tagline, { fontFamily: 'SpaceMono' }]}>Find something for your pet!</Text>
       </View>
 
