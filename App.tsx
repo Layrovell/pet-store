@@ -1,6 +1,7 @@
 import 'react-native-gesture-handler';
 import { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Provider } from 'react-redux';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, View } from 'react-native';
@@ -12,6 +13,7 @@ import AuthNavigator from './app/navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigationTheme';
 import { navigationRef } from './app/navigation/rootNavigation';
 import colors from './app/config/colors';
+import { store } from './app/store/root/config.store';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // Keep the splash screen visible while we fetch resources.
@@ -40,6 +42,7 @@ export default function App() {
   }
 
   return (
+    <Provider store={store}>
     <View style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer ref={navigationRef} theme={navigationTheme}>
@@ -53,5 +56,6 @@ export default function App() {
 
       <StatusBar animated={true} backgroundColor={colors.primary} style={Platform.OS === 'ios' ? 'light' : 'dark'} />
     </View>
+    </Provider>
   );
 }
