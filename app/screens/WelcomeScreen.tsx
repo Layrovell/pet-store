@@ -1,18 +1,11 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { ImageBackground, View, StyleSheet, Text, Button } from 'react-native';
 
 import AppButton from '../components/Button';
 import routes from '../navigation/routes';
 import Logo from '../components/Logo';
-import useUserService from '../services/user/service';
 
 const WelcomeScreen: React.FC = ({ navigation }: any) => {
-  const { getUser, data: user, error, loading } = useUserService();
-
-  const fetchData = useCallback(() => {
-    getUser('Marina1');
-  }, [getUser]);
-  
   return (
     <ImageBackground
       source={require('../assets/bg.jpg')}
