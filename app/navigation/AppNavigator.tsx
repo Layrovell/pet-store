@@ -16,7 +16,7 @@ const AppNavigator = () => {
       })}
     >
       <Tab.Screen
-        name='Feed'
+        name='DummyScreen'
         component={DummyScreen}
         options={{
           tabBarIcon: ({ size, color }) => (

@@ -1,10 +1,8 @@
 import React from 'react';
-import { ImageBackground, View, StyleSheet, Text } from 'react-native';
+import { ImageBackground, View, StyleSheet, Text, Button } from 'react-native';
 
 import AppButton from '../components/Button';
 import routes from '../navigation/routes';
-import Icon from '../components/Icon';
-import colors from '../config/colors';
 import Logo from '../components/Logo';
 
 const WelcomeScreen: React.FC = ({ navigation }: any) => {
@@ -23,6 +21,8 @@ const WelcomeScreen: React.FC = ({ navigation }: any) => {
         <Logo size={80} />
         <Text style={[styles.tagline, { fontFamily: 'SpaceMono' }]}>Find something for your pet!</Text>
       </View>
+
+      {/* <Button title='getUser' onPress={fetchData} /> */}
 
       {/* the size of View determined by the size of the content */}
       <View style={styles.buttonContainer}>

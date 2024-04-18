@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 
@@ -6,6 +6,7 @@ import Screen from '../components/Screen';
 import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms';
 import { ActivityIndicator } from '../components';
 import Logo from '../components/Logo';
+import useAuthService from '../services/auth/service';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('User name'),
@@ -13,10 +14,10 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginScreen: React.FC = () => {
-  const [error, setError] = useState<any>(null);
+  const { login, error, loading } = useAuthService();
 
   const handleSubmit = async ({ username, password }: { username: string; password: string }) => {
-    console.log('LoginScreen');
+    await login(username, password);
   };
 
   return (
@@ -32,7 +33,7 @@ const LoginScreen: React.FC = () => {
           validationSchema={validationSchema}
         >
           <>
-            <ErrorMessage error={'Invalid email or password'} visible={error} />
+            <ErrorMessage error={error} visible={!!error} />
             <FormField
               name='username'
               icon={'person'}
@@ -56,7 +57,7 @@ const LoginScreen: React.FC = () => {
       </Screen>
 
       <View style={{ flex: 1 }}>
-        <ActivityIndicator visible={true} />
+        <ActivityIndicator visible={loading} />
       </View>
     </>
   );

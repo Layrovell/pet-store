@@ -8,6 +8,7 @@ import colors from '../config/colors';
 import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms';
 import { ActivityIndicator } from '../components';
 import Logo from '../components/Logo';
+import useAuthService from '../services/auth/service';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('User name'),
@@ -19,10 +20,13 @@ const validationSchema = Yup.object().shape({
 });
 
 function RegisterScreen() {
+  const { register, loading } = useAuthService();
+
   const [error, setError] = useState<any>(null);
 
   const handleSubmit = async (userInfo: any) => {
     console.log('RegisterScreen');
+    await register(userInfo);
   };
 
   return (
@@ -67,7 +71,7 @@ function RegisterScreen() {
       <StatusBar backgroundColor={colors.secondary} />
 
       <View style={{ flex: 1 }}>
-        <ActivityIndicator visible={true} />
+        <ActivityIndicator visible={loading} />
       </View>
     </>
   );
