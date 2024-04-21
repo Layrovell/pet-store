@@ -26,8 +26,14 @@ const WelcomeScreen: React.FC = ({ navigation }: any) => {
 
       {/* the size of View determined by the size of the content */}
       <View style={styles.buttonContainer}>
-        <AppButton title={'Login'} onPress={() => navigation.navigate(routes.LOGIN)} />
-        <AppButton title={'Register'} onPress={() => navigation.navigate(routes.REGISTER)} color='secondary' />
+        <AppButton title={'Login'} size='lg' fullWidth onPress={() => navigation.navigate(routes.LOGIN)} />
+        <AppButton
+          title={'Register'}
+          size='lg'
+          fullWidth
+          onPress={() => navigation.navigate(routes.REGISTER)}
+          color='secondary'
+        />
       </View>
     </ImageBackground>
   );
