@@ -4,6 +4,7 @@ import { ImageBackground, View, StyleSheet, Text, Button } from 'react-native';
 import AppButton from '../components/Button';
 import routes from '../navigation/routes';
 import Logo from '../components/Logo';
+import Stack from '../components/Stack';
 
 const WelcomeScreen: React.FC = ({ navigation }: any) => {
   return (
@@ -25,7 +26,7 @@ const WelcomeScreen: React.FC = ({ navigation }: any) => {
       {/* <Button title='getUser' onPress={fetchData} /> */}
 
       {/* the size of View determined by the size of the content */}
-      <View style={styles.buttonContainer}>
+      <Stack spacing={3} style={styles.buttonContainer}>
         <AppButton title={'Login'} size='lg' fullWidth onPress={() => navigation.navigate(routes.LOGIN)} />
         <AppButton
           title={'Register'}
@@ -34,7 +35,7 @@ const WelcomeScreen: React.FC = ({ navigation }: any) => {
           onPress={() => navigation.navigate(routes.REGISTER)}
           color='secondary'
         />
-      </View>
+      </Stack>
     </ImageBackground>
   );
 };

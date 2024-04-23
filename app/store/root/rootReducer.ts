@@ -1,9 +1,11 @@
 import { type Action, combineReducers } from '@reduxjs/toolkit';
 
 import authSlice from '../auth/slice';
+import productSlice from '../product/slice';
 
 const appReducer = combineReducers({
   auth: authSlice,
+  product: productSlice,
 });
 
 const rootReducer = (state: any, action: Action): ReturnType<typeof appReducer> => {

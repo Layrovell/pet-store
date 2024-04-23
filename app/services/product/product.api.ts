@@ -1,13 +1,8 @@
 import axiosInstance from '../../api/axios';
+import { StatusType } from '../../interface/product.interface';
 
-interface GetProductsProps {
-  status: string[];
-}
-
-export const getProductsApi = ({ status }: GetProductsProps) => {
-  return axiosInstance.get(`/pet/findByStatus`, {
-    params: status,
-  });
+export const getProductsApi = (status: StatusType[]) => {
+  return axiosInstance.get(`/pet/findByStatus?status=${status}`);
 };
 
 interface GetProductById {

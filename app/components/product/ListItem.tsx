@@ -5,13 +5,13 @@ import { FontAwesome } from '@expo/vector-icons';
 import colors from '../../config/colors';
 import AppButton from '../Button';
 import Status from '../Status';
-import { ProductStatus } from '../../interface/product.interface';
+import { StatusType } from '../../interface/product.interface';
 
 interface Props {
   photoUrls: string[];
   name: string;
   id: string;
-  status: ProductStatus;
+  status: StatusType;
   price: string;
   category: string;
   onPress?: () => void;

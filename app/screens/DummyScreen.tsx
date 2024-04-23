@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Button, StyleSheet, Text } from 'react-native';
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
@@ -5,6 +6,7 @@ import colors from '../config/colors';
 import Screen from '../components/Screen';
 import useAuthService from '../services/auth/service';
 import List from '../components/product/List';
+import useProductsService from '../services/product/service';
 
 const mockData = [
   {
@@ -135,6 +137,11 @@ interface Props {
 
 const DummyScreen: React.FC<Props> = ({ navigation }) => {
   const { logout } = useAuthService();
+  const { getProducts, products } = useProductsService();
+
+  useEffect(() => {
+    getProducts(['available', 'sold', 'pending'])
+  }, []);
 
   const deleteToken = async () => {
     logout();
@@ -143,7 +150,7 @@ const DummyScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <Screen style={styles.screen}>
       <Button title='Logout' onPress={deleteToken} />
-      <List dataset={mockData} title='Pets' navigation={navigation} />
+      <List dataset={products} title='Pets' navigation={navigation} />
     </Screen>
   );
 };

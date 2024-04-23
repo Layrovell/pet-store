@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
-import { ProductStatus } from '../interface/product.interface';
+import { ProductStatus, StatusType } from '../interface/product.interface';
 
 interface Props {
-  status: ProductStatus;
+  status: StatusType;
 }
 
 const statusConfig = {
@@ -15,7 +15,7 @@ const statusConfig = {
 
 const Status: React.FC<Props> = ({ status }) => {
   return (
-    <Text style={[styles.status, { color: statusConfig[status as ProductStatus] }]}>{status}</Text>
+    <Text style={[styles.status, { color: statusConfig[status as StatusType] }]}>{status}</Text>
   );
 };
 
