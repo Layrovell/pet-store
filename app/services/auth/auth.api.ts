@@ -2,14 +2,13 @@ import axiosInstance from '../../api/axios';
 import { User } from '../../interface/user.interface';
 
 interface LoginProps {
-  username: string;
+  email: string;
   password: string;
 }
 
-export const loginApi = ({ username, password }: LoginProps) => {
-  return axiosInstance.get(`/user/login`, {
-    params: { username, password },
-  });
+export const loginApi = ({ email, password }: LoginProps) => {
+  const data = { email, password };
+  return axiosInstance.post(`/auth/login`, data);
 };
 
 export const registerApi = (data: User) => {

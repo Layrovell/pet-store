@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://petstore.swagger.io/v2';
+const API_URL = 'http://192.168.0.102:3000/api/v1';
 
 const axiosInstance = axios.create({
   baseURL: API_URL,

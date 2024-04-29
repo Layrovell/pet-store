@@ -9,15 +9,15 @@ import Logo from '../components/Logo';
 import useAuthService from '../services/auth/service';
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().required().label('User name'),
+  email: Yup.string().required().label('Email'),
   password: Yup.string().required().min(4).label('Password'),
 });
 
 const LoginScreen: React.FC = () => {
   const { login, error, loading } = useAuthService();
 
-  const handleSubmit = async ({ username, password }: { username: string; password: string }) => {
-    await login(username, password);
+  const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
+    await login(email, password);
   };
 
   return (
@@ -28,17 +28,19 @@ const LoginScreen: React.FC = () => {
         </View>
 
         <Form
-          initialValues={{ username: '', password: '' }}
+          initialValues={{ email: '', password: '' }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           <>
             <ErrorMessage error={error} visible={!!error} />
             <FormField
-              name='username'
-              icon={'person'}
-              placeholder={'User name'}
+              name='email'
+              icon={'email'}
+              placeholder={'Email'}
               autoCapitalize='none'
+              keyboardType='email-address'
+              textContentType='emailAddress' // iOS
               // onChangeText={handleChange("email")}
               // onBlur={() => setFieldTouched('email')}
             />

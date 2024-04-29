@@ -9,6 +9,7 @@ import AppButton from '../components/Button';
 import Status from '../components/Status';
 import Stack from '../components/Stack';
 import ImageCarousel from '../components/ImageCarousel';
+import Attributes from '../components/Attributes';
 
 interface Props {
   route: any;
@@ -22,7 +23,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
   return (
     <Screen style={styles.screen}>
       <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 100}>
-        <ImageCarousel items={item.photoUrls} />
+        <ImageCarousel items={item.images} />
 
         <View style={styles.detailsContainer}>
           <View style={styles.horizontal}>
@@ -44,6 +45,8 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
               }}
             />
           </View>
+
+          <Attributes data={item.attributes} />
         </View>
       </KeyboardAvoidingView>
     </Screen>

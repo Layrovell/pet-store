@@ -1,8 +1,14 @@
 import axiosInstance from '../../api/axios';
+import { getMockedProducts } from '../../api/mock/products';
 import { StatusType } from '../../interface/product.interface';
 
 export const getProductsApi = (status: StatusType[]) => {
-  return axiosInstance.get(`/pet/findByStatus?status=${status}`);
+  const products = getMockedProducts();
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ data: products });
+    }, 3000);
+  });
 };
 
 interface GetProductById {

@@ -1,3 +1,5 @@
+import { KeyValuePair } from './common';
+
 export const ProductStatus = {
   available: 'available',
   pending: 'pending',
@@ -8,17 +10,12 @@ export type StatusType = keyof typeof ProductStatus;
 
 export interface Product {
   id: number;
-  category: {
-    id: number;
-    name: string;
-  };
+  attributes: KeyValuePair;
+  categoryId: number;
+  createdat: Date;
+  description: string;
+  images: string[];
   name: string;
-  photoUrls: string[];
-  tags: [
-    {
-      id: number;
-      name: string;
-    }
-  ];
+  price: number;
   status: StatusType;
 }

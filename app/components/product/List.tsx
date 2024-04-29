@@ -18,29 +18,17 @@ const List: React.FC<Props> = ({ dataset, title, navigation }) => {
   function renderMealItem(itemData: any) {
     const item = itemData.item;
 
-    const mealItemProps = {
-      id: item?.id,
-      name: item?.name,
-      photoUrls: [
-        'https://images.unsplash.com/photo-1450778869180-41d0601e046e?q=80&w=1586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        'https://images.unsplash.com/photo-1507146426996-ef05306b995a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        'https://images.unsplash.com/photo-1478029973231-f42d99fe5c20?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      ],
-      status: item?.status || 'unknown',
-      category: item?.category?.name || 'unknown',
-      price: '$99.00',
-    };
-    return (
+    return item ? (
       <ListItem
-        {...mealItemProps}
+        item={item}
         onPress={() => {
-          navigation.navigate(routes.PRODUCT_DETAILS, mealItemProps);
+          navigation.navigate(routes.PRODUCT_DETAILS, item);
         }}
         onPressBuy={() => {
           navigation.navigate(routes.CART_DETAILS);
         }}
       />
-    );
+    ) : <>loading...</>; // TODO:
   }
 
   return (

@@ -8,7 +8,7 @@ interface AuthServiceOperators {
   isAuthenticated: boolean;
   loading: boolean;
   error: string;
-  login: (username: string, password: string) => any;
+  login: (email: string, password: string) => any;
   register: (userData: User) => any;
   logout: () => void;
   // 
@@ -25,9 +25,9 @@ const useAuthService = (): Readonly<AuthServiceOperators> => {
     isAuthenticated: useAppSelector(selectIsAuthenticated),
     loading: useAppSelector(selectAuthLoading),
     error: useAppSelector(selectAuthError),
-    login: useCallback((username, password) => {
+    login: useCallback((email, password) => {
       dispatch(authActions.authIsLoading());
-      dispatch(authActions.login({ username, password }));
+      dispatch(authActions.login({ email, password }));
     },
     [dispatch]),
     register: useCallback((userData) => {

@@ -5,15 +5,10 @@ import { FontAwesome } from '@expo/vector-icons';
 import colors from '../../config/colors';
 import AppButton from '../Button';
 import Status from '../Status';
-import { StatusType } from '../../interface/product.interface';
+import { Product } from '../../interface/product.interface';
 
 interface Props {
-  photoUrls: string[];
-  name: string;
-  id: string;
-  status: StatusType;
-  price: string;
-  category: string;
+  item: Product;
   onPress?: () => void;
   onPressBuy: () => void;
 }
@@ -25,7 +20,9 @@ const gap = 5;
 const availableSpace = screenWidth - (numColumns - 1) * gap;
 const itemSize = availableSpace / numColumns;
 
-const ListItem: React.FC<Props> = ({ name, photoUrls, status, price, onPress, onPressBuy }) => {
+const ListItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
+  const { name, images, status, price } = item;
+
   return (
     <View style={styles.item}>
       <View style={styles.innerContainer}>
@@ -35,7 +32,7 @@ const ListItem: React.FC<Props> = ({ name, photoUrls, status, price, onPress, on
             style={({ pressed }) => (pressed ? styles.buttonPressed : null)}
           > */}
           <TouchableOpacity onPress={onPress}>
-            <Image source={{ uri: photoUrls[0] }} style={styles.image} />
+            <Image source={{ uri: images[0] }} style={styles.image} />
           </TouchableOpacity>
           {/* </Pressable> */}
 
