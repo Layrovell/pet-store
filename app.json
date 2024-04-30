@@ -4,6 +4,9 @@
     "slug": "pets-app",
     "version": "1.0.0",
     "orientation": "portrait",
+    // gives an ability to directly debug JavaScript 
+    // running on Hermes thru the Chrome debugger
+    "jsEngine": "hermes",
     "icon": "./app/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {

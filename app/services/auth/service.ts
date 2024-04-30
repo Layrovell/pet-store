@@ -1,50 +1,34 @@
 import { useCallback } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/root/hooks';
-import { authActions, selectAuthError, selectAuthLoading, selectIsAuthenticated, selectUser, selectUserError, selectUserLoading } from '../../store/auth/slice';
+import { authActions, selectUser } from '../../store/auth/slice';
 import { User } from '../../interface/user.interface';
+import { promiseActions } from '../../store/promises/slice';
+import { AUTH_KEY } from '../../store/root/config.store';
 
 interface AuthServiceOperators {
-  isAuthenticated: boolean;
-  loading: boolean;
-  error: string;
   login: (email: string, password: string) => any;
   register: (userData: User) => any;
   logout: () => void;
-  // 
   data: User;
-  userLoading: boolean;
-  userError: string;
-  getUser: (username: string) => void;
 }
 
 const useAuthService = (): Readonly<AuthServiceOperators> => {
   const dispatch = useAppDispatch();
 
   return {
-    isAuthenticated: useAppSelector(selectIsAuthenticated),
-    loading: useAppSelector(selectAuthLoading),
-    error: useAppSelector(selectAuthError),
     login: useCallback((email, password) => {
-      dispatch(authActions.authIsLoading());
+      dispatch(promiseActions.promisePending(AUTH_KEY))
       dispatch(authActions.login({ email, password }));
     },
     [dispatch]),
     register: useCallback((userData) => {
-      dispatch(authActions.authIsLoading());
+      dispatch(promiseActions.promisePending(AUTH_KEY))
       dispatch(authActions.register(userData));
     },[dispatch]),
-    // 
     data: useAppSelector(selectUser),
-    userLoading: useAppSelector(selectUserLoading),
-    userError: useAppSelector(selectUserError),
-    getUser: useCallback((username) => {
-      dispatch(authActions.authIsLoading());
-      dispatch(authActions.getUserByUsername({ username }));
-    },
-    [dispatch]),
     logout: useCallback(() => {
-      dispatch(authActions.authIsLoading());
+      dispatch(promiseActions.promisePending(AUTH_KEY))
       dispatch(authActions.logout());
     },
     [dispatch]),

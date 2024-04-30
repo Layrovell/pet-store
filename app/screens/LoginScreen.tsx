@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 
@@ -7,6 +7,8 @@ import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms
 import { ActivityIndicator } from '../components';
 import Logo from '../components/Logo';
 import useAuthService from '../services/auth/service';
+import usePromiseService from '../services/promise/service';
+import { AUTH_KEY } from '../store/root/config.store';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().label('Email'),
@@ -14,7 +16,15 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginScreen: React.FC = () => {
-  const { login, error, loading } = useAuthService();
+  const { login } = useAuthService();
+  const { data, isLoading } = usePromiseService();
+
+  const loading = isLoading(AUTH_KEY);
+
+  // const { getState } = useStore();
+  // const dispatch = useDispatch();
+
+  // const promiseData = useAppSelector(getSelectApiData('authApi'))
 
   const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
     await login(email, password);
@@ -27,13 +37,9 @@ const LoginScreen: React.FC = () => {
           <Logo />
         </View>
 
-        <Form
-          initialValues={{ email: '', password: '' }}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
+        <Form initialValues={{ email: '', password: '' }} onSubmit={handleSubmit} validationSchema={validationSchema}>
           <>
-            <ErrorMessage error={error} visible={!!error} />
+            <ErrorMessage error={false} visible={false} />
             <FormField
               name='email'
               icon={'email'}
@@ -54,6 +60,22 @@ const LoginScreen: React.FC = () => {
               secureTextEntry
             />
             <SubmitButton title={'Login'} />
+
+            {/* <Button
+              title='btn 1'
+              onPress={() => {
+                dispatch(promiseActions.promisePending('authApi'));
+                console.log('=====getState', getState());
+                
+              }}
+            />
+            <Button
+              title='btn 2'
+              onPress={() => {
+                dispatch(promiseActions.promiseResolved('authApi', { say: 'hello' }));
+                console.log('=====getState', getState());
+              }}
+            /> */}
           </>
         </Form>
       </Screen>

@@ -39,7 +39,7 @@ export default function App() {
 }
 
 const Routes = () => {
-  const [isReady, setIsReady] = useState(false);
+  const { data: user } = useAuthService();
   const [loaded, error] = useFonts({
     SpaceMono: require('./app/assets/fonts/ZillaSlabHighlight-Regular.ttf'),
     ...FontAwesome.font,
@@ -51,25 +51,11 @@ const Routes = () => {
     }
   }, [error]);
 
-  const { isAuthenticated, data: user, error: authError, userLoading, userError, getUser } = useAuthService();
-
-  const fetchUser = async () => {
-    const storedToken = await AsyncStorage.getItem('token');
-    if (storedToken) {
-      getUser(storedToken);
-    }
-    setIsReady(true); // Tell the application to render
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, [isAuthenticated]);
-
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, isReady]);
+  }, [loaded]);
 
   if (!loaded) {
     return null;
