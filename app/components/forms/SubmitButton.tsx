@@ -17,6 +17,7 @@ const SubmitButton: React.FC<Props> = ({ title, color = 'primary' }) => {
       title={title}
       onPress={handleSubmit}
       color={color}
+      size='lg'
     />
   )
 };

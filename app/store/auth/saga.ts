@@ -24,7 +24,7 @@ export function* registerWorker(action: PayloadAction<User>): SagaIterator {
     yield put(authActions.authIsLoading());
     yield call(registerApi, action.payload);
     yield put(authActions.login({
-      username: action.payload.username,
+      email: action.payload.username,
       password: action.payload.password,
     }));
   } catch (e: unknown) {

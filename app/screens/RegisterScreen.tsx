@@ -37,7 +37,7 @@ function RegisterScreen() {
         </View>
 
         <Form
-          initialValues={{ username: '', firstname: '', lastName: '', email: '', phone: '', password: '' }}
+          initialValues={{ username: '', firstName: '', lastName: '', email: '', phone: '', password: '' }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
