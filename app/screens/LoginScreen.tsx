@@ -33,7 +33,11 @@ const LoginScreen: React.FC = () => {
           <Logo />
         </View>
 
-        <Form initialValues={{ email: '', password: '' }} onSubmit={handleSubmit} validationSchema={validationSchema}>
+        <Form
+          initialValues={{ email: '', password: '' }}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+        >
           <>
             <ErrorMessage error={error} visible={!!error} />
             <FormField

@@ -1,12 +1,9 @@
 import { useCallback } from 'react';
 
-import { getSelectApiData, promiseActions, selectApiError, selectIsLoading } from '../../store/promises/slice';
+import { getSelectApiData, selectApiError, selectIsLoading } from '../../store/promises/slice';
 import { useAppDispatch, useAppSelector } from '../../store/root/hooks';
 
 interface PromiseServiceOperators {
-  createPromise: (name: string, operation: () => Promise<any>) => void;
-  resolvePromise: (name: string, data: any) => void;
-  rejectPromise: (name: string, error: string) => void;
   getIsLoading: (name: string) => boolean;
   getError: (name: string) => any | undefined;
   data: (name: string) => any;
@@ -16,25 +13,6 @@ const usePromiseService = (): Readonly<PromiseServiceOperators> => {
   const dispatch = useAppDispatch();
 
   return {
-    createPromise: useCallback((name: string, operation: any) => {
-      dispatch(promiseActions.promisePending(name));
-      operation()
-        .then((data: any) => {
-          dispatch(promiseActions.promiseResolved({ name, data} ));
-        })
-        .catch((error: any) => {
-          dispatch(promiseActions.promiseRejected({ name, error: error.toString() }));
-        });
-    }, [dispatch]),
-
-    resolvePromise: useCallback((name: string, data: any) => {
-      dispatch(promiseActions.promiseResolved({ name, data }));
-    }, [dispatch]),
-
-    rejectPromise: useCallback((name: string, error: string) => {
-      dispatch(promiseActions.promiseRejected({ name, error }));
-    }, [dispatch]),
-
     getIsLoading: useCallback((name: string) => 
       useAppSelector((state) => selectIsLoading(state.promise, name)),
     [dispatch]),
