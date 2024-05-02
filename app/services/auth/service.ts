@@ -18,7 +18,7 @@ const useAuthService = (): Readonly<AuthServiceOperators> => {
 
   return {
     login: useCallback((email, password) => {
-      dispatch(promiseActions.promisePending(AUTH_KEY))
+      // dispatch(promiseActions.promisePending(AUTH_KEY))
       dispatch(authActions.login({ email, password }));
     },
     [dispatch]),

@@ -12,7 +12,7 @@ const promiseSlice = createSlice({
   name: 'promise',
   initialState,
   reducers: {
-    promise: (state, action: PayloadAction<{ status: PromiseStatus; data?: any; error?: string; name: string }>) => {
+    promise: (state, action: PayloadAction<{ status: PromiseStatus; data?: any; error?: any; name: string }>) => {
       const { name, ...rest } = action.payload;
       state[name] = { ...rest };
     },
@@ -20,17 +20,18 @@ const promiseSlice = createSlice({
 });
 
 export const promiseActions = {
-  promise: promiseSlice.actions.promise,
+  // promise: promiseSlice.actions.promise,
   promisePending: (name: string) => promiseSlice.actions.promise({ status: PromiseStatus.PENDING, name }),
   promiseResolved: (name: string, data: any) =>
     promiseSlice.actions.promise({ status: PromiseStatus.RESOLVED, name, data }),
-  promiseRejected: (name: string, error: string) =>
+  promiseRejected: (name: string, error: any) =>
     promiseSlice.actions.promise({ status: PromiseStatus.REJECTED, name, error }),
+  promiseAsync: (name: string, promise: Promise<any>) => ({ type: 'promise/AUTH_PROMISE', payload: { promise, name } }),
 };
 
 // Selectors
 export const selectIsLoading = (state: any, name: string): boolean => state[name]?.status === PromiseStatus.PENDING;
-export const getSelectApiData = (name: string) => (state: any): boolean => state.promise[name]?.data;
+export const getSelectApiData = (name: string) => (state: any): any => state.promise[name]?.data;
 export const selectApiError = (name: string) => (state: any): string => state.promise[name]?.error;
 export const selectAllState = (state: any): boolean => state.promise;
 

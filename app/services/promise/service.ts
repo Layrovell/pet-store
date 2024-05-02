@@ -7,8 +7,8 @@ interface PromiseServiceOperators {
   createPromise: (name: string, operation: () => Promise<any>) => void;
   resolvePromise: (name: string, data: any) => void;
   rejectPromise: (name: string, error: string) => void;
-  isLoading: (name: string) => boolean;
-  error: (name: string) => string | undefined;
+  getIsLoading: (name: string) => boolean;
+  getError: (name: string) => any | undefined;
   data: (name: string) => any;
 }
 
@@ -35,11 +35,11 @@ const usePromiseService = (): Readonly<PromiseServiceOperators> => {
       dispatch(promiseActions.promiseRejected(name, error));
     }, [dispatch]),
 
-    isLoading: useCallback((name: string) => 
+    getIsLoading: useCallback((name: string) => 
       useAppSelector((state) => selectIsLoading(state.promise, name)),
     [dispatch]),
 
-    error: useCallback((name: string) =>
+    getError: useCallback((name: string) =>
       useAppSelector((state) => selectApiError(name)(state)),
     [dispatch]),
 

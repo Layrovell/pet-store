@@ -19,7 +19,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<{ email: string; password: string }>) => {
+    addToken: (state, action: PayloadAction) => {
     },
     register: (state, action: PayloadAction<User>) => {
     },
@@ -33,7 +33,7 @@ const authSlice = createSlice({
 });
 
 export const authActions = {
-  login: authSlice.actions.login,
+  login: (payload: { email: string; password: string }) => ({type: "auth/login", payload}),
   register: authSlice.actions.register,
   logout: authSlice.actions.logout,
   addUser: authSlice.actions.addUser,

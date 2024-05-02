@@ -22,10 +22,10 @@ const validationSchema = Yup.object().shape({
 
 function RegisterScreen() {
   const { register } = useAuthService();
-  const { isLoading, error: authError } = usePromiseService();
+  const { getIsLoading, getError } = usePromiseService();
 
-  const loading = isLoading(AUTH_KEY);
-  const error = authError(AUTH_KEY);
+  const loading = getIsLoading(AUTH_KEY);
+  const error = getError(AUTH_KEY);
 
   const handleSubmit = async (userInfo: any) => {
     await register(userInfo);

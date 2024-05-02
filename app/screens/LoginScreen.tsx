@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 
 import Screen from '../components/Screen';
@@ -7,8 +7,11 @@ import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms
 import { ActivityIndicator } from '../components';
 import Logo from '../components/Logo';
 import useAuthService from '../services/auth/service';
-import usePromiseService from '../services/promise/service';
 import { AUTH_KEY } from '../store/root/config.store';
+import { useDispatch, useStore } from 'react-redux';
+import { useAppSelector } from '../store/root/hooks';
+import { getSelectApiData, promiseActions } from '../store/promises/slice';
+import usePromiseService from '../services/promise/service';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().label('Email'),
@@ -17,14 +20,27 @@ const validationSchema = Yup.object().shape({
 
 const LoginScreen: React.FC = () => {
   const { login } = useAuthService();
-  const { data, isLoading } = usePromiseService();
-
-  const loading = isLoading(AUTH_KEY);
+  const { data, getIsLoading, getError } = usePromiseService();
 
   // const { getState } = useStore();
   // const dispatch = useDispatch();
 
   // const promiseData = useAppSelector(getSelectApiData('authApi'))
+
+  const loading = getIsLoading(AUTH_KEY);
+  const error = getError(AUTH_KEY);
+
+  const { getState, subscribe } = useStore();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscr = subscribe(() => {
+      console.log('=====getState', getState());
+    });
+    return () => unsubscr();
+  }, []);
+
+  const promiseData = useAppSelector(getSelectApiData('authApi'));
 
   const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
     await login(email, password);
@@ -37,7 +53,7 @@ const LoginScreen: React.FC = () => {
           <Logo />
         </View>
 
-        <Form initialValues={{ email: '', password: '' }} onSubmit={handleSubmit} validationSchema={validationSchema}>
+        <Form initialValues={{ email: 'eee@gmail.com', password: '' }} onSubmit={handleSubmit} validationSchema={validationSchema}>
           <>
             <ErrorMessage error={false} visible={false} />
             <FormField
@@ -66,7 +82,8 @@ const LoginScreen: React.FC = () => {
               onPress={() => {
                 dispatch(promiseActions.promisePending('authApi'));
                 console.log('=====getState', getState());
-                
+                const delay = new Promise((resolve) => setTimeout(resolve, 3000, 'hello'));
+                dispatch(promiseActions.promiseAsync('testApi', delay));
               }}
             />
             <Button
