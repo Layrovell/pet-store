@@ -18,17 +18,14 @@ const useAuthService = (): Readonly<AuthServiceOperators> => {
 
   return {
     login: useCallback((email, password) => {
-      // dispatch(promiseActions.promisePending(AUTH_KEY))
       dispatch(authActions.login({ email, password }));
     },
     [dispatch]),
     register: useCallback((userData) => {
-      dispatch(promiseActions.promisePending(AUTH_KEY))
       dispatch(authActions.register(userData));
     },[dispatch]),
     data: useAppSelector(selectUser),
     logout: useCallback(() => {
-      dispatch(promiseActions.promisePending(AUTH_KEY))
       dispatch(authActions.logout());
     },
     [dispatch]),

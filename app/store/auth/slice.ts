@@ -19,10 +19,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    addToken: (state, action: PayloadAction) => {
-    },
-    register: (state, action: PayloadAction<User>) => {
-    },
     logout: (state) => {
       state.data = null;
     },
@@ -32,9 +28,14 @@ const authSlice = createSlice({
   },
 });
 
+export const authTypes = {
+  login: 'auth/login',
+  register: 'auth/register',
+}
+
 export const authActions = {
-  login: (payload: { email: string; password: string }) => ({type: "auth/login", payload}),
-  register: authSlice.actions.register,
+  login: (payload: { email: string; password: string }) => ({ type: authTypes.login, payload }),
+  register: (payload: User) => ({ type: authTypes.register, payload }),
   logout: authSlice.actions.logout,
   addUser: authSlice.actions.addUser,
 };

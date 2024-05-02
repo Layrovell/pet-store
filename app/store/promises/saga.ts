@@ -8,14 +8,14 @@ export function* promiseAsync({ payload: { name, promise } }: any): SagaIterator
   try {
     yield put(promiseActions.promisePending(name));
     const { data } = yield call(() => promise);
-    yield put(promiseActions.promiseResolved(name, data));
+    yield put(promiseActions.promiseResolved({ name, data }));
   } catch (error: unknown) {
     let errorMessage = 'Unknown error';
     if (error instanceof AxiosError) {
       errorMessage = error.response?.data?.message || errorMessage;
     }
     console.error('Promise rejected in promiseAsync:', errorMessage, error);
-    yield put(promiseActions.promiseRejected(name, errorMessage));
+    yield put(promiseActions.promiseRejected({ name, error: errorMessage }));
   }
 }
 

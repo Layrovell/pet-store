@@ -20,19 +20,19 @@ const usePromiseService = (): Readonly<PromiseServiceOperators> => {
       dispatch(promiseActions.promisePending(name));
       operation()
         .then((data: any) => {
-          dispatch(promiseActions.promiseResolved(name, data));
+          dispatch(promiseActions.promiseResolved({ name, data} ));
         })
         .catch((error: any) => {
-          dispatch(promiseActions.promiseRejected(name, error.toString()));
+          dispatch(promiseActions.promiseRejected({ name, error: error.toString() }));
         });
     }, [dispatch]),
 
     resolvePromise: useCallback((name: string, data: any) => {
-      dispatch(promiseActions.promiseResolved(name, data));
+      dispatch(promiseActions.promiseResolved({ name, data }));
     }, [dispatch]),
 
     rejectPromise: useCallback((name: string, error: string) => {
-      dispatch(promiseActions.promiseRejected(name, error));
+      dispatch(promiseActions.promiseRejected({ name, error }));
     }, [dispatch]),
 
     getIsLoading: useCallback((name: string) => 

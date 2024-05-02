@@ -10,7 +10,7 @@ import useAuthService from '../services/auth/service';
 import { AUTH_KEY } from '../store/root/config.store';
 import { useDispatch, useStore } from 'react-redux';
 import { useAppSelector } from '../store/root/hooks';
-import { getSelectApiData, promiseActions } from '../store/promises/slice';
+import { getSelectApiData } from '../store/promises/slice';
 import usePromiseService from '../services/promise/service';
 
 const validationSchema = Yup.object().shape({
@@ -55,7 +55,7 @@ const LoginScreen: React.FC = () => {
 
         <Form initialValues={{ email: 'eee@gmail.com', password: '' }} onSubmit={handleSubmit} validationSchema={validationSchema}>
           <>
-            <ErrorMessage error={false} visible={false} />
+            <ErrorMessage error={error} visible={!!error} />
             <FormField
               name='email'
               icon={'email'}
