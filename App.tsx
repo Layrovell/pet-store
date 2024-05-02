@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Provider } from 'react-redux';
 import { useFonts } from 'expo-font';

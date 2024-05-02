@@ -3,6 +3,7 @@ import JWT from 'expo-jwt';
 import { type SagaIterator } from '@redux-saga/core';
 import { call, put, putResolve, select, take, takeEvery } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { SECRET_KEY } from '@env';
 
 import { authActions, authTypes } from './slice';
 import { loginApi, registerApi } from '../../services/auth/auth.api';
@@ -10,8 +11,6 @@ import { User } from '../../interface/user.interface';
 import { AUTH_KEY } from '../root/config.store';
 import { promiseAsync } from '../promises/saga';
 import { promiseActions } from '../promises/slice';
-
-const key = 'jwt-pet-store-app-secret-v1';
 
 // Worker Sagas
 export function* loginWorker(action: any): SagaIterator {
@@ -23,7 +22,7 @@ export function* loginWorker(action: any): SagaIterator {
 
     const token = data[AUTH_KEY]?.data?.accessToken;
     yield call([AsyncStorage, 'setItem'], 'token', token);
-    const userData = JWT.decode(token, key);
+    const userData = JWT.decode(token, SECRET_KEY);
     yield put(authActions.addUser(userData.user));
     yield put(promiseActions.clearPromise({ name: AUTH_KEY }));
   } catch (error: unknown) {
