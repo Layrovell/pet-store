@@ -44,7 +44,7 @@ const AppTextInput: React.FC<Props> = ({ icon, width = '100%', ...otherProps }) 
         // keyboardType="numeric"
         // clearButtonMode="always" // iOS
         placeholderTextColor={defaultStyles.colors.medium}
-        style={defaultStyles.text} // styles.textInput
+        style={[defaultStyles.text, styles.input]}
         {...otherProps}
         secureTextEntry={otherProps?.secureTextEntry ? isFieldVisible : false}
       />
@@ -60,6 +60,10 @@ const styles = StyleSheet.create({
     padding: 15,
     marginVertical: 10,
     alignItems: 'center',
+  },
+  input: {
+    // temp fix for input field type area
+    width: '90%',
   },
   icon: {
     marginRight: 10,

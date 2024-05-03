@@ -12,7 +12,7 @@ export const loginApi = ({ email, password }: LoginProps) => {
 };
 
 export const registerApi = (data: User) => {
-  return axiosInstance.post(`/user`, JSON.stringify(data));
+  return axiosInstance.post(`/auth/register`, JSON.stringify(data));
 };
 
 export const getUserApi = (username: string = 'Marina123') => {

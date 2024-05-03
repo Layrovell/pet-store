@@ -4,6 +4,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
 
+export const AUTH_KEY = 'authApi';
+
 const makeStore = (): any => {
   const sagaMiddleware = createSagaMiddleware();
 

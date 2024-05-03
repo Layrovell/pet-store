@@ -7,6 +7,8 @@ import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms
 import { ActivityIndicator } from '../components';
 import Logo from '../components/Logo';
 import useAuthService from '../services/auth/service';
+import { AUTH_KEY } from '../store/root/config.store';
+import usePromiseService from '../services/promise/service';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().label('Email'),
@@ -14,7 +16,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginScreen: React.FC = () => {
-  const { login, error, loading } = useAuthService();
+  const { login } = useAuthService();
+  const { data, getIsLoading, getError } = usePromiseService();
+
+  const loading = getIsLoading(AUTH_KEY);
+  const error = getError(AUTH_KEY);
 
   const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
     await login(email, password);

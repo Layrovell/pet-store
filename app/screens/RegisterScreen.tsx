@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 
@@ -9,23 +9,25 @@ import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms
 import { ActivityIndicator } from '../components';
 import Logo from '../components/Logo';
 import useAuthService from '../services/auth/service';
+import usePromiseService from '../services/promise/service';
+import { AUTH_KEY } from '../store/root/config.store';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('User name'),
-  firstName: Yup.string().required().label('First name'),
-  lastName: Yup.string().required().label('Last name'),
+  firstname: Yup.string().required().label('First name'),
+  lastname: Yup.string().required().label('Last name'),
   email: Yup.string().required().email().label('Email'),
-  phone: Yup.string().required().label('Phone number'), // TODO:
   password: Yup.string().required().min(4).max(10).label('Password'),
 });
 
 function RegisterScreen() {
-  const { register, loading } = useAuthService();
+  const { register } = useAuthService();
+  const { getIsLoading, getError } = usePromiseService();
 
-  const [error, setError] = useState<any>(null);
+  const loading = getIsLoading(AUTH_KEY);
+  const error = getError(AUTH_KEY);
 
   const handleSubmit = async (userInfo: any) => {
-    console.log('RegisterScreen');
     await register(userInfo);
   };
 
@@ -37,15 +39,15 @@ function RegisterScreen() {
         </View>
 
         <Form
-          initialValues={{ username: '', firstName: '', lastName: '', email: '', phone: '', password: '' }}
+          initialValues={{ username: '', firstname: '', lastname: '', email: '', password: '' }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           <>
             <ErrorMessage error={error} visible={!!error} />
             <FormField icon='person' name='username' placeholder='User name' />
-            <FormField icon='drive-file-rename-outline' name='firstName' placeholder='First name' />
-            <FormField icon='drive-file-rename-outline' name='lastName' placeholder='Last name' />
+            <FormField icon='drive-file-rename-outline' name='firstname' placeholder='First name' />
+            <FormField icon='drive-file-rename-outline' name='lastname' placeholder='Last name' />
             <FormField
               autoCapitalize='none'
               icon='email'
@@ -54,7 +56,6 @@ function RegisterScreen() {
               placeholder='Email'
               textContentType='emailAddress' // iOS
             />
-            <FormField icon='phone' name='phone' placeholder='Phone' />
             <FormField
               autoCapitalize='none'
               icon='lock'

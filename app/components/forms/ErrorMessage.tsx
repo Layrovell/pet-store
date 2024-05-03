@@ -14,7 +14,7 @@ const ErrorMessage: React.FC<Props> = ({ error, visible }) => {
 
   return (
     <AppText style={styles.error}>
-      {error}
+      {error.message || error}
     </AppText>
   )
 };
