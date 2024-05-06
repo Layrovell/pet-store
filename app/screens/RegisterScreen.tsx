@@ -1,16 +1,20 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React from 'react';
+import { Dimensions, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import * as Yup from 'yup';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { Formik } from 'formik';
 
 import Screen from '../components/Screen';
-import { StatusBar } from 'expo-status-bar';
 import colors from '../config/colors';
 import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms';
 import { ActivityIndicator } from '../components';
-import Logo from '../components/Logo';
 import useAuthService from '../services/auth/service';
 import usePromiseService from '../services/promise/service';
 import { AUTH_KEY } from '../store/root/config.store';
+import Stack from '../components/Stack';
+import Typography from '../components/Typography';
+import Link from '../components/Link';
+import routes from '../navigation/routes';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('User name'),
@@ -20,7 +24,11 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required().min(4).max(10).label('Password'),
 });
 
-function RegisterScreen() {
+interface Props {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   const { register } = useAuthService();
   const { getIsLoading, getError } = usePromiseService();
 
@@ -32,60 +40,78 @@ function RegisterScreen() {
   };
 
   return (
-    <>
-      <Screen style={styles.container}>
-        <View style={styles.logo}>
-          <Logo backgroundColor={colors.secondary} />
-        </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1, minHeight: Dimensions.get('window').height - 80 }}
+      contentContainerStyle={{ flex: 1, flexShrink: 0 }}
+    >
+      <Screen>
+        <Stack spacing={6} style={{ flex: 1 }}>
+          <Stack spacing={2}>
+            <Typography variant='h1'>Create</Typography>
+            <Typography variant='h1'>New Account</Typography>
+          </Stack>
+          <Typography variant='body2'>
+            Water is life. Water is a basic human need. In various lines of life, humans need water.
+          </Typography>
 
-        <Form
-          initialValues={{ username: '', firstname: '', lastname: '', email: '', password: '' }}
-          onSubmit={handleSubmit}
-          validationSchema={validationSchema}
-        >
-          <>
-            <ErrorMessage error={error} visible={!!error} />
-            <FormField icon='person' name='username' placeholder='User name' />
-            <FormField icon='drive-file-rename-outline' name='firstname' placeholder='First name' />
-            <FormField icon='drive-file-rename-outline' name='lastname' placeholder='Last name' />
-            <FormField
-              autoCapitalize='none'
-              icon='email'
-              keyboardType='email-address'
-              name='email'
-              placeholder='Email'
-              textContentType='emailAddress' // iOS
-            />
-            <FormField
-              autoCapitalize='none'
-              icon='lock'
-              name='password'
-              placeholder='Password'
-              secureTextEntry
-              textContentType='password'
-            />
-            <SubmitButton title='Register' color='secondary' />
-          </>
-        </Form>
+          <Formik
+            initialValues={{ username: '', firstname: '', lastname: '', email: '', password: '' }}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+            style={{ flex: 1, justifyContent: 'space-between' }}
+          >
+            {({ isValid }) => {
+              return (
+                <>
+                  <Stack spacing={4} style={{ marginBottom: 36 }}>
+                    <ErrorMessage error={error} visible={!!error} />
+
+                    <FormField icon='person' name='username' placeholder='User name' />
+                    <FormField icon='drive-file-rename-outline' name='firstname' placeholder='First name' />
+                    <FormField icon='drive-file-rename-outline' name='lastname' placeholder='Last name' />
+                    <FormField
+                      autoCapitalize='none'
+                      icon='email'
+                      keyboardType='email-address'
+                      name='email'
+                      placeholder='Email'
+                      textContentType='emailAddress' // iOS
+                    />
+                    <FormField
+                      autoCapitalize='none'
+                      icon='lock'
+                      name='password'
+                      placeholder='Password'
+                      secureTextEntry
+                      textContentType='password'
+                    />
+                  </Stack>
+
+                  <Stack spacing={6} style={{ flex: 1, justifyContent: 'flex-end' }}>
+                    <Stack spacing={1} style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                      <Typography variant='body2'>Have an account?</Typography>
+                      <Link
+                        variant={'h5'}
+                        color={colors.secondary.main}
+                        onPress={() => navigation.navigate(routes.LOGIN)}
+                        text='Login'
+                      />
+                    </Stack>
+
+                    <SubmitButton disabled={!isValid} title={'Register'} color={colors.secondary.main} />
+                  </Stack>
+                </>
+              );
+            }}
+          </Formik>
+        </Stack>
       </Screen>
 
-      <StatusBar backgroundColor={colors.secondary} />
-
-      <View style={{ flex: 1 }}>
-        <ActivityIndicator visible={loading} />
-      </View>
-    </>
+      {loading && <ActivityIndicator visible={loading} />}
+    </KeyboardAvoidingView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  logo: {
-    alignItems: 'center',
-    padding: 10,
-  }
-});
+const styles = StyleSheet.create({});
 
 export default RegisterScreen;

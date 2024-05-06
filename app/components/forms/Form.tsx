@@ -1,11 +1,13 @@
 import React from "react";
 import { Formik } from "formik";
+import { View } from "react-native";
 
 interface Props {
   initialValues: any;
-  onSubmit: any;
+  onSubmit?: any;
   validationSchema: any;
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
+  style?: any;
 }
 
 const AppForm: React.FC<Props> = ({
@@ -13,6 +15,7 @@ const AppForm: React.FC<Props> = ({
   onSubmit,
   validationSchema,
   children,
+  style,
 }) => {
   return (
     <Formik
@@ -22,7 +25,7 @@ const AppForm: React.FC<Props> = ({
     >
       {() => {
         return (
-          <>{children}</>
+          <View style={style}>{children}</View>
         );
       }}
     </Formik>

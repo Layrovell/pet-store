@@ -1,7 +1,6 @@
 import React from "react";
-import { StyleSheet } from "react-native";
 
-import AppText from "../Text";
+import Typography from "../Typography";
 import colors from "../../config/colors";
 
 interface Props {
@@ -13,16 +12,18 @@ const ErrorMessage: React.FC<Props> = ({ error, visible }) => {
   if (!visible || !error) return null;
 
   return (
-    <AppText style={styles.error}>
-      {error.message || error}
-    </AppText>
-  )
+    <>
+      {Array.isArray(error) ? (
+        error.map((err: string, idx) => (
+          <Typography color={colors.danger} key={idx}>
+            {err}
+          </Typography>
+        ))
+      ) : (
+        <Typography color={colors.danger}>{error.message || error}</Typography>
+      )}
+    </>
+  );
 };
-
-const styles = StyleSheet.create({
-  error: {
-    color: colors.danger,
-  },
-});
 
 export default ErrorMessage;

@@ -12,7 +12,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import AuthNavigator from './app/navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigationTheme';
 import { navigationRef } from './app/navigation/rootNavigation';
-import colors from './app/config/colors';
 import { store } from './app/store/root/config.store';
 import AppNavigator from './app/navigation/AppNavigator';
 import useAuthService from './app/services/auth/service';
@@ -31,7 +30,7 @@ export default function App() {
           </NavigationContainer>
         </GestureHandlerRootView>
 
-        <StatusBar animated={true} backgroundColor={colors.primary} style={Platform.OS === 'ios' ? 'light' : 'dark'} />
+        <StatusBar animated={true} style={'dark'} />
       </View>
     </Provider>
   );
@@ -41,6 +40,12 @@ const Routes = () => {
   const { data: user } = useAuthService();
   const [loaded, error] = useFonts({
     SpaceMono: require('./app/assets/fonts/ZillaSlabHighlight-Regular.ttf'),
+    PrimaryBold: require('./app/assets/fonts/Poppins-Bold.ttf'),
+    PrimarySemiBold: require('./app/assets/fonts/Poppins-SemiBold.ttf'),
+    PrimaryThin: require('./app/assets/fonts/Poppins-Thin.ttf'),
+    PrimaryLight: require('./app/assets/fonts/Poppins-Light.ttf'),
+    PrimaryMedium: require('./app/assets/fonts/Poppins-Medium.ttf'),
+    PrimaryRegular: require('./app/assets/fonts/Poppins-Regular.ttf'),
     ...FontAwesome.font,
   });
 

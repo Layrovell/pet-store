@@ -6,10 +6,11 @@ import colors from '../../config/colors';
 
 interface Props {
   title: string;
-  color?: keyof typeof colors;
+  color?: string;
+  disabled?: boolean;
 }
 
-const SubmitButton: React.FC<Props> = ({ title, color = 'primary' }) => {
+const SubmitButton: React.FC<Props> = ({ title, color = colors.secondary.main, disabled }) => {
   const { handleSubmit } = useFormikContext();
 
   return (
@@ -17,7 +18,9 @@ const SubmitButton: React.FC<Props> = ({ title, color = 'primary' }) => {
       title={title}
       onPress={handleSubmit}
       color={color}
+      radius={30}
       size='lg'
+      disabled={disabled}
     />
   )
 };
