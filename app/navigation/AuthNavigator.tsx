@@ -20,9 +20,6 @@ const AuthNavigator = () => {
         name='Welcome'
         component={WelcomeScreen}
         options={{
-          // for single Screen
-          // headerStyle: { backgroundColor: 'tomato' },
-          // headerTintColor: 'white',
           headerShown: false,
         }}
       />
@@ -30,7 +27,8 @@ const AuthNavigator = () => {
         name='Login'
         component={LoginScreen}
         options={{
-          headerStyle: { backgroundColor: colors.primary },
+          headerTintColor: colors.secondary.main,
+          headerTitle: '',
         }}
         // options={({ route }: any) => ({ title: `Something ${route?.params?.id}` })}
       />
@@ -38,7 +36,8 @@ const AuthNavigator = () => {
         name='Register'
         component={RegisterScreen}
         options={{
-          headerStyle: { backgroundColor: colors.secondary },
+          headerTintColor: colors.secondary.main,
+          headerTitle: '',
         }}
       />
     </Stack.Navigator>

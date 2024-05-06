@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { TextInput, View, StyleSheet, DimensionValue } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { TextInput, StyleSheet, DimensionValue } from 'react-native';
 
 import defaultStyles from '../config/styles';
+import Stack from './Stack';
+import colors from '../config/colors';
 
 interface Props {
   icon?: any;
@@ -17,49 +17,44 @@ interface Props {
   onBlur?: any;
   width?: DimensionValue;
   hideIcon?: string;
+  color?: string;
 }
 
 const AppTextInput: React.FC<Props> = ({ icon, width = '100%', ...otherProps }) => {
-  const [isFieldVisible, setIsFieldVisible] = useState(true);
-
-  const toggleFieldVisibility = () => {
-    setIsFieldVisible((prev) => !prev);
-  };
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={[styles.container, { width }]}>
-      {icon && (
-        <TouchableWithoutFeedback onPress={() => {}}>
-          <MaterialIcons
-            onPress={() => otherProps?.secureTextEntry && toggleFieldVisibility()}
-            name={!isFieldVisible && otherProps?.hideIcon ? otherProps?.hideIcon : icon}
-            size={20}
-            color={defaultStyles.colors.medium}
-            style={styles.icon}
-          />
-        </TouchableWithoutFeedback>
-      )}
+    <Stack
+      style={[
+        styles.container, 
+        { width }, 
+        isFocused ? styles.focused : null,
+      ]}
+    >
       <TextInput
         // onChangeText={(text) => setFirstName(text)}
         // keyboardType="numeric"
         // clearButtonMode="always" // iOS
-        placeholderTextColor={defaultStyles.colors.medium}
+        placeholderTextColor={colors.grey[30]}
         style={[defaultStyles.text, styles.input]}
         {...otherProps}
-        secureTextEntry={otherProps?.secureTextEntry ? isFieldVisible : false}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        secureTextEntry={otherProps?.secureTextEntry}
       />
-    </View>
+    </Stack>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: defaultStyles.colors.light,
-    borderRadius: 25,
+    borderColor: colors.grey[10],
+    borderRadius: 16,
+    borderWidth: 1,
     flexDirection: 'row',
-    padding: 15,
-    marginVertical: 10,
     alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 22,
   },
   input: {
     // temp fix for input field type area
@@ -67,6 +62,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
+  },
+  focused: {
+    borderColor: colors.secondary.main,
   },
 });
 

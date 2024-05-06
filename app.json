@@ -30,7 +30,18 @@
       "favicon": "./app/assets/favicon.png"
     },
     "plugins": [
-      "expo-secure-store"
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "/app/assets/fonts/MontserratAlternates-Medium.ttf",
+            "/app/assets/fonts/MontserratAlternates-SemiBold.ttf",
+            "/app/assets/fonts/SpaceMono-Regular.ttf",
+            "/app/assets/fonts/ZillaSlabHighlight-Bold.ttf",
+            "/app/assets/fonts/ZillaSlabHighlight-Regular.ttf"
+          ]
+        }
+      ]
     ]
   }
 }

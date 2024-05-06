@@ -1,32 +1,38 @@
 // import Constants from 'expo-constants';
-import { Platform, SafeAreaView, StatusBar } from 'react-native';
-import { StyleSheet } from 'react-native';
+import { Dimensions, View, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   children: JSX.Element | JSX.Element[];
   style?: any;
 }
 
+const { width, height } = Dimensions.get('window');
+
+const guidelineBaseWidth = 390;
+const guidelineBaseHeight = 844;
+
+const horizontalScale = (size: number) => (width / guidelineBaseWidth) * size;
+const verticalScale = (size: number) => (height / guidelineBaseHeight) * size;
+const moderateScale = (size: number, factor = 0.5) => size + horizontalScale(size) * factor;
+
 const Screen: React.FC<Props> = ({ children, style }) => {
+  const insets = useSafeAreaInsets();
+
   return (
     // SafeAreaView: only work in iOS
-    <SafeAreaView style={[styles.screen, style]}>
-      {/* <View > style={[styles.view, style]} */}
+    <View style={[styles.screen, { paddingTop: insets.top + 16 }, style]}>
       {children}
-      {/* </View> */}
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
-    // flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    // or
-    // paddingTop: Constants.statusBarHeight,
-  },
-  view: {
     flex: 1,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    paddingVertical: verticalScale(16),
+    paddingHorizontal: horizontalScale(16),
   },
 });
 
