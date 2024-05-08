@@ -3,12 +3,11 @@ import { StyleSheet, FlatList, View, Image, TouchableHighlight } from 'react-nat
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { RectButton } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
-
 // components
-import Screen from '../components/Screen';
 import Typography from '../components/Typography';
 import Stack from '../components/Stack';
 import AppButton from '../components/Button';
+import Footer from '../components/Footer';
 // hooks
 import useProductsService from '../services/product/service';
 
@@ -77,21 +76,17 @@ const CartScreen: React.FC<Props> = () => {
   };
 
   return (
-    <Stack spacing={8} style={styles.container}>
-      <Screen>
-        <View style={styles.container}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={products?.slice(0, 5)}
-            keyExtractor={(item) => `${item.id}`}
-            renderItem={({ item }) => (
-              <CartItem item={item} onDelete={handleDeleteProduct} onView={handleViewProduct} />
-            )}
-          />
-        </View>
-      </Screen>
+    <View style={styles.container}>
+      <View style={[styles.container, { paddingHorizontal: 16 }]}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={products?.slice(0, 5)}
+          keyExtractor={(item) => `${item.id}`}
+          renderItem={({ item }) => <CartItem item={item} onDelete={handleDeleteProduct} onView={handleViewProduct} />}
+        />
+      </View>
 
-      <Stack spacing={8} style={styles.footer}>
+      <Footer>
         <Stack spacing={3}>
           <View style={styles.summaryRow}>
             <Typography variant='body3'>3 items</Typography>
@@ -108,8 +103,8 @@ const CartScreen: React.FC<Props> = () => {
         </Stack>
 
         <AppButton title='Checkout' onPress={() => {}} color={colors.secondary.main} radius={30} size='lg' />
-      </Stack>
-    </Stack>
+      </Footer>
+    </View>
   );
 };
 
@@ -137,16 +132,6 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 16,
-  },
-  footer: {
-    borderWidth: 1,
-    borderColor: colors.grey[10],
-    backgroundColor: '#fff',
-    marginHorizontal: 2,
-    padding: 16,
-    paddingTop: 28,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
   },
   leftAction: {
     width: 60,

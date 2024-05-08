@@ -3,6 +3,6 @@ export default Object.freeze({
   REGISTER: 'Register',
   DUMMY_SCREEN: 'DummyScreen',
   PRODUCT_DETAILS: 'ProductDetails',
-  CART_DETAILS: 'CartDetails',
+  CART_DETAILS: 'Cart',
   ACCOUNT: 'Account',
 });

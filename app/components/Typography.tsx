@@ -11,7 +11,7 @@ const variantStyles = {
   },
   body2: {
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 16,
     fontFamily: 'PrimaryLight',
   },
   body3: {
@@ -24,7 +24,6 @@ const variantStyles = {
     fontSize: 16,
     lineHeight: 20,
     fontFamily: 'PrimaryBold',
-    textTransform: 'capitalize',
   },
   h1: {
     fontSize: 38,
@@ -33,7 +32,7 @@ const variantStyles = {
   },
   h2: {
     fontSize: 32,
-    lineHeight: 32,
+    lineHeight: 36,
     fontFamily: 'PrimarySemiBold',
   },
   h3: {
@@ -41,7 +40,7 @@ const variantStyles = {
     lineHeight: 36,
   },
   h4: {
-    fontSize: 24,
+    fontSize: 22,
     lineHeight: 32,
     fontFamily: 'PrimaryBold',
   },

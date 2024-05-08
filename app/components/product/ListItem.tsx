@@ -1,11 +1,11 @@
 import React from 'react';
-import { Dimensions, Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import colors from '../../config/colors';
-import AppButton from '../Button';
-import Status from '../Status';
 import { Product } from '../../interface/product.interface';
+import Typography from '../Typography';
+import IconButton from '../IconButton';
+import Stack from '../Stack';
 
 interface Props {
   item: Product;
@@ -13,39 +13,27 @@ interface Props {
   onPressBuy: () => void;
 }
 
-const screenWidth = Dimensions.get('window').width;
-const numColumns = 2;
-const gap = 5;
-
-const availableSpace = screenWidth - (numColumns - 1) * gap;
-const itemSize = availableSpace / numColumns;
-
 const ListItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
   const { name, images, status, price } = item;
 
   return (
     <View style={styles.item}>
       <View style={styles.innerContainer}>
-        <View>
-          {/* <Pressable
-            android_ripple={{ color: '#ccc' }}
-            style={({ pressed }) => (pressed ? styles.buttonPressed : null)}
-          > */}
+        <Stack spacing={2}>
           <TouchableOpacity onPress={onPress}>
             <Image source={{ uri: images[0] }} style={styles.image} />
           </TouchableOpacity>
-          {/* </Pressable> */}
 
-          <View style={styles.titleSection}>
-            <Text style={styles.title}>{name}</Text>
-            <FontAwesome name={'heart-o'} size={18} color={colors.primary} />
+          <View>
+            <Typography style={{ textTransform: 'capitalize' }}>{name}</Typography>
+            <View style={styles.titleSection}>
+              <Typography variant='h4' style={styles.price}>
+                ${price}
+              </Typography>
+              <IconButton name={'add'} size={18} iconColor={colors.white} backgroundColor={colors.secondary.main} />
+            </View>
           </View>
-          <Status status={status} />
-          <View style={styles.titleSection}>
-            <Text style={styles.price}>{price}</Text>
-            <AppButton title='Buy' onPress={onPressBuy} />
-          </View>
-        </View>
+        </Stack>
       </View>
     </View>
   );
@@ -53,14 +41,10 @@ const ListItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
 
 const styles = StyleSheet.create({
   item: {
-    // maxWidth: Dimensions.get('window').width / 2,
-    // width: itemSize,
     flex: 0.5,
-    // height: itemSize,
-    // width: itemSize,
-  },
-  buttonPressed: {
-    // opacity: 0.5,
+    backgroundColor: colors.background,
+    borderRadius: 16,
+    padding: 12,
   },
   innerContainer: {
     borderRadius: 8,
@@ -71,15 +55,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 6,
   },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: colors.primary,
-    textTransform: 'capitalize',
-  },
-
   titleSection: {
-    marginVertical: 8,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -87,7 +63,6 @@ const styles = StyleSheet.create({
   price: {
     fontWeight: 'bold',
   },
-  category: {},
 });
 
 export default ListItem;

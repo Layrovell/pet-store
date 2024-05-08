@@ -25,7 +25,7 @@ const FeedNavigator = () => {
         ...TransitionPresets.ModalSlideFromBottomIOS,
       }}
     >
-      <Stack.Screen name='Listings' component={DummyScreen} options={{ headerTitleAlign: 'center' }} />
+      <Stack.Screen name='Best Sellers' component={DummyScreen} options={{ headerTitleAlign: 'center' }} />
       <Stack.Screen
         name='ProductDetails'
         options={{
