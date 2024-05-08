@@ -21,7 +21,7 @@ const Screen: React.FC<Props> = ({ children, style }) => {
 
   return (
     // SafeAreaView: only work in iOS
-    <View style={[styles.screen, { paddingTop: insets.top + 16 }, style]}>
+    <View style={[styles.screen, { paddingTop: insets.top }, style]}>
       {children}
     </View>
   );

@@ -19,4 +19,6 @@ export default {
     90: '#1A1919',
     100: '#000000',
   },
+  background: '#F8F8F8',
+  underlay: 'rgba(192,192,192,1,0.6)',
 };

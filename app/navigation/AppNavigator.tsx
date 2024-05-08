@@ -1,15 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  createStackNavigator,
-  TransitionPresets,
-} from '@react-navigation/stack';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 
 import DummyScreen from '../screens/DummyScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScreen';
 import CartScreen from '../screens/CartScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import AccountScreen from '../screens/AccountScreen';
 
 const Tab = createBottomTabNavigator();
@@ -24,57 +21,71 @@ const FeedNavigator = () => {
       screenOptions={{
         // animationEnabled: true,
         gestureEnabled: true,
-        headerShown: false, // for mode="modal"
+        headerShown: true, // for mode="modal"
         ...TransitionPresets.ModalSlideFromBottomIOS,
       }}
     >
+      <Stack.Screen name='Listings' component={DummyScreen} options={{ headerTitleAlign: 'center' }} />
       <Stack.Screen
-        name='Listings'
-        component={DummyScreen}
-        options={{ headerTitleAlign: 'center' }}
+        name='ProductDetails'
+        options={{
+          headerTitle: 'Product Details',
+        }}
+        component={ProductDetailsScreen}
       />
-      <Stack.Screen name='ProductDetails' component={ProductDetailsScreen} />
-      {/* <Stack.Screen name='CartDetails' component={CartScreen} /> */}
     </Stack.Navigator>
   );
 };
+
+const SettingsNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        gestureEnabled: true,
+        headerShown: true,
+        headerTitleAlign: 'center',
+        headerMode: 'screen',
+        ...TransitionPresets.ModalSlideFromBottomIOS,
+      }}
+      initialRouteName='Settings'
+    >
+      <Stack.Screen name='Settings' component={SettingsScreen} />
+      <Stack.Screen name='Account' component={AccountScreen} />
+    </Stack.Navigator>
+  );
+};
+
 const AppNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerTitleAlign: 'center',
         headerShown: false,
+        tabBarHideOnKeyboard: true,
+        // headerMode: 'screen',
         // ...TransitionPresets.ModalSlideFromBottomIOS,
       })}
     >
       <Tab.Screen
-        name='Feed'
+        name='Browse'
         component={FeedNavigator}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name='home' size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='home' size={size} color={color} />,
         }}
       />
       <Tab.Screen
-        name='CartDetails'
+        name='Cart'
         component={CartScreen}
         options={({ navigation, route }) => ({
-          tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons
-              name='plus-circle'
-              size={size}
-              color={color}
-            />
-          ),
+          headerShown: true,
+          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='plus-circle' size={size} color={color} />,
         })}
       />
       <Tab.Screen
-        name='Account'
-        component={AccountScreen}
+        name='SettingsScreen'
+        component={SettingsNavigator}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name='account' size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='account-settings' size={size} color={color} />,
         }}
       />
     </Tab.Navigator>

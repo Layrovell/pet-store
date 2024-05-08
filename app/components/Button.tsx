@@ -1,7 +1,8 @@
-import { StyleSheet, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, TouchableHighlight } from 'react-native';
 
 import colors from '../config/colors';
 import { shadeColor } from '../utils/color';
+import Typography from './Typography';
 
 interface Props {
   title: string;
@@ -11,6 +12,7 @@ interface Props {
   fullWidth?: boolean;
   radius?: number;
   disabled?: boolean;
+  isOutlined?: boolean;
 }
 
 const AppButton: React.FC<Props> = ({
@@ -21,46 +23,47 @@ const AppButton: React.FC<Props> = ({
   fullWidth,
   radius,
   disabled,
+  isOutlined,
 }) => {
   return (
     <TouchableHighlight
-      underlayColor={disabled ? '' : shadeColor(color, -5)}
+      underlayColor={disabled || isOutlined ? '' : shadeColor(color, -5)}
       style={[
         styles.button,
         {
           paddingHorizontal: size === 'lg' ? 16 : size === 'md' ? 16 : 14,
-          paddingVertical: size === 'lg' ? 14 : size === 'md' ? 10 : 6,
+          paddingVertical: size === 'lg' ? 16 : size === 'md' ? 10 : 6,
           width: fullWidth ? '100%' : 'auto',
           backgroundColor: disabled ? colors.grey[10] : color,
           borderRadius: radius ? radius : 8,
+          borderColor: isOutlined ? color : 'none',
         },
+        isOutlined && styles.outlined,
       ]}
       onPress={disabled ? () => {} : onPress}
     >
-      <Text
+      <Typography
+        variant='button'
         style={[
-          styles.text,
           {
-            fontSize: size === 'lg' ? 18 : 'md' ? 14 : 10,
+            color: isOutlined ? color : 'white',
           },
         ]}
       >
         {title}
-      </Text>
+      </Typography>
     </TouchableHighlight>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
-    color: colors.white,
-    textTransform: 'capitalize',
-    fontWeight: 'bold',
+  outlined: {
+    borderWidth: 1,
+    backgroundColor: 'white',
   },
 });
 

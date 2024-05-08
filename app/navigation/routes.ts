@@ -4,4 +4,5 @@ export default Object.freeze({
   DUMMY_SCREEN: 'DummyScreen',
   PRODUCT_DETAILS: 'ProductDetails',
   CART_DETAILS: 'CartDetails',
+  ACCOUNT: 'Account',
 });
