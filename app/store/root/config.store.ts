@@ -5,6 +5,8 @@ import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
 
 export const AUTH_KEY = 'authApi';
+export const PRODUCT_KEY = 'productApi';
+export const CATEGORIES_KEY = 'categoriesApi';
 
 const makeStore = (): any => {
   const sagaMiddleware = createSagaMiddleware();

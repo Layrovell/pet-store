@@ -5,14 +5,10 @@ import { RootState } from '../root/config.store';
 
 interface AuthState {
   data: User | null; // Defining user data structure here
-  loading: boolean;
-  error: string;
 }
 
 const initialState: AuthState = {
   data: null,
-  loading: false,
-  error: '',
 };
 
 const authSlice = createSlice({

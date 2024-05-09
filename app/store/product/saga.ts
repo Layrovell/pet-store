@@ -1,24 +1,29 @@
 import { type SagaIterator } from '@redux-saga/core';
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { put, putResolve, select, take, takeEvery } from 'redux-saga/effects';
 
-import { StatusType } from '../../interface/product.interface';
-import { productsActions } from './slice';
+import { productActions } from './slice';
 import { getProductsApi } from '../../services/product/product.api';
+import { promiseActions } from '../promises/slice';
+import { PRODUCT_KEY } from '../root/config.store';
 
 // Worker Sagas
-export function* fetchProductsWorker(action: { payload: StatusType[] }): SagaIterator {
+export function* fetchProductsWorker(action: { payload: any }): SagaIterator {
   try {
-    yield put(productsActions.productIsLoading());
-    const data = yield call(getProductsApi, action.payload);
-    yield put(productsActions.productsSuccess(data.data));
+    yield putResolve(promiseActions.promiseAsync(PRODUCT_KEY, getProductsApi(action.payload)));
+    yield take(promiseActions.promiseResolved({ name: PRODUCT_KEY, data: {} }).type);
+
+    const data = yield select((state) => state.promise);
+    const products = data[PRODUCT_KEY]?.data;
+
+    yield put(productActions.add(products));
   } catch (e: unknown) {
-    yield put(productsActions.productsFailure(`Sorry, couldn't load the products!`));
+    console.error('Error in fetchProductsWorker:', e);
   }
 }
 
 // Watcher Saga
 function* productWatcherSaga(): SagaIterator {
-  yield takeEvery(productsActions.getProducts.type as any, fetchProductsWorker);
+  yield takeEvery(productActions.fetch, fetchProductsWorker);
 }
 
 export default productWatcherSaga;
