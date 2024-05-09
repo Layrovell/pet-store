@@ -20,8 +20,7 @@ const Screen: React.FC<Props> = ({ children, style }) => {
   const insets = useSafeAreaInsets();
 
   return (
-    // SafeAreaView: only work in iOS
-    <View style={[styles.screen, { paddingTop: insets.top + 16 }, style]}>
+    <View style={[styles.screen, style]}>
       {children}
     </View>
   );
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    paddingVertical: verticalScale(16),
+    paddingBottom: verticalScale(16),
     paddingHorizontal: horizontalScale(16),
   },
 });

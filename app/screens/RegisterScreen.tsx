@@ -91,7 +91,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                     <Stack spacing={1} style={{ flexDirection: 'row', justifyContent: 'center' }}>
                       <Typography variant='body2'>Have an account?</Typography>
                       <Link
-                        variant={'h5'}
+                        variant={'button'}
                         color={colors.secondary.main}
                         onPress={() => navigation.navigate(routes.LOGIN)}
                         text='Login'

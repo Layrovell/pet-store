@@ -1,15 +1,17 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import Screen from '../components/Screen';
 import colors from '../config/colors';
-import IconButton from '../components/IconButton';
 import routes from '../navigation/routes';
 import AppButton from '../components/Button';
-import Status from '../components/Status';
+import Typography from '../components/Typography';
 import Stack from '../components/Stack';
 import ImageCarousel from '../components/ImageCarousel';
 import Attributes from '../components/Attributes';
+import PlusMinusButton from '../components/PlusMinusButton';
+import Footer from '../components/Footer';
 
 interface Props {
   route: any;
@@ -17,69 +19,61 @@ interface Props {
 }
 
 const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
+  const [amount, setAmount] = useState(0);
+
   const item = route.params;
-  console.log('product:', item);
 
   return (
-    <Screen style={styles.screen}>
-      <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 100}>
+    <View style={styles.container}>
+      <ScrollView>
         <ImageCarousel items={item.images} />
 
-        <View style={styles.detailsContainer}>
-          <View style={styles.horizontal}>
-            <Text style={styles.title}>{item.name}</Text>
-            <IconButton name={'heart'} size={24} iconColor={colors.primary} />
-          </View>
+        <Screen>
+          <Stack spacing={4}>
+            <Typography variant='h5' style={{ textTransform: 'capitalize' }}>
+              {item.name}
+            </Typography>
+            <Typography variant='body2'>Category: {item.category || 'no category'}</Typography>
+            <Typography variant='body3'>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, aliquam? Itaque sint impedit ipsam sunt
+              quo in iste quaerat distinctio, repellendus ullam nesciunt. Impedit nemo ratione incidunt quam itaque
+              doloremque.
+            </Typography>
 
-          <Stack spacing={1}>
-            <Text style={styles.paragraph}>Category: {item.category}</Text>
-            <Status status={item.status} />
+            <Attributes data={item.attributes} />
           </Stack>
+        </Screen>
+      </ScrollView>
 
-          <View style={styles.horizontal}>
-            <Text style={styles.subTitle}>{item.price}</Text>
-            <AppButton
-              title='Buy'
-              onPress={() => {
-                navigation.navigate(routes.CART_DETAILS);
-              }}
-            />
-          </View>
+      <Footer>
+        <View style={styles.horizontal}>
+          <PlusMinusButton value={amount} setValue={setAmount} />
 
-          <Attributes data={item.attributes} />
+          <Typography variant='h2'>${item.price}</Typography>
         </View>
-      </KeyboardAvoidingView>
-    </Screen>
+
+        <AppButton
+          title='Add to Cart'
+          size='lg'
+          radius={30}
+          color={colors.secondary.main}
+          onPress={() => {
+            navigation.navigate(routes.CART_DETAILS);
+          }}
+        />
+      </Footer>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
+  container: {
     flex: 1,
-  },
-  detailsContainer: {
-    padding: 20,
   },
   horizontal: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  userContainer: {
-    marginVertical: 40,
-  },
-  subTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginVertical: 10,
-  },
-  paragraph: {},
-  title: {
-    fontSize: 24,
-    fontWeight: '500',
-    textTransform: 'capitalize',
-    color: colors.primary,
-    marginBottom: 16,
+    alignItems: 'baseline',
   },
 });
 

@@ -1,61 +1,36 @@
 import React from 'react';
-import { Text, View, StyleSheet, FlatList } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { KeyValuePair } from '../interface/common';
+import Typography from './Typography';
+import Stack from './Stack';
 
 interface Props {
   data: KeyValuePair;
 }
-
-const TableRow = ({ item }: any) => {
-  return (
-    <View style={styles.row}>
-      <Text style={styles.key}>{item.key}</Text>
-      <Text style={styles.value}>{item.value}</Text>
-    </View>
-  );
-};
 
 const Attributes: React.FC<Props> = ({ data }) => {
   if (!data) {
     return null;
   }
 
-  const data2 = Object.entries(data).map(([key, value]) => ({
-    key,
-    value,
-  }));
+  const dataToRender = Object.entries(data).map(([k, v]) => ({ k, v }));
 
   return (
-    <View style={styles.container}>
-      <FlatList
-      data={data2}
-      renderItem={({ item }) => <TableRow item={item} />}
-      keyExtractor={(item) => item.key} />
-    </View>
+    <Stack spacing={2}>
+      {dataToRender.map((item, index) => (
+        <Stack direction='row' key={index} spacing={2}>
+          <Typography variant='body2' style={styles.key}>{item.k}:</Typography>
+          <Typography variant='body2'>{item.v}</Typography>
+        </Stack>
+      ))}
+    </Stack>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
   key: {
-    fontWeight: 'bold',
-  },
-  value: {
-    textAlign: 'right',
+    textTransform: 'capitalize',
   },
 });
 

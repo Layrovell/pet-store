@@ -2,6 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 
 import { TypographyType } from '../interface/theme';
+import colors from '../config/colors';
 
 const variantStyles = {
   body1: {
@@ -10,12 +11,19 @@ const variantStyles = {
   },
   body2: {
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 16,
     fontFamily: 'PrimaryLight',
   },
-  button: {
-    fontSize: 14,
+  body3: {
+    fontSize: 12,
     lineHeight: 20,
+    fontFamily: 'PrimaryLight',
+    color: colors.grey[30],
+  },
+  button: {
+    fontSize: 16,
+    lineHeight: 20,
+    fontFamily: 'PrimaryBold',
   },
   h1: {
     fontSize: 38,
@@ -24,7 +32,7 @@ const variantStyles = {
   },
   h2: {
     fontSize: 32,
-    lineHeight: 32,
+    lineHeight: 36,
     fontFamily: 'PrimarySemiBold',
   },
   h3: {
@@ -34,9 +42,10 @@ const variantStyles = {
   h4: {
     fontSize: 22,
     lineHeight: 32,
+    fontFamily: 'PrimaryBold',
   },
   h5: {
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 24,
     fontFamily: 'PrimarySemiBold',
   },
@@ -54,7 +63,9 @@ interface Props {
 const Typography: React.FC<Props> = ({ children, variant = 'body1', color, textAlign, style }) => {
   const variantStyle = variantStyles[variant] || variantStyles.body1;
 
-  return <Text style={[variantStyle, { color, textAlign }, style]}>{children}</Text>;
+  return (
+    <Text style={[variantStyle, { color: color || (variantStyle as any)?.color, textAlign }, style]}>{children}</Text>
+  );
 };
 
 export default Typography;

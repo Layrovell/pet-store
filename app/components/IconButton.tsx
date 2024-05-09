@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import colors from '../config/colors';
 
 interface Props {
   onPress?: () => void;
@@ -11,23 +12,29 @@ interface Props {
   styles?: any;
 }
 
-const IconButton: React.FC<Props> = ({ onPress, styles, name, size = 40, backgroundColor, iconColor = '#fff' }) => {
+const IconButton: React.FC<Props> = ({
+  onPress,
+  styles,
+  name,
+  size = 40,
+  backgroundColor,
+  iconColor = colors.grey[90],
+}) => {
   return (
-    <View
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        backgroundColor: backgroundColor || '',
-        justifyContent: 'center',
-        alignItems: 'center',
-        ...styles,
-      }}
-    >
-      <TouchableOpacity onPress={onPress}>
-        <FontAwesome name={name} size={size} color={iconColor} />
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
+      <View
+        style={{
+          padding: 8,
+          borderRadius: 50,
+          backgroundColor: backgroundColor || '',
+          justifyContent: 'center',
+          alignItems: 'center',
+          ...styles,
+        }}
+      >
+        <MaterialIcons name={name} size={size} color={iconColor} />
+      </View>
+    </TouchableOpacity>
   );
 };
 

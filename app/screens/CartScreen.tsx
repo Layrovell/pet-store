@@ -1,87 +1,110 @@
 import React from 'react';
-import { Text, StyleSheet, FlatList, View, Image } from 'react-native';
+import { StyleSheet, FlatList, View, Image, TouchableHighlight } from 'react-native';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { RectButton } from 'react-native-gesture-handler';
+import { Feather } from '@expo/vector-icons';
+// components
+import Typography from '../components/Typography';
+import Stack from '../components/Stack';
+import AppButton from '../components/Button';
+import Footer from '../components/Footer';
+// hooks
+import useProductsService from '../services/product/service';
 
-import Screen from '../components/Screen';
+import { Product } from '../interface/product.interface';
 import colors from '../config/colors';
 
-const mockData = [
-  {
-    id: 0,
-    category: {
-      id: 0,
-      name: 'dog',
-    },
-    name: 'doggie',
-    photoUrls: [
-      'https://images.unsplash.com/photo-1450778869180-41d0601e046e?q=80&w=1586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      'https://images.unsplash.com/photo-1507146426996-ef05306b995a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      'https://images.unsplash.com/photo-1478029973231-f42d99fe5c20?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    ],
-    tags: [
-      {
-        id: 0,
-        name: 'dog111',
-      },
-    ],
-    status: 'available',
-  },
-  {
-    id: 1,
-    category: {
-      id: 1,
-      name: 'cat',
-    },
-    name: 'kitten',
-    photoUrls: [
-      'https://images.unsplash.com/photo-1450778869180-41d0601e046e?q=80&w=1586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      'https://images.unsplash.com/photo-1507146426996-ef05306b995a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      'https://images.unsplash.com/photo-1478029973231-f42d99fe5c20?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    ],
-    tags: [
-      {
-        id: 1,
-        name: 'string',
-      },
-    ],
-    status: 'available',
-  },
-];
+const ListItemDeleteAction = ({ onPress }: any) => {
+  return (
+    <RectButton style={styles.leftAction} onPress={onPress}>
+      <Feather name='trash-2' size={24} color='red' />
+    </RectButton>
+  );
+};
+
+interface CartItemProps {
+  item: Product;
+  onDelete: (id: number) => void;
+  onView: (id: number) => void;
+}
+
+const CartItem: React.FC<CartItemProps> = ({ item, onDelete, onView }) => {
+  return (
+    <View style={styles.itemContainer}>
+      <Swipeable
+        overshootRight={false}
+        renderRightActions={() => <ListItemDeleteAction onPress={() => onDelete(item.id)} />}
+      >
+        <TouchableHighlight underlayColor={colors.underlay} onPress={() => onView(item.id)}>
+          <View style={styles.item}>
+            <Image
+              style={styles.image}
+              source={{
+                uri: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?q=80&w=1586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+              }}
+            />
+            <View style={{ paddingVertical: 8, paddingHorizontal: 16 }}>
+              <View style={styles.container}>
+                <Typography variant='h5' style={{ textTransform: 'capitalize' }}>
+                  {item?.name}
+                </Typography>
+                <Typography variant='body2'>category</Typography>
+              </View>
+
+              <Typography variant='h5' color={colors.secondary.main}>
+                ${item.price}
+              </Typography>
+            </View>
+          </View>
+        </TouchableHighlight>
+      </Swipeable>
+    </View>
+  );
+};
 
 interface Props {}
 
 const CartScreen: React.FC<Props> = () => {
-  function renderMealItem(itemData: any) {
-    const item = itemData.item;
-    console.log('=== item:', item);
+  const { getProducts, products } = useProductsService();
 
-    return (
-      <View>
-        <View style={styles.item}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?q=80&w=1586&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            }}
-          />
-          <Text>text</Text>
-        </View>
-      </View>
-    );
-  }
+  const handleDeleteProduct = (id: number) => {
+    console.log('onDelete product with id:', id);
+  };
+
+  const handleViewProduct = (id: number) => {
+    console.log('view product with id:', id);
+  };
 
   return (
-    <Screen style={styles.container}>
-      <Text style={styles.header}>Your Cart</Text>
-
-      <View style={styles.listContainer}>
+    <View style={styles.container}>
+      <View style={[styles.container, { paddingHorizontal: 16 }]}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={mockData}
+          data={products?.slice(0, 5)}
           keyExtractor={(item) => `${item.id}`}
-          renderItem={renderMealItem}
+          renderItem={({ item }) => <CartItem item={item} onDelete={handleDeleteProduct} onView={handleViewProduct} />}
         />
       </View>
-    </Screen>
+
+      <Footer>
+        <Stack spacing={3}>
+          <View style={styles.summaryRow}>
+            <Typography variant='body3'>3 items</Typography>
+            <Typography variant='body3'>$38,97</Typography>
+          </View>
+          <View style={styles.summaryRow}>
+            <Typography variant='body3'>Tax</Typography>
+            <Typography variant='body3'>$1,99</Typography>
+          </View>
+          <View style={styles.summaryRow}>
+            <Typography variant='h5'>Totals</Typography>
+            <Typography variant='h4'>$36,98</Typography>
+          </View>
+        </Stack>
+
+        <AppButton title='Checkout' onPress={() => {}} color={colors.secondary.main} radius={30} size='lg' />
+      </Footer>
+    </View>
   );
 };
 
@@ -89,28 +112,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    fontSize: 22,
-    textAlign: 'center',
-    color: colors.secondary,
-    fontWeight: 'bold',
+  itemContainer: {
+    marginVertical: 8,
+    marginHorizontal: 2,
   },
-  listContainer: {
+  summaryRow: {
     flexDirection: 'row',
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 16,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   item: {
     flexDirection: 'row',
-    marginVertical: 8,
+    padding: 8,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.grey[10],
   },
   image: {
     width: 120,
     height: 120,
+    borderRadius: 16,
+  },
+  leftAction: {
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
+    marginLeft: 16,
+    backgroundColor: colors.background,
   },
 });
 
