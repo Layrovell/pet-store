@@ -22,7 +22,7 @@ const variantStyles = {
   },
   button: {
     fontSize: 16,
-    lineHeight: 20,
+    lineHeight: 24,
     fontFamily: 'PrimaryBold',
   },
   h1: {
