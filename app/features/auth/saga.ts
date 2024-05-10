@@ -9,8 +9,8 @@ import { authActions, authTypes } from './slice';
 import { loginApi, registerApi } from './api';
 import { User } from '../../interface/user.interface';
 import { AUTH_KEY } from '../../store/root/config.store';
-import { promiseAsync } from '../../store/promises/saga';
-import { promiseActions } from '../../store/promises/slice';
+import { promiseAsync } from '../promises/saga';
+import { promiseActions } from '../promises/slice';
 
 // Worker Sagas
 export function* loginWorker(action: any): SagaIterator {

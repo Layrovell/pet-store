@@ -3,7 +3,7 @@ import { put, putResolve, select, take, takeEvery } from 'redux-saga/effects';
 
 import { productActions } from './slice';
 import { getProductsApi } from '../../services/product/product.api';
-import { promiseActions } from '../promises/slice';
+import { promiseActions } from '../../features/promises/slice';
 import { PRODUCT_KEY } from '../root/config.store';
 
 // Worker Sagas
