@@ -12,6 +12,7 @@ import ImageCarousel from '../components/ImageCarousel';
 import Attributes from '../components/Attributes';
 import PlusMinusButton from '../components/PlusMinusButton';
 import Footer from '../components/Footer';
+import { getRandomImages } from '../api/mock/products';
 
 interface Props {
   route: any;
@@ -22,11 +23,12 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
   const [amount, setAmount] = useState(0);
 
   const item = route.params;
+  const imagesMock = getRandomImages();
 
   return (
     <View style={styles.container}>
       <ScrollView>
-        <ImageCarousel items={item.images} />
+        <ImageCarousel items={imagesMock} />
 
         <Screen>
           <Stack spacing={4}>

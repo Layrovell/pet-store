@@ -11,8 +11,8 @@ import ActionBar from '../components/ActionBar';
 import Banner from '../components/Banner';
 import Typography from '../components/Typography';
 import List from '../components/product/List';
-import useProductsService from '../features/product/service';
-import useCategoriesService from '../features/category/service';
+import useProductsService from '../controllers/product/service';
+import useCategoriesService from '../controllers/category/service';
 import colors from '../config/colors';
 
 interface Props {

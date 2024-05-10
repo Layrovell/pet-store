@@ -16,6 +16,8 @@ interface AuthServiceOperators {
 const useAuthService = (): Readonly<AuthServiceOperators> => {
   const dispatch = useAppDispatch();
 
+  // todo: images from disk: upload/get controllers
+
   return {
     login: useCallback((email, password) => {
       dispatch(authActions.login({ email, password }));
