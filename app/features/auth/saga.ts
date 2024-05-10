@@ -8,7 +8,7 @@ import { SECRET_KEY } from '@env';
 import { authActions, authTypes } from './slice';
 import { loginApi, registerApi } from './api';
 import { User } from '../../interface/user.interface';
-import { AUTH_KEY } from '../../store/root/config.store';
+import { AUTH_KEY } from '../../store/config.store';
 import { promiseAsync } from '../promises/saga';
 import { promiseActions } from '../promises/slice';
 

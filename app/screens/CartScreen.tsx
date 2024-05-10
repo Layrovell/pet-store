@@ -12,7 +12,7 @@ import Footer from '../components/Footer';
 
 import { Product } from '../interface/product.interface';
 import colors from '../config/colors';
-import useProductsService from '../services/product/product.service';
+import useProductsService from '../features/product/service';
 
 const ListItemDeleteAction = ({ onPress }: any) => {
   return (

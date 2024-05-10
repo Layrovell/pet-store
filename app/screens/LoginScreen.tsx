@@ -10,7 +10,7 @@ import { ActivityIndicator } from '../components';
 import useAuthService from '../features/auth/service';
 import Stack from '../components/Stack';
 import colors from '../config/colors';
-import { AUTH_KEY } from '../store/root/config.store';
+import { AUTH_KEY } from '../store/config.store';
 import usePromiseService from '../services/promise/service';
 import Typography from '../components/Typography';
 import Link from '../components/Link';

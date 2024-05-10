@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { User } from '../../interface/user.interface';
-import { RootState } from '../../store/root/config.store';
+import { RootState } from '../../store/config.store';
 
 interface AuthState {
   data: User | null; // Defining user data structure here

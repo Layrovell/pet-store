@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { getSelectApiData, selectApiError, selectIsLoading } from '../../features/promises/slice';
-import { useAppDispatch, useAppSelector } from '../../store/root/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
 interface PromiseServiceOperators {
   getIsLoading: (name: string) => boolean;
