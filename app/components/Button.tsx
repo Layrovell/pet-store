@@ -1,7 +1,6 @@
-import { StyleSheet, TouchableHighlight } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import colors from '../config/colors';
-import { shadeColor } from '../utils/color';
 import Typography from './Typography';
 import { TypographyType } from '../interface/theme';
 
@@ -17,10 +16,16 @@ interface Props {
   variant?: TypographyType;
 }
 
+const sizeStyles = {
+  sm: { paddingVertical: 6, paddingHorizontal: 12, fontSize: 14 },
+  md: { paddingVertical: 12, paddingHorizontal: 24, fontSize: 16 },
+  lg: { paddingVertical: 15, paddingHorizontal: 30, fontSize: 18 },
+};
+
 const AppButton: React.FC<Props> = ({
   title,
   onPress,
-  color = colors.primary,
+  color = colors.secondary.main,
   size = 'sm',
   fullWidth,
   radius,
@@ -28,46 +33,47 @@ const AppButton: React.FC<Props> = ({
   isOutlined,
   variant,
 }) => {
+  const styleProps = {
+    title,
+    color,
+    radius,
+    disabled,
+    isOutlined,
+    fullWidth,
+    size,
+  };
+
   return (
-    <TouchableHighlight
-      underlayColor={disabled || isOutlined ? '' : shadeColor(color, -5)}
-      style={[
-        styles.button,
-        {
-          paddingHorizontal: size === 'lg' ? 16 : size === 'md' ? 16 : 14,
-          paddingVertical: size === 'lg' ? 16 : size === 'md' ? 10 : 6,
-          width: fullWidth ? '100%' : 'auto',
-          backgroundColor: disabled ? colors.grey[10] : color,
-          borderRadius: radius ? radius : 8,
-          borderColor: isOutlined ? color : 'none',
-        },
-        isOutlined && styles.outlined,
-      ]}
+    <TouchableOpacity
+      activeOpacity={0.8}
+      disabled={disabled}
+      style={[styles(styleProps).button, sizeStyles[size] || sizeStyles.sm]}
       onPress={disabled ? () => {} : onPress}
     >
-      <Typography
-        variant={variant || 'button'}
-        style={[
-          {
-            color: isOutlined ? color : 'white',
-          },
-        ]}
-      >
+      <Typography variant={variant || 'button'} style={[styles(styleProps).text]}>
         {title}
       </Typography>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  outlined: {
-    borderWidth: 1,
-    backgroundColor: 'white',
-  },
-});
+const styles = (props: Partial<Props>) =>
+  StyleSheet.create({
+    button: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'flex-start',
+      borderRadius: props?.radius || 0,
+      backgroundColor: props?.disabled ? colors.grey[10] : props?.isOutlined ? 'transparent' : props?.color,
+      borderColor: props?.color,
+      borderWidth: props?.isOutlined ? 2 : 0,
+      width: props?.fullWidth ? '100%' : 'auto',
+      opacity: props?.disabled ? 0.8 : 1,
+    },
+    text: {
+      color: props?.isOutlined ? props?.color : '#fff',
+      fontSize: sizeStyles?.[props?.size!]?.fontSize,
+    },
+  });
 
 export default AppButton;

@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 
 import Screen from '../components/Screen';
 import colors from '../config/colors';
-import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms';
+import { FormField, SubmitButton, ErrorMessage } from '../components/forms';
 import { ActivityIndicator } from '../components';
 import useAuthService from '../controllers/auth/service';
 import usePromiseService from '../controllers/promises/service';
@@ -58,7 +58,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             initialValues={{ username: '', firstname: '', lastname: '', email: '', password: '' }}
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
-            style={{ flex: 1, justifyContent: 'space-between' }}
+            style={[styles.fullWidth, styles.between]}
           >
             {({ isValid }) => {
               return (
@@ -87,14 +87,12 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                     />
                   </Stack>
 
-                  <Stack spacing={6} style={{ flex: 1, justifyContent: 'flex-end' }}>
-                    <Stack spacing={1} style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                  <Stack spacing={6} style={[styles.fullWidth, styles.right]}>
+                    <Stack spacing={1} direction='row' style={styles.center}>
                       <Typography variant='body2'>Have an account?</Typography>
                       <Link
-                        variant={'button'}
-                        color={colors.secondary.main}
-                        onPress={() => navigation.navigate(routes.LOGIN)}
                         text='Login'
+                        onPress={() => navigation.navigate(routes.LOGIN)}
                       />
                     </Stack>
 
@@ -112,6 +110,20 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  fullWidth: {
+    flex: 1,
+  },
+  right: {
+    justifyContent: 'flex-end',
+  },
+  between: {
+    justifyContent: 'space-between',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'baseline',
+  },
+});
 
 export default RegisterScreen;

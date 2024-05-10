@@ -19,7 +19,7 @@ const WelcomeScreen: React.FC<Props> = ({ navigation }) => {
       <AppButton
         radius={30}
         size='lg'
-        color={colors.secondary.main}
+        fullWidth
         title='Get Started'
         onPress={() => navigation.navigate(routes.LOGIN)}
       />

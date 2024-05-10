@@ -102,7 +102,7 @@ const CartScreen: React.FC<Props> = () => {
           </View>
         </Stack>
 
-        <AppButton title='Checkout' onPress={() => {}} color={colors.secondary.main} radius={30} size='lg' />
+        <AppButton title='Checkout' onPress={() => {}} fullWidth radius={30} size='lg' />
       </Footer>
     </View>
   );

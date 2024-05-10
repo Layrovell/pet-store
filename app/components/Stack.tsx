@@ -14,7 +14,6 @@ const Stack: React.FC<Props> = ({ spacing, direction, style, children }) => {
       style={[
         {
           flexDirection: direction,
-          alignItems: direction ? 'center' : '',
           gap: spacing ? 4 * spacing : 0,
         },
         style,

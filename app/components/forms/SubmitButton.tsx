@@ -21,6 +21,7 @@ const SubmitButton: React.FC<Props> = ({ title, color = colors.secondary.main, d
       radius={30}
       size='lg'
       disabled={disabled}
+      fullWidth
     />
   )
 };

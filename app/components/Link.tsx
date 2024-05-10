@@ -11,9 +11,9 @@ interface Props {
   variant?: TypographyType;
 }
 
-const Link: React.FC<Props> = ({ text, onPress, variant, color = colors.primary }) => {
+const Link: React.FC<Props> = ({ text, onPress, variant = 'button', color = colors.secondary.main }) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
       <Typography variant={variant} color={color}>
         {text}
       </Typography>

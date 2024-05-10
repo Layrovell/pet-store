@@ -68,7 +68,7 @@ const SettingsScreen: React.FC<Props> = ({ navigation }) => {
       <AppButton
         radius={30}
         size='lg'
-        color={colors.secondary.main}
+        fullWidth
         title='Log Out'
         onPress={handleLogout}
         isOutlined

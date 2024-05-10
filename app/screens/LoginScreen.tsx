@@ -38,11 +38,11 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, minHeight: Dimensions.get('window').height - 80 }}
-      contentContainerStyle={{ flex: 1, flexShrink: 0 }}
+      style={[styles.fullWidth, { minHeight: Dimensions.get('window').height - 80 }]}
+      contentContainerStyle={[styles.fullWidth, { flexShrink: 0 }]}
     >
       <Screen>
-        <Stack spacing={6} style={{ flex: 1 }}>
+        <Stack spacing={6} style={styles.fullWidth}>
           <Stack spacing={2}>
             <Typography variant='h1'>Hello</Typography>
             <Typography variant='h1'>Welcome Back!</Typography>
@@ -52,10 +52,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           </Typography>
 
           <Formik
-            initialValues={{ email: 'eee@gmail.com', password: 'qwe123' }}
+            initialValues={{ email: 'qqq@gmail.com', password: 'qwe123' }}
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
-            style={{ flex: 1, justifyContent: 'space-between' }}
+            style={[styles.fullWidth, styles.between]}
           >
             {({ isValid }) => {
               return (
@@ -83,14 +83,12 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                     />
                   </Stack>
 
-                  <Stack spacing={6} style={{ flex: 1, justifyContent: 'flex-end' }}>
-                    <Stack spacing={1} style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                  <Stack spacing={6} style={[styles.fullWidth, styles.right]}>
+                    <Stack spacing={1} direction='row' style={styles.center}>
                       <Typography variant='body2'>Don’t have an account?</Typography>
                       <Link
-                        variant={'button'}
-                        color={colors.secondary.main}
-                        onPress={() => navigation.navigate(routes.REGISTER)}
                         text='Create Account'
+                        onPress={() => navigation.navigate(routes.REGISTER)}
                       />
                     </Stack>
 
@@ -108,6 +106,20 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  fullWidth: {
+    flex: 1,
+  },
+  right: {
+    justifyContent: 'flex-end',
+  },
+  between: {
+    justifyContent: 'space-between',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'baseline',
+  },
+});
 
 export default LoginScreen;
