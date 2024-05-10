@@ -12,7 +12,7 @@ import Footer from '../components/Footer';
 
 import { Product } from '../interface/product.interface';
 import colors from '../config/colors';
-import useProductsService from '../features/product/service';
+import useProductsService from '../controllers/product/service';
 
 const ListItemDeleteAction = ({ onPress }: any) => {
   return (
@@ -80,7 +80,7 @@ const CartScreen: React.FC<Props> = () => {
       <View style={[styles.container, { paddingHorizontal: 16 }]}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={products.content?.slice(0, 5)}
+          data={products?.content?.slice(0, 5)}
           keyExtractor={(item) => `${item.id}`}
           renderItem={({ item }) => <CartItem item={item} onDelete={handleDeleteProduct} onView={handleViewProduct} />}
         />

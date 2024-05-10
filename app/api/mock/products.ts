@@ -136,7 +136,7 @@ export const products = [
   },
 ];
 
-const getRandomImages = () => {
+export const getRandomImages = () => {
   const shuffled = imagesFullList.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, 5);
 };

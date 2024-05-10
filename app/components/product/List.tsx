@@ -4,6 +4,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import ListItem from './ListItem';
 import routes from '../../navigation/routes';
+import { getRandomImages } from '../../api/mock/products';
 
 interface Props {
   dataset: any[];
@@ -14,12 +15,14 @@ const numColumns = 2;
 const gap = 16;
 
 const List: React.FC<Props> = ({ dataset, navigation }) => {
+  const imagesMock = getRandomImages();
+
   function renderMealItem(itemData: any) {
     const item = itemData.item;
 
     return item ? (
       <ListItem
-        item={item}
+        item={{ ...item, images: imagesMock }}
         onPress={() => {
           navigation.navigate(routes.PRODUCT_DETAILS, item);
         }}

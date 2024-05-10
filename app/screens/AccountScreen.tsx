@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import Screen from '../components/Screen';
 import Typography from '../components/Typography';
 import colors from '../config/colors';
-import useAuthService from '../features/auth/service';
+import useAuthService from '../controllers/auth/service';
 import Stack from '../components/Stack';
 import { FormField, SubmitButton } from '../components/forms';
 

@@ -1,9 +1,9 @@
 import { all, fork } from 'redux-saga/effects';
 
-import authWatcherSaga from '../features/auth/saga';
-import productWatcherSaga from '../features/product/saga';
-import promiseWatcherSaga from '../features/promises/saga';
-import categoriesWatcherSaga from '../features/category/saga';
+import authWatcherSaga from '../controllers/auth/saga';
+import productWatcherSaga from '../controllers/product/saga';
+import promiseWatcherSaga from '../controllers/promises/saga';
+import categoriesWatcherSaga from '../controllers/category/saga';
 
 export default function* rootSaga() {
   yield all([
