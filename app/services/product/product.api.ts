@@ -1,14 +1,7 @@
 import axiosInstance from '../../api/axios';
-import { getMockedProducts } from '../../api/mock/products';
-import { StatusType } from '../../interface/product.interface';
 
-export const getProductsApi = (status: StatusType[]) => {
-  const products = getMockedProducts();
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ data: products });
-    }, 3000);
-  });
+export const getProductsApi = () => {
+  return axiosInstance.get(`/products`);
 };
 
 interface GetProductById {

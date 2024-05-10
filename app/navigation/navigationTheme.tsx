@@ -5,7 +5,7 @@ export default {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: colors.primary, // isn't apply to Back buttons
+    primary: colors.secondary.main, // isn't apply to Back buttons
     background: colors.white,
   },
 };

@@ -8,6 +8,9 @@ import ProductDetailsScreen from '../screens/ProductDetailsScreen';
 import CartScreen from '../screens/CartScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import AccountScreen from '../screens/AccountScreen';
+import colors from '../config/colors';
+
+const ICON_SIZE = 28;
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -25,7 +28,7 @@ const FeedNavigator = () => {
         ...TransitionPresets.ModalSlideFromBottomIOS,
       }}
     >
-      <Stack.Screen name='Best Sellers' component={DummyScreen} options={{ headerTitleAlign: 'center' }} />
+      <Stack.Screen name='Browse' component={DummyScreen} options={{ headerTitleAlign: 'center' }} />
       <Stack.Screen
         name='ProductDetails'
         options={{
@@ -62,15 +65,23 @@ const AppNavigator = () => {
         headerTitleAlign: 'center',
         headerShown: false,
         tabBarHideOnKeyboard: true,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: colors.background,
+          height: 80,
+          paddingBottom: 16,
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+        },
         // headerMode: 'screen',
         // ...TransitionPresets.ModalSlideFromBottomIOS,
       })}
     >
       <Tab.Screen
-        name='Browse'
+        name='Home'
         component={FeedNavigator}
         options={{
-          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='home' size={size} color={color} />,
+          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='home-variant' size={ICON_SIZE} color={color} />
         }}
       />
       <Tab.Screen
@@ -78,14 +89,14 @@ const AppNavigator = () => {
         component={CartScreen}
         options={({ navigation, route }) => ({
           headerShown: true,
-          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='plus-circle' size={size} color={color} />,
+          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='cart-outline' size={ICON_SIZE} color={color} />,
         })}
       />
       <Tab.Screen
         name='SettingsScreen'
         component={SettingsNavigator}
         options={{
-          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='account-settings' size={size} color={color} />,
+          tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='account-outline' size={ICON_SIZE} color={color} />
         }}
       />
     </Tab.Navigator>

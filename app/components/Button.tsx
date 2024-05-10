@@ -3,6 +3,7 @@ import { StyleSheet, TouchableHighlight } from 'react-native';
 import colors from '../config/colors';
 import { shadeColor } from '../utils/color';
 import Typography from './Typography';
+import { TypographyType } from '../interface/theme';
 
 interface Props {
   title: string;
@@ -13,6 +14,7 @@ interface Props {
   radius?: number;
   disabled?: boolean;
   isOutlined?: boolean;
+  variant?: TypographyType;
 }
 
 const AppButton: React.FC<Props> = ({
@@ -24,6 +26,7 @@ const AppButton: React.FC<Props> = ({
   radius,
   disabled,
   isOutlined,
+  variant,
 }) => {
   return (
     <TouchableHighlight
@@ -43,7 +46,7 @@ const AppButton: React.FC<Props> = ({
       onPress={disabled ? () => {} : onPress}
     >
       <Typography
-        variant='button'
+        variant={variant || 'button'}
         style={[
           {
             color: isOutlined ? color : 'white',
