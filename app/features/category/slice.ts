@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { RootState } from '../root/config.store';
+import { RootState } from '../../store/config.store';
 
 interface CategoriesState {
   data: {

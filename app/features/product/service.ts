@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
-import { useAppDispatch, useAppSelector } from '../../store/root/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Product } from '../../interface/product.interface';
-import { productActions, selectProducts } from '../../store/product/slice';
+import { productActions, selectProducts } from './slice';
 
 interface CategoriesServiceOperators {
   data: {

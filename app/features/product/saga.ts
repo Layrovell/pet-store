@@ -2,14 +2,14 @@ import { type SagaIterator } from '@redux-saga/core';
 import { put, putResolve, select, take, takeEvery } from 'redux-saga/effects';
 
 import { productActions } from './slice';
-import { getProductsApi } from '../../services/product/product.api';
+import { getProductsApi } from './api';
 import { promiseActions } from '../promises/slice';
-import { PRODUCT_KEY } from '../root/config.store';
+import { PRODUCT_KEY } from '../../store/config.store';
 
 // Worker Sagas
 export function* fetchProductsWorker(action: { payload: any }): SagaIterator {
   try {
-    yield putResolve(promiseActions.promiseAsync(PRODUCT_KEY, getProductsApi(action.payload)));
+    yield putResolve(promiseActions.promiseAsync(PRODUCT_KEY, getProductsApi()));
     yield take(promiseActions.promiseResolved({ name: PRODUCT_KEY, data: {} }).type);
 
     const data = yield select((state) => state.promise);

@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 
-import { useAppDispatch, useAppSelector } from '../../store/root/hooks';
-import { authActions, selectUser } from '../../store/auth/slice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { authActions, selectUser } from './slice';
 import { User } from '../../interface/user.interface';
-import { promiseActions } from '../../store/promises/slice';
-import { AUTH_KEY } from '../../store/root/config.store';
+import { promiseActions } from '../promises/slice';
+import { AUTH_KEY } from '../../store/config.store';
 
 interface AuthServiceOperators {
   login: (email: string, password: string) => any;

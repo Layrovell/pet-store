@@ -2,9 +2,9 @@ import { type SagaIterator } from '@redux-saga/core';
 import { put, putResolve, select, take, takeEvery } from 'redux-saga/effects';
 
 import { promiseActions } from '../promises/slice';
-import { CATEGORIES_KEY } from '../root/config.store';
-import { categoriesActions } from './category.slice';
-import { getCategoriesApi } from '../../services/category/category.api';
+import { categoriesActions } from './slice';
+import { getCategoriesApi } from './api';
+import { CATEGORIES_KEY } from '../../store/config.store';
 
 // Worker Sagas
 export function* fetchCategoriesWorker(action: { payload: any }): SagaIterator {
