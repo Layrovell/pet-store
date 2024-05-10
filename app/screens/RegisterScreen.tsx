@@ -8,7 +8,7 @@ import Screen from '../components/Screen';
 import colors from '../config/colors';
 import { FormField, SubmitButton, Form, ErrorMessage } from '../components/forms';
 import { ActivityIndicator } from '../components';
-import useAuthService from '../services/auth/service';
+import useAuthService from '../features/auth/service';
 import usePromiseService from '../services/promise/service';
 import { AUTH_KEY } from '../store/root/config.store';
 import Stack from '../components/Stack';

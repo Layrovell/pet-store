@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/root/hooks';
-import { authActions, selectUser } from '../../store/auth/slice';
+import { authActions, selectUser } from './slice';
 import { User } from '../../interface/user.interface';
 import { promiseActions } from '../../store/promises/slice';
 import { AUTH_KEY } from '../../store/root/config.store';

@@ -14,7 +14,7 @@ import navigationTheme from './app/navigation/navigationTheme';
 import { navigationRef } from './app/navigation/rootNavigation';
 import { store } from './app/store/root/config.store';
 import AppNavigator from './app/navigation/AppNavigator';
-import useAuthService from './app/services/auth/service';
+import useAuthService from './app/features/auth/service';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // Keep the splash screen visible while we fetch resources.

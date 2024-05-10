@@ -7,7 +7,7 @@ import { Formik } from 'formik';
 import Screen from '../components/Screen';
 import { FormField, SubmitButton, ErrorMessage } from '../components/forms';
 import { ActivityIndicator } from '../components';
-import useAuthService from '../services/auth/service';
+import useAuthService from '../features/auth/service';
 import Stack from '../components/Stack';
 import colors from '../config/colors';
 import { AUTH_KEY } from '../store/root/config.store';

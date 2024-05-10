@@ -8,7 +8,7 @@ import Typography from '../components/Typography';
 import Stack from '../components/Stack';
 import AppButton from '../components/Button';
 import colors from '../config/colors';
-import useAuthService from '../services/auth/service';
+import useAuthService from '../features/auth/service';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import routes from '../navigation/routes';
 
