@@ -16,6 +16,7 @@ export function* fetchCategoriesWorker(action: { payload: any }): SagaIterator {
     const categories = data[CATEGORIES_KEY]?.data;
 
     yield put(categoriesActions.add(categories));
+    yield put(promiseActions.clearPromise({ name: CATEGORIES_KEY }));
   } catch (e: unknown) {
     console.error('Error in fetchCategoriesWorker:', e);
   }

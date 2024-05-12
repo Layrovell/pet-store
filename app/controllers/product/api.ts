@@ -1,7 +1,16 @@
 import axiosInstance from '../../api/axios';
 
-export const getProductsApi = () => {
-  return axiosInstance.get(`/products`);
+export type GetProductsType = {
+  categoryId: number[];
+};
+
+export const getProductsApi = (params?: GetProductsType) => {
+  return axiosInstance.get(`/products`, {
+    params: params,
+    paramsSerializer: (params) => {
+      return `${params.categoryId ? params.categoryId.map((code: any) => `categoryId=${code}`).join('&') : ''}`;
+    },
+  });
 };
 
 interface GetProductById {

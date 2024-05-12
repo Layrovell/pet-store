@@ -1,19 +1,21 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { Animated, Button, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Animated, View } from 'react-native';
 
 import Screen from '../components/Screen';
 import Stack from '../components/Stack';
 import Link from '../components/Link';
-import AppButton from '../components/Button';
 import ActionBar from '../components/ActionBar';
 import Banner from '../components/Banner';
 import Typography from '../components/Typography';
 import List from '../components/product/List';
 import useProductsService from '../controllers/product/service';
 import useCategoriesService from '../controllers/category/service';
-import colors from '../config/colors';
+import usePromiseService from '../controllers/promises/service';
+import { PRODUCT_KEY } from '../store/config.store';
+import HorizontalNav from '../components/navigation/HorizontalNav';
+import { CategoryNavigationType, CategoryType } from '../interface/category';
+import { ActivityIndicator } from '../components';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -24,106 +26,99 @@ const catParams = {
 };
 
 const DummyScreen: React.FC<Props> = ({ navigation }) => {
-  useEffect(() => {
-    loadCategories(catParams);
-    loadProducts();
-  }, []);
-
   const { loadProducts, data: products } = useProductsService();
   const { loadCategories, data: categories } = useCategoriesService();
+  const { getIsLoading } = usePromiseService();
 
-  const [childCategories, serChildCategories] = useState<any[]>([]);
+  const productsIsLoading = getIsLoading(PRODUCT_KEY);
 
-  const topLevelCategories = useMemo(() => {
-    return categories?.content?.filter((c) => !c.parentId);
-  }, [categories?.content]);
-
-  const getChildCategories = useCallback((id: number) => {
-    if (!categories?.content.length) {
-      return;
+  function buildTreeView(arr: CategoryType[]) {
+    if (!arr?.length) {
+      return [];
     }
 
-    const res = categories.content.filter((c) => c.parentId === id);
+    const menu: { [key: number]: CategoryNavigationType } = {};
 
-    if (!res?.length) {
-      return;
+    arr.forEach((element) => {
+      if (!element.parentId) {
+        menu[element.id] = { ...element, children: [] };
+      }
+    });
+
+    arr
+      .filter((el) => el.parentId !== null)
+      .forEach((element) => {
+        const parent = menu[element.parentId as number];
+        parent.children.push(element);
+      });
+
+    return Object.values(menu);
+  }
+
+  const menuItems = useMemo(() => buildTreeView(categories?.content), [categories?.content?.length]);
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState(1);
+  const [parentId, setParentId] = useState(1);
+
+  useEffect(() => {
+    loadCategories(catParams);
+  }, []);
+
+  useEffect(() => {
+    const params: any = {
+      with_category_attributes: false,
+    };
+
+    if (parentId !== selectedCategoryId) {
+      params.categoryId = [selectedCategoryId];
+    } else {
+      params.categoryId = menuItems?.find((item) => item.id === parentId)?.children?.map((el) => el.id);
     }
 
-    serChildCategories(res);
-  }, [categories?.content]);
+    loadProducts(params);
+  }, [parentId, selectedCategoryId, menuItems?.length]);
 
   const scrollX = useRef(new Animated.Value(0)).current;
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const bannerTranslation = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [0, -100],
+    extrapolate: 'clamp',
+  });
 
   return (
     <Screen>
-      <Stack spacing={6}>
-        <Banner title='Royal Canin Adult Pomeraniann' subtitle='Get an interesting promo here, without conditions' />
+      <Stack spacing={6} style={{ flex: 1 }}>
+        <Animated.View style={{ transform: [{ translateY: bannerTranslation }] }}>
+          <Banner title='Royal Canin Adult Pomeraniann' subtitle='Get an interesting promo here, without conditions' />
+        </Animated.View>
 
         <ActionBar title='Categories'>
-          <Link text='View all' color={colors.secondary.main} onPress={() => {}} />
+          <Stack spacing={0}>
+            <Link text='Load products' variant='body1' onPress={loadProducts} />
+            <Link text='Load categories' variant='body1' onPress={() => loadCategories(catParams)} />
+          </Stack>
         </ActionBar>
 
         <Stack spacing={2}>
-          <Stack spacing={2} direction='row'>
-            {topLevelCategories?.map((c, idx) => (
-              <AppButton
-                key={idx}
-                variant={'body1'}
-                title={c.name}
-                onPress={() => getChildCategories(c.id)}
-                color={colors.secondary.main}
-                size='lg'
-                radius={16}
-              />
-            ))}
-          </Stack>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            onScroll={Animated.event(
-              [
-                {
-                  nativeEvent: {
-                    contentOffset: {
-                      x: scrollX,
-                    },
-                  },
-                },
-              ],
-              { useNativeDriver: false }
-            )}
-            scrollEventThrottle={200}
-            children={
-              <Stack direction='row' spacing={2}>
-                {childCategories?.map((c, idx) => (
-                  <AppButton
-                    key={idx}
-                    variant={'body1'}
-                    isOutlined
-                    title={c.name}
-                    onPress={() => getChildCategories(c.id)}
-                    color={colors.secondary.main}
-                    size='md'
-                    radius={16}
-                  />
-                ))}
-              </Stack>
-            }
+          <HorizontalNav
+            menuItems={menuItems}
+            onSelect={setSelectedCategoryId}
+            parentId={parentId}
+            setParentId={setParentId}
           />
         </Stack>
 
         <ActionBar title='Products'>
-          <Link text='View all' color={colors.secondary.main} onPress={() => {}} />
+          <Link text='View all' variant='body1' onPress={() => {}} />
         </ActionBar>
 
-        {products?.content.length ? (
-          <List dataset={products.content} navigation={navigation} />
-        ) : (
-          <View style={{ padding: 26, alignItems: 'center' }}>
-            <Typography>No products</Typography>
-          </View>
-        )}
+        <View style={{ flex: 1 }}>
+          {products?.content.length ? <List dataset={products.content} navigation={navigation} /> : null}
+          {productsIsLoading && <ActivityIndicator visible={productsIsLoading} />}
+          {!productsIsLoading && !products?.content.length && <Typography>No data</Typography>}
+        </View>
       </Stack>
     </Screen>
   );

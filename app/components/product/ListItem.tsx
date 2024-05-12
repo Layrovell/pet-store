@@ -21,7 +21,12 @@ const ListItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
       <View style={styles.innerContainer}>
         <Stack spacing={2}>
           <TouchableOpacity onPress={onPress}>
-            <Image source={{ uri: images[0] }} style={styles.image} />
+            <Image
+              source={{
+                uri: 'https://images.unsplash.com/photo-1491629378451-b740fed22d86?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+              }}
+              style={styles.image}
+            />
           </TouchableOpacity>
 
           <View>

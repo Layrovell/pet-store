@@ -9,13 +9,14 @@ import { PRODUCT_KEY } from '../../store/config.store';
 // Worker Sagas
 export function* fetchProductsWorker(action: { payload: any }): SagaIterator {
   try {
-    yield putResolve(promiseActions.promiseAsync(PRODUCT_KEY, getProductsApi()));
+    yield putResolve(promiseActions.promiseAsync(PRODUCT_KEY, getProductsApi(action.payload)));
     yield take(promiseActions.promiseResolved({ name: PRODUCT_KEY, data: {} }).type);
 
     const data = yield select((state) => state.promise);
     const products = data[PRODUCT_KEY]?.data;
 
     yield put(productActions.add(products));
+    yield put(promiseActions.clearPromise({ name: PRODUCT_KEY }));
   } catch (e: unknown) {
     console.error('Error in fetchProductsWorker:', e);
   }

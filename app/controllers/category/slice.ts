@@ -1,18 +1,17 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '../../store/config.store';
+import { CategoryType } from '../../interface/category';
 
 interface CategoriesState {
   data: {
-    content: any[];
+    content: CategoryType[];
     count?: number;
-  };
+  } | null;
 }
 
 const initialState: CategoriesState = {
-  data: {
-    content: [],
-  },
+  data: null,
 };
 
 const categoriesSlice = createSlice({

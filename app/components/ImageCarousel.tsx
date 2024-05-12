@@ -6,8 +6,6 @@ interface Props {
 }
 
 const ImageCarousel: React.FC<Props> = ({ items }) => {
-  console.log('items:', items);
-
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const { width: windowWidth } = useWindowDimensions();

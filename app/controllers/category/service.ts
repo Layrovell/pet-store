@@ -2,13 +2,15 @@ import { useCallback } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { categoriesActions, selectCategories } from './slice';
+import { CategoryType } from '../../interface/category';
+import { CategoryParams } from './api';
 
 interface ProductsServiceOperators {
   data: {
-    content: any[];
+    content: CategoryType[];
     count: number;
   };
-  loadCategories: (params?: any) => any;
+  loadCategories: (params?: CategoryParams) => void;
 }
 
 const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
