@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -23,7 +23,10 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
   const [amount, setAmount] = useState(0);
 
   const item = route.params;
-  const imagesMock = getRandomImages();
+
+  const imagesMock = useMemo(() => {
+    return getRandomImages();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -58,7 +61,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
           title='Add to Cart'
           size='lg'
           radius={30}
-          color={colors.secondary.main}
+          fullWidth
           onPress={() => {
             navigation.navigate(routes.CART_DETAILS);
           }}

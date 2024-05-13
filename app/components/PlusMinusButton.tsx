@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import IconButton from './IconButton';
 import Typography from './Typography';
@@ -14,17 +14,17 @@ interface Props {
 }
 
 const PlusMinusButton: React.FC<Props> = ({ value, setValue }) => {
-  const onPlus = () => {
-    if (value <= MAX_ITEMS) {
+  const onPlus = useCallback(() => {
+    if (value < MAX_ITEMS) {
       setValue(value + 1);
     }
-  };
+  }, [value]);
 
-  const onMinus = () => {
+  const onMinus = useCallback(() => {
     if (value > MIN_ITEMS) {
       setValue(value - 1);
     }
-  };
+  }, [value]);
 
   return (
     <Stack
@@ -35,6 +35,7 @@ const PlusMinusButton: React.FC<Props> = ({ value, setValue }) => {
         paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 24,
+        alignItems: 'center',
       }}
     >
       <IconButton onPress={onMinus} name={'horizontal-rule'} size={20} />
