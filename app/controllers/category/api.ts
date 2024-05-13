@@ -1,6 +1,6 @@
 import axiosInstance from '../../api/axios';
 
-interface CategoryParams {
+export type CategoryParams = {
   with_category_attributes?: boolean;
 }
 

@@ -3,22 +3,23 @@ import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Product } from '../../interface/product.interface';
 import { productActions, selectProducts } from './slice';
+import { GetProductsType } from './api';
 
-interface CategoriesServiceOperators {
+interface ProductServiceOperators {
   data: {
     content: Product[];
     count: number;
   };
-  loadProducts: (filters?: any) => any;
+  loadProducts: (params?: GetProductsType) => void;
 }
 
-const useProductsService = (): Readonly<CategoriesServiceOperators> => {
+const useProductsService = (): Readonly<ProductServiceOperators> => {
   const dispatch = useAppDispatch();
 
   return {
     data: useAppSelector(selectProducts),
-    loadProducts: useCallback((filters) => {
-      dispatch(productActions.fetch(filters));
+    loadProducts: useCallback((params) => {
+      dispatch(productActions.fetch(params));
     }, [dispatch]),
   };
 };

@@ -7,13 +7,11 @@ interface ProductState {
   data: {
     content: Product[];
     count?: number;
-  };
+  } | null;
 }
 
 const initialState: ProductState = {
-  data: {
-    content: [],
-  },
+  data: null,
 };
 
 const productSlice = createSlice({
@@ -30,7 +28,6 @@ const productSlice = createSlice({
 export const productActions = {
   fetch: productSlice.actions.fetch,
   add: productSlice.actions.add,
-  // addProducts: (payload: any) => ({ type: productTypes.fetchAll, payload }),
 };
 
 // Selectors

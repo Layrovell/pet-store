@@ -30,7 +30,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
       <ScrollView>
         <ImageCarousel items={imagesMock} />
 
-        <Screen>
+        <Screen style={{ minHeight: 300 }}>
           <Stack spacing={4}>
             <Typography variant='h5' style={{ textTransform: 'capitalize' }}>
               {item.name}

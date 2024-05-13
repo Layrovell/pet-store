@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '../config/colors';
 import Typography from './Typography';
 import { TypographyType } from '../interface/theme';
+import { firstUpperLetter } from '../utils/stringFormatter';
 
 interface Props {
   title: string;
@@ -51,7 +52,7 @@ const AppButton: React.FC<Props> = ({
       onPress={disabled ? () => {} : onPress}
     >
       <Typography variant={variant || 'button'} style={[styles(styleProps).text]}>
-        {title}
+        {firstUpperLetter(title)}
       </Typography>
     </TouchableOpacity>
   );
