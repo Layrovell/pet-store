@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import colors from '../../config/colors';
@@ -6,6 +6,7 @@ import { Product } from '../../interface/product.interface';
 import Typography from '../Typography';
 import IconButton from '../IconButton';
 import Stack from '../Stack';
+import useCartService from '../../controllers/cart/service';
 
 interface Props {
   item: Product;
@@ -15,6 +16,19 @@ interface Props {
 
 const ListItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
   const { name, images, status, price } = item;
+  const { data: cartData, add, remove } = useCartService();
+
+  useEffect(() => {
+  }, [cartData?.length]);
+
+  const handleAddProduct = (item: Product) => {
+    console.log('=== handleAddProduct ===');
+    add(item);
+  };
+
+  const handleRemoveProduct = (itemId: number) => {
+    remove(itemId);
+  };
 
   return (
     <View style={styles.item}>
@@ -35,7 +49,13 @@ const ListItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
               <Typography variant='h4' style={styles.price}>
                 ${price}
               </Typography>
-              <IconButton name={'add'} size={18} iconColor={colors.white} backgroundColor={colors.secondary.main} />
+              <IconButton
+                name={'add'}
+                size={18}
+                iconColor={colors.white}
+                backgroundColor={colors.secondary.main}
+                onPress={() => handleAddProduct(item)}
+              />
             </View>
           </View>
         </Stack>

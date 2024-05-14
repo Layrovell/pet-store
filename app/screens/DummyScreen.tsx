@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { Animated, View } from 'react-native';
+import { Animated, Button, View } from 'react-native';
 
 import Screen from '../components/Screen';
 import Stack from '../components/Stack';
@@ -17,6 +17,7 @@ import HorizontalNav from '../components/navigation/HorizontalNav';
 import { CategoryType } from '../interface/category';
 import { ActivityIndicator } from '../components';
 import { buildTreeView } from '../utils/arrayFormatter';
+import { useDispatch, useStore } from 'react-redux';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -35,6 +36,16 @@ const DummyScreen: React.FC<Props> = ({ navigation }) => {
   const { getIsLoading } = usePromiseService();
 
   const productsIsLoading = getIsLoading(PRODUCT_KEY);
+
+  const { getState, subscribe } = useStore();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscr = subscribe(() => {
+      console.log('=====getState', getState());
+    });
+    return () => unsubscr();
+  }, []);
 
   const menuItems = useMemo(() => buildTreeView(categories?.content), [categories?.content?.length]);
 
@@ -66,6 +77,8 @@ const DummyScreen: React.FC<Props> = ({ navigation }) => {
         <ActionBar title='Categories'>
           <Link text='Load categories' variant='body1' onPress={() => loadCategories(catParams)} />
         </ActionBar>
+
+        <Button title='get state' onPress={() => console.log('getState', getState())} />
 
         <Stack spacing={2}>
           <HorizontalNav

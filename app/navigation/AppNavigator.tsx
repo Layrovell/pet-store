@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
@@ -59,6 +59,8 @@ const SettingsNavigator = () => {
 };
 
 const AppNavigator = () => {
+  const [cartItemsLength] = useState(3);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -89,6 +91,10 @@ const AppNavigator = () => {
         component={CartScreen}
         options={({ navigation, route }) => ({
           headerShown: true,
+          tabBarBadge: cartItemsLength,
+          tabBarBadgeStyle: {
+            fontSize: 12,
+          },
           tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='cart-outline' size={ICON_SIZE} color={color} />,
         })}
       />

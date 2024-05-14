@@ -13,6 +13,7 @@ import Footer from '../components/Footer';
 import { Product } from '../interface/product.interface';
 import colors from '../config/colors';
 import useProductsService from '../controllers/product/service';
+import useCartService from '../controllers/cart/service';
 
 const ListItemDeleteAction = ({ onPress }: any) => {
   return (
@@ -67,8 +68,11 @@ interface Props {}
 const CartScreen: React.FC<Props> = () => {
   const { loadProducts, data: products } = useProductsService();
 
+  const { remove, data: cartData } = useCartService();
+
   const handleDeleteProduct = (id: number) => {
     console.log('onDelete product with id:', id);
+    remove(id);
   };
 
   const handleViewProduct = (id: number) => {
@@ -80,7 +84,7 @@ const CartScreen: React.FC<Props> = () => {
       <View style={[styles.container, { paddingHorizontal: 16 }]}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={products?.content?.slice(0, 5)}
+          data={cartData}
           keyExtractor={(item) => `${item.id}`}
           renderItem={({ item }) => <CartItem item={item} onDelete={handleDeleteProduct} onView={handleViewProduct} />}
         />
@@ -127,6 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.grey[10],
+    backgroundColor: '#fff',
   },
   image: {
     width: 120,

@@ -15,6 +15,8 @@ import { navigationRef } from './app/navigation/rootNavigation';
 import { store } from './app/store/config.store';
 import AppNavigator from './app/navigation/AppNavigator';
 import useAuthService from './app/controllers/auth/service';
+import { loadCartDataAsync } from './app/controllers/cart/slice';
+import useCartService from './app/controllers/cart/service';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // Keep the splash screen visible while we fetch resources.
@@ -38,6 +40,12 @@ export default function App() {
 
 const Routes = () => {
   const { data: user } = useAuthService();
+  const { loadCartData } = useCartService();
+  
+  useEffect(() => {
+    loadCartDataAsync();
+  }, [])
+
   const [loaded, error] = useFonts({
     SpaceMono: require('./app/assets/fonts/ZillaSlabHighlight-Regular.ttf'),
     PrimaryBold: require('./app/assets/fonts/Poppins-Bold.ttf'),

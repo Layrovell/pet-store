@@ -19,3 +19,7 @@ export interface Product {
   price: number;
   status: StatusType;
 }
+
+export type CartProduct = Product & {
+  quantity: number;
+}
