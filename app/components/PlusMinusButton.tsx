@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react';
 
-import IconButton from './IconButton';
 import Typography from './Typography';
 import Stack from './Stack';
-import colors from '../config/colors';
 import Button from './atoms/Button';
 import Icon from './atoms/Icon';
 

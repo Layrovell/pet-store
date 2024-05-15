@@ -6,8 +6,6 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import Screen from '../components/Screen';
 import Typography from '../components/Typography';
 import Stack from '../components/Stack';
-import AppButton from '../components/Button';
-import colors from '../config/colors';
 import useAuthService from '../controllers/auth/service';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import routes from '../navigation/routes';

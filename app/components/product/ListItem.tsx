@@ -4,7 +4,6 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import colors from '../../config/colors';
 import { Product } from '../../interface/product.interface';
 import Typography from '../Typography';
-import IconButton from '../IconButton';
 import Stack from '../Stack';
 import Button from '../atoms/Button';
 import Icon from '../atoms/Icon';
