@@ -1,7 +1,7 @@
 import React, { createRef, useState } from 'react';
 import { Text, View, StyleSheet, useWindowDimensions, TouchableOpacity, FlatList } from 'react-native';
 
-import { SVGIllustrationV1, SvgIllustrationV2, SvgIllustrationV3 } from '../theme/CustomIcons';
+import { SVGIllustrationV1, SvgIllustrationV2, SvgIllustrationV3 } from '../config/UI/CustomIcons';
 import Typography from './Typography';
 import colors from '../config/colors';
 

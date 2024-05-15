@@ -1,41 +1,30 @@
 import React from "react";
-import { DimensionValue, Text } from "react-native";
-import { useFormikContext } from 'formik';
+import { TextInputProps } from 'react-native';
+import { useFormikContext, useField } from 'formik';
 
-import TextInput from "../TextInput";
-import ErrorMessage from './ErrorMessage';
-import Stack from "../Stack";
+import Input from '../atoms/Input';
 
-interface Props {
+interface Props extends TextInputProps {
   name: string;
-  icon?: string;
-  placeholder?: string;
-  autoCapitalize?: string;
-  autoCorrect?: boolean;
-  keyboardType?: string;
-  textContentType?: string;
-  secureTextEntry?: boolean;
-  maxLength?: number;
-  numberOfLines?: number;
-  multiline?: boolean;
-  width?: DimensionValue;
-  hideIcon?: string;
+  label?: string;
+  size?: string;
+  accessoryRight?: (iconProps?: any) => React.ReactElement;
 }
 
-const AppFormField: React.FC<Props> = ({ name, width, ...otherProps }) => {
-  const { errors, touched, setFieldTouched, handleChange } = useFormikContext();  
+const AppFormField: React.FC<Props> = ({ name, ...otherProps }) => {
+  const { setFieldTouched, handleChange } = useFormikContext();
+
+  const [field, meta] = useField(name);
 
   return (
-    <Stack spacing={1}>
-      <TextInput
-        onBlur={() => setFieldTouched(name)}
-        onChangeText={handleChange(name)}
-        width={width}
-        {...otherProps}
-      />
-      {/* @ts-ignore */}
-      <ErrorMessage error={errors[name]} visible={touched[name]} />
-    </Stack>
+    <Input
+      // onBlur={() => setFieldTouched(name)}
+      onChangeText={handleChange(name)}
+      caption={meta.error}
+      status={meta.error ? 'danger' : 'basic'}
+      {...field}
+      {...otherProps}
+    />
   );
 };
 

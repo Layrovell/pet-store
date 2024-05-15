@@ -32,43 +32,27 @@ const AccountScreen: React.FC<Props> = () => {
           <View style={styles.userImageContainer}></View>
         </View>
 
-        <View style={{ marginTop: 60 }}>
-          <Typography variant='h4' textAlign='center'>
-            {user.username}
-          </Typography>
-        </View>
+        <Typography variant='h4' textAlign='center' style={{ marginTop: 60, marginBottom: 26 }}>
+          {user.username}
+        </Typography>
 
-        <Stack spacing={2} style={{ marginTop: 26 }}>
-          <Formik
-            initialValues={{ email: '', password: '' }}
-            onSubmit={handleSubmit}
-            validationSchema={validationSchema}
-            style={{ flex: 1, justifyContent: 'space-between' }}
-          >
-            {({ isValid }) => {
-              return (
-                <Stack spacing={4} style={{ marginBottom: 36 }}>
-                  <Stack spacing={2}>
-                    <Typography>First name</Typography>
-                    <FormField name='username' placeholder='User name' />
-                  </Stack>
-
-                  <Stack spacing={2}>
-                    <Typography>First name</Typography>
-                    <FormField name='firstname' placeholder='First name' />
-                  </Stack>
-
-                  <Stack spacing={2}>
-                    <Typography>First name</Typography>
-                    <FormField name='lastname' placeholder='Last name' />
-                  </Stack>
-
-                  <SubmitButton title={'Save changes'} disabled={!isValid} color={colors.secondary.main} />
-                </Stack>
-              );
-            }}
-          </Formik>
-        </Stack>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+          style={{ marginTop: 26 }}
+        >
+          {({ isValid }) => {
+            return (
+              <Stack spacing={4}>
+                <FormField label='Username' name='username' placeholder='User name' />
+                <FormField label='First name' name='firstname' placeholder='First name' />
+                <FormField label='Last name' name='lastname' placeholder='Last name' />
+                <SubmitButton title={'Save changes'} disabled={!isValid} />
+              </Stack>
+            );
+          }}
+        </Formik>
       </ScrollView>
     </Screen>
   );

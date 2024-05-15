@@ -11,6 +11,7 @@ import colors from '../config/colors';
 import useAuthService from '../controllers/auth/service';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import routes from '../navigation/routes';
+import Button from '../components/atoms/Button';
 
 const DATA = [
   {
@@ -65,14 +66,9 @@ const SettingsScreen: React.FC<Props> = ({ navigation }) => {
         }}
         renderSectionHeader={({ section: { title } }) => <Typography style={{ fontWeight: 700 }}>{title}</Typography>}
       />
-      <AppButton
-        radius={30}
-        size='lg'
-        fullWidth
-        title='Log Out'
-        onPress={handleLogout}
-        isOutlined
-      />
+      <Button size='large' appearance='outline' onPress={handleLogout}>
+        Log Out
+      </Button>
     </Screen>
   );
 };

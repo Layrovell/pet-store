@@ -1,23 +1,22 @@
 import React from 'react';
-import { StyleSheet, FlatList, View, Image, TouchableHighlight } from 'react-native';
+import { StyleSheet, FlatList, View, Image, TouchableOpacity } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { RectButton } from 'react-native-gesture-handler';
-import { Feather } from '@expo/vector-icons';
 // components
 import Typography from '../components/Typography';
 import Stack from '../components/Stack';
-import AppButton from '../components/Button';
 import Footer from '../components/Footer';
+import Button from '../components/atoms/Button';
 // hooks
-
 import { Product } from '../interface/product.interface';
 import colors from '../config/colors';
 import useProductsService from '../controllers/product/service';
+import Icon from '../components/atoms/Icon';
 
 const ListItemDeleteAction = ({ onPress }: any) => {
   return (
     <RectButton style={styles.leftAction} onPress={onPress}>
-      <Feather name='trash-2' size={24} color='red' />
+      <Icon name='trash-2-outline' animation='zoom' />
     </RectButton>
   );
 };
@@ -35,7 +34,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onDelete, onView }) => {
         overshootRight={false}
         renderRightActions={() => <ListItemDeleteAction onPress={() => onDelete(item.id)} />}
       >
-        <TouchableHighlight underlayColor={colors.underlay} onPress={() => onView(item.id)}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => onView(item.id)}>
           <View style={styles.item}>
             <Image
               style={styles.image}
@@ -56,7 +55,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onDelete, onView }) => {
               </Typography>
             </View>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </Swipeable>
     </View>
   );
@@ -102,7 +101,7 @@ const CartScreen: React.FC<Props> = () => {
           </View>
         </Stack>
 
-        <AppButton title='Checkout' onPress={() => {}} fullWidth radius={30} size='lg' />
+        <Button size='large' onPress={() => {}}>Checkout</Button>
       </Footer>
     </View>
   );
@@ -127,6 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.grey[10],
+    backgroundColor: '#fff',
   },
   image: {
     width: 120,
