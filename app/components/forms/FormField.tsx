@@ -22,7 +22,7 @@ const AppFormField: React.FC<Props> = ({ name, ...otherProps }) => {
       onChangeText={handleChange(name)}
       caption={meta.error}
       status={meta.error ? 'danger' : 'basic'}
-      {...field}
+      onBlur={() => setFieldTouched(name)}
       {...otherProps}
     />
   );

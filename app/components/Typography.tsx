@@ -18,7 +18,7 @@ const variantStyles = {
     fontSize: 12,
     lineHeight: 20,
     fontFamily: 'PrimaryLight',
-    color: colors.grey[30],
+    color: colors.grey[70],
   },
   button: {
     fontSize: 16,
@@ -42,7 +42,7 @@ const variantStyles = {
   h4: {
     fontSize: 22,
     lineHeight: 32,
-    fontFamily: 'PrimaryBold',
+    fontFamily: 'PrimaryMedium',
   },
   h5: {
     fontSize: 16,

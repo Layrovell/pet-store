@@ -4,34 +4,47 @@ import { RootState } from '../../store/config.store';
 import { CategoryType } from '../../interface/category';
 
 interface CategoriesState {
-  data: {
+  categories: {
     content: CategoryType[];
     count?: number;
   } | null;
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: CategoriesState = {
-  data: null,
+  categories: null,
+  loading: false,
+  error: null,
 };
 
 const categoriesSlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
-    fetch: (state, action: PayloadAction<any>) => {},
-    add: (state, action: PayloadAction<any>) => {
-      state.data = action.payload;
+    fetchCategoryRequest: (state, action: PayloadAction<{ page: number; size: number }>) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchCategoriesSuccess: (state, action: PayloadAction<{ content: CategoryType[], count: number }>) => {
+      state.loading = false;
+      state.categories = action.payload;
+    },
+    fetchCategoriesFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
     },
   },
 });
 
 export const categoriesActions = {
-  fetch: categoriesSlice.actions.fetch,
-  add: categoriesSlice.actions.add,
+  fetchCategoryRequest: categoriesSlice.actions.fetchCategoryRequest,
+  fetchCategoriesSuccess: categoriesSlice.actions.fetchCategoriesSuccess,
+  fetchCategoriesFailure: categoriesSlice.actions.fetchCategoriesFailure,
 };
 
 // Selectors
-export const selectCategories = (state: RootState): any => state.categories.data;
+export const selectCategories = (state: RootState): RootState => state.categories.categories;
 
 // Reducer
 export default categoriesSlice.reducer;

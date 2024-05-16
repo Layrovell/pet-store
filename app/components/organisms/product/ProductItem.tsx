@@ -1,12 +1,12 @@
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import colors from '../../config/colors';
-import { Product } from '../../interface/product.interface';
-import Typography from '../Typography';
-import Stack from '../Stack';
-import Button from '../atoms/Button';
-import Icon from '../atoms/Icon';
+import colors from '../../../config/colors';
+import Typography from '@components/Typography';
+import Stack from '@components/Stack';
+import Button from '@atoms/Button';
+import Icon from '@atoms/Icon';
+import { Product } from '@type/product.interface';
 
 interface Props {
   item: Product;
@@ -14,7 +14,7 @@ interface Props {
   onPressBuy: () => void;
 }
 
-const ListItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
+const ProductItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
   const { name, images, status, price } = item;
 
   return (
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListItem;
+export default ProductItem;

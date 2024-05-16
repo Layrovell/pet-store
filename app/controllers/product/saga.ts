@@ -1,30 +1,50 @@
 import { type SagaIterator } from '@redux-saga/core';
-import { put, putResolve, select, take, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { PayloadAction } from '@reduxjs/toolkit';
 
 import { productActions } from './slice';
-import { getProductsApi } from './api';
-import { promiseActions } from '../promises/slice';
-import { PRODUCT_KEY } from '../../store/config.store';
+import { getProductByCategoryIdApi, getProductByIdApi, getProductsApi } from './api';
 
 // Worker Sagas
-export function* fetchProductsWorker(action: { payload: any }): SagaIterator {
+function* fetchProducts(action: PayloadAction<{ page?: number; size?: number }>): SagaIterator {
   try {
-    yield putResolve(promiseActions.promiseAsync(PRODUCT_KEY, getProductsApi(action.payload)));
-    yield take(promiseActions.promiseResolved({ name: PRODUCT_KEY, data: {} }).type);
+    const response = yield call(getProductsApi, action.payload);
+    yield put(productActions.fetchProductsSuccess(response.data));
+  } catch (error) {
+    console.log('fetch products error:', error);
+    yield put(productActions.fetchProductsFailure('Failed to load products!'));
+  }
+}
 
-    const data = yield select((state) => state.promise);
-    const products = data[PRODUCT_KEY]?.data;
+function* fetchProductById(action: PayloadAction<{ id: number }>): SagaIterator {
+  const { id } = action.payload;
 
-    yield put(productActions.add(products));
-    yield put(promiseActions.clearPromise({ name: PRODUCT_KEY }));
-  } catch (e: unknown) {
-    console.error('Error in fetchProductsWorker:', e);
+  try {
+    const response = yield call(getProductByIdApi, id);
+    yield put(productActions.fetchProductByIdSuccess(response.data));
+  } catch (error) {
+    console.log('fetch product by id error:', error);
+    yield put(productActions.fetchProductByIdFailure(`Failed to load product by id ${id}!`));
+  }
+}
+
+function* fetchProductByCategoryId(action: PayloadAction<{ categoryId: number, page?: number; size?: number }>): SagaIterator {
+  const { categoryId } = action.payload;
+
+  try {
+    const response = yield call(getProductByCategoryIdApi, action.payload);
+    yield put(productActions.fetchProductsByCategoryIdSuccess(response.data));
+  } catch (error) {
+    console.log('fetch product by category id error:', error);
+    yield put(productActions.fetchProductsByCategoryIdFailure(`Failed to load product by id ${categoryId}!`));
   }
 }
 
 // Watcher Saga
 function* productWatcherSaga(): SagaIterator {
-  yield takeEvery(productActions.fetch, fetchProductsWorker);
+  yield takeLatest(productActions.fetchProductsRequest.type, fetchProducts);
+  yield takeLatest(productActions.fetchProductByIdRequest.type, fetchProductById);
+  yield takeLatest(productActions.fetchProductsByCategoryIdRequest.type, fetchProductByCategoryId);
 }
 
 export default productWatcherSaga;

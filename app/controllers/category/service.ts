@@ -10,16 +10,21 @@ interface ProductsServiceOperators {
     content: CategoryType[];
     count: number;
   };
-  loadCategories: (params?: CategoryParams) => void;
+  loadCategories: (params: { page: number, size: number }) => void;
+  loading: boolean;
+  error: string | null;
 }
 
 const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
   const dispatch = useAppDispatch();
+  const categoriesState = useAppSelector((state) => state.categories);
 
   return {
     data: useAppSelector(selectCategories),
-    loadCategories: useCallback((params) => {
-      dispatch(categoriesActions.fetch(params));
+    loading: categoriesState.loading,
+    error: categoriesState.error,
+    loadCategories: useCallback((params: { page: number, size: number }) => {
+      dispatch(categoriesActions.fetchCategoryRequest(params));
     }, [dispatch]),
   };
 };
