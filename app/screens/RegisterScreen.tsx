@@ -5,8 +5,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Formik } from 'formik';
 
 import Screen from '../components/Screen';
-import colors from '../config/colors';
-import { FormField, SubmitButton, ErrorMessage } from '../components/forms';
+import { SubmitButton } from '../components/forms';
 import { ActivityIndicator } from '../components';
 import useAuthService from '../controllers/auth/service';
 import usePromiseService from '../controllers/promises/service';
@@ -15,6 +14,7 @@ import Stack from '../components/Stack';
 import Typography from '../components/Typography';
 import Link from '../components/Link';
 import routes from '../navigation/routes';
+import RegisterForm from '../components/molecules/form/RegisterForm';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('User name'),
@@ -63,40 +63,15 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             {({ isValid }) => {
               return (
                 <>
-                  <Stack spacing={4} style={{ marginBottom: 36 }}>
-                    <ErrorMessage error={error} visible={!!error} />
-
-                    <FormField icon='person' name='username' placeholder='User name' />
-                    <FormField icon='drive-file-rename-outline' name='firstname' placeholder='First name' />
-                    <FormField icon='drive-file-rename-outline' name='lastname' placeholder='Last name' />
-                    <FormField
-                      autoCapitalize='none'
-                      icon='email'
-                      keyboardType='email-address'
-                      name='email'
-                      placeholder='Email'
-                      textContentType='emailAddress' // iOS
-                    />
-                    <FormField
-                      autoCapitalize='none'
-                      icon='lock'
-                      name='password'
-                      placeholder='Password'
-                      secureTextEntry
-                      textContentType='password'
-                    />
-                  </Stack>
+                  <RegisterForm formError={error} />
 
                   <Stack spacing={6} style={[styles.fullWidth, styles.right]}>
                     <Stack spacing={1} direction='row' style={styles.center}>
                       <Typography variant='body2'>Have an account?</Typography>
-                      <Link
-                        text='Login'
-                        onPress={() => navigation.navigate(routes.LOGIN)}
-                      />
+                      <Link text='Login' onPress={() => navigation.navigate(routes.LOGIN)} />
                     </Stack>
 
-                    <SubmitButton disabled={!isValid} title={'Register'} color={colors.secondary.main} />
+                    <SubmitButton disabled={!isValid} title={'Register'} />
                   </Stack>
                 </>
               );

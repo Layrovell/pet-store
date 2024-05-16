@@ -12,7 +12,7 @@ interface Props {
 const ActionBar: React.FC<Props> = ({ title, direction = 'row', children }) => {
   return (
     <Stack direction='row' style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-      <Typography variant='button'>{title}</Typography>
+      <Typography variant='h5'>{title}</Typography>
       {children}
     </Stack>
   );

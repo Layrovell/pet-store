@@ -1,29 +1,25 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 
-import AppButton from '../Button';
-import colors from '../../config/colors';
+import Button from '../atoms/Button';
 
 interface Props {
   title: string;
-  color?: string;
   disabled?: boolean;
 }
 
-const SubmitButton: React.FC<Props> = ({ title, color = colors.secondary.main, disabled }) => {
+const SubmitButton: React.FC<Props> = ({ title, disabled }) => {
   const { handleSubmit } = useFormikContext();
 
   return (
-    <AppButton
-      title={title}
-      onPress={handleSubmit}
-      color={color}
-      radius={30}
-      size='lg'
+    <Button
+      onPress={(ev: any) => handleSubmit(ev)}
       disabled={disabled}
-      fullWidth
-    />
-  )
+      size='large'
+    >
+      {title}
+    </Button>
+  );
 };
 
 export default SubmitButton;

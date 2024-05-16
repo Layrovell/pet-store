@@ -1,7 +1,18 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "baseUrl": "./app",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@atoms/*": ["components/atoms/*"],
+      "@molecules/*": ["components/molecules/*"],
+      "@organisms/*": ["components/organisms/*"],
+      "@templates/*": ["components/templates/*"],
+      "@pages/*": ["components/pages/*"],
+
+      "@type/*": ["interface/*"]
+    }
   },
   "module": "commonjs",
   "sourceMap": true

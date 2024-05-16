@@ -1,5 +1,6 @@
 // import Constants from 'expo-constants';
-import { Dimensions, View, StyleSheet } from 'react-native';
+import { Layout } from '@ui-kitten/components';
+import { Dimensions, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
@@ -20,9 +21,9 @@ const Screen: React.FC<Props> = ({ children, style }) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.screen, style]}>
+    <Layout style={[styles.screen, style]}>
       {children}
-    </View>
+    </Layout>
   );
 };
 

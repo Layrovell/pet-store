@@ -1,24 +1,33 @@
 import axiosInstance from '../../api/axios';
 
-export type GetProductsType = {
-  categoryId: number[];
+export type ProductsApiRequest = {
+  categoryId?: number;
+  page?: number;
+  size?: number;
 };
 
-export const getProductsApi = (params?: GetProductsType) => {
+export const getProductsApi = (params?: ProductsApiRequest) => {
   return axiosInstance.get(`/products`, {
     params: params,
-    paramsSerializer: (params) => {
-      return `${params.categoryId ? params.categoryId.map((code: any) => `categoryId=${code}`).join('&') : ''}`;
-    },
   });
 };
 
-interface GetProductById {
-  id: string;
-}
+export const getProductByIdApi = (id: number) => {
+  return axiosInstance.get(`/products/${id}`);
+};
 
-export const getProductByIdApi = ({ id }: GetProductById) => {
-  return axiosInstance.get(`/pet`, {
-    params: id,
+type ProductByCategoryIdRequest = {
+  categoryId: number;
+  withCategory?: boolean;
+  size?: number;
+  page?: number;
+  withAttributes?: boolean;
+};
+
+export const getProductByCategoryIdApi = (params: ProductByCategoryIdRequest) => {
+  const { categoryId, ...rest } = params;
+  
+  return axiosInstance.get(`/categories/${categoryId}/products`, {
+    params: rest,
   });
 };

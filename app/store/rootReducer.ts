@@ -1,13 +1,13 @@
 import { type Action, combineReducers } from '@reduxjs/toolkit';
 
 import authSlice from '../controllers/auth/slice';
-import productSlice from '../controllers/product/slice';
+import productsSlice from '../controllers/product/slice';
 import promiseSlice from '../controllers/promises/slice';
 import categoriesSlice from '../controllers/category/slice';
 
 const appReducer = combineReducers({
   auth: authSlice,
-  product: productSlice,
+  products: productsSlice,
   promise: promiseSlice,
   categories: categoriesSlice,
 });

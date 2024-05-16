@@ -1,90 +1,65 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React from 'react';
 import type { PropsWithChildren } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import Stack from '../Stack';
-import AppButton from '../Button';
+import Card from '../atoms/Card';
+import Typography from '../Typography';
+import { firstUpperLetter } from '../../utils/stringFormatter';
 
 interface Props {
   onScroll?: any;
   menuItems: any[];
   onSelect?: (v: number) => void;
-  parentId: number;
-  setParentId: (v: number) => void;
+  setParentId?: (v?: number) => void;
 }
 
-const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({
-  onScroll,
-  menuItems,
-  onSelect,
-  parentId,
-  setParentId,
-}) => {
-  const scrollViewRef = useRef<FlatList | null>(null);
-
-  const children = useMemo(() => {
-    if (!parentId || !menuItems?.length) {
-      return [];
-    }
-
-    const parent = menuItems.find((el) => el.id === parentId);
-
-    if (!parent?.children.length) {
-      return [];
-    }
-
-    return parent.children;
-  }, [parentId, menuItems?.length]);
-
-  useEffect(() => {
-    if (children?.length > 0) {
-      scrollViewRef?.current?.scrollToIndex({ index: 0, animated: true });
-    }
-  }, [children?.length]);
-
+const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ onScroll, menuItems, onSelect, setParentId }) => {
   return (
-    <Stack spacing={2}>
+    <Stack>
       <FlatList
         data={menuItems}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ gap: 6 }}
-        renderItem={({ item }) => (
-          <AppButton
-            variant={'body1'}
-            size='md'
-            title={item.name}
-            onPress={() => {
-              console.log('=== item.id:', item.id);
-              
-              setParentId(item.id);
-              onSelect && onSelect(item.id);
-            }}
-            radius={8}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-      />
-
-      <FlatList
-        data={children}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        ref={scrollViewRef}
-        contentContainerStyle={{ gap: 6 }}
-        renderItem={({ item }) => (
-          <AppButton
-            variant={'body1'}
-            isOutlined
-            title={item.name}
-            onPress={() => onSelect && onSelect(item.id)}
-            radius={8}
-          />
-        )}
+        contentContainerStyle={{ gap: 16 }}
+        renderItem={({ item }) => {
+          return (
+            <Stack spacing={2} style={styles.cardContainer}>
+              <Card
+                onPress={() => {
+                  if (['pet', 'accessories', 'food'].includes(item.name)) {
+                    setParentId && setParentId(item.id);
+                  } else {
+                    setParentId && setParentId();
+                  }
+                  onSelect && onSelect(item.id);
+                }}
+                style={styles.card}
+              >
+                <Typography variant='h5'>{item.name.charAt(0).toUpperCase()}</Typography>
+              </Card>
+              <Typography variant='body3'>{firstUpperLetter(item.name)}</Typography>
+            </Stack>
+          );
+        }}
         keyExtractor={(item) => item.id}
       />
     </Stack>
   );
 };
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    alignItems: 'center',
+    maxWidth: 74,
+  },
+  card: {
+    width: 74,
+    height: 74,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default HorizontalNav;
