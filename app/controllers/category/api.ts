@@ -11,3 +11,7 @@ export const getCategoriesApi = (params?: CategoryParams) => {
     params,
   });
 };
+
+export const getAttributesByCategoryIdApi = (categoryId: number) => {
+  return axiosInstance.get(`/categories/${categoryId}/attributes`);
+};

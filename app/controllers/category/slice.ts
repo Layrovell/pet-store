@@ -8,14 +8,28 @@ interface CategoriesState {
     content: CategoryType[];
     count?: number;
   } | null;
-  loading: boolean;
-  error: string | null;
+  attributes: any[];
+  loading: {
+    categories: boolean,
+    attributes: boolean,
+  };
+  error: {
+    categories: string | null,
+    attributes: string | null,
+  };
 }
 
 const initialState: CategoriesState = {
   categories: null,
-  loading: false,
-  error: null,
+  attributes: [],
+  loading: {
+    categories: false,
+    attributes: false,
+  },
+  error: {
+    categories: null,
+    attributes: null,
+  },
 };
 
 const categoriesSlice = createSlice({
@@ -23,16 +37,29 @@ const categoriesSlice = createSlice({
   initialState,
   reducers: {
     fetchCategoryRequest: (state, action: PayloadAction<{ page: number; size: number }>) => {
-      state.loading = true;
-      state.error = null;
+      state.loading.categories = true;
+      state.error.categories = null;
     },
     fetchCategoriesSuccess: (state, action: PayloadAction<{ content: CategoryType[], count: number }>) => {
-      state.loading = false;
+      state.loading.categories = false;
       state.categories = action.payload;
     },
     fetchCategoriesFailure: (state, action: PayloadAction<string>) => {
-      state.loading = false;
-      state.error = action.payload;
+      state.loading.categories = false;
+      state.error.categories = action.payload;
+    },
+    // attributes by category id
+    fetchAttributesByCategoryIdRequest: (state, action: PayloadAction<number>) => {
+      state.loading.attributes = true;
+      state.error.attributes = null;
+    },
+    fetchAttributesByCategoryIdSuccess: (state, action: PayloadAction<any[]>) => {
+      state.loading.attributes = false;
+      state.attributes = action.payload;
+    },
+    fetchAttributesByCategoryIdFailure: (state, action: PayloadAction<string>) => {
+      state.loading.attributes = false;
+      state.error.attributes = action.payload;
     },
   },
 });
@@ -41,6 +68,10 @@ export const categoriesActions = {
   fetchCategoryRequest: categoriesSlice.actions.fetchCategoryRequest,
   fetchCategoriesSuccess: categoriesSlice.actions.fetchCategoriesSuccess,
   fetchCategoriesFailure: categoriesSlice.actions.fetchCategoriesFailure,
+  // 
+  fetchAttributesByCategoryIdRequest: categoriesSlice.actions.fetchAttributesByCategoryIdRequest,
+  fetchAttributesByCategoryIdSuccess: categoriesSlice.actions.fetchAttributesByCategoryIdSuccess,
+  fetchAttributesByCategoryIdFailure: categoriesSlice.actions.fetchAttributesByCategoryIdFailure,
 };
 
 // Selectors

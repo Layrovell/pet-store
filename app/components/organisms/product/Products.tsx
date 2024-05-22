@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import ListItem from './ProductItem';
@@ -19,46 +19,39 @@ const numColumns = 2;
 const gap = 16;
 
 const Products: React.FC<Props> = ({ dataset, navigation, isLoading, error }) => {
-  if (isLoading) {
-    return (
-      <ActivityIndicator visible={isLoading} />
-    )
-  }
-  
-  function renderMealItem(itemData: any) {
-    const item = itemData.item;
-
-    return (
-      <ListItem
-        item={item}
-        onPress={() => {
-          navigation.navigate(routes.PRODUCT_DETAILS, item);
-        }}
-        onPressBuy={() => {
-          navigation.navigate(routes.CART_DETAILS);
-        }}
-      />
-    )
-  }
-
   if (error) {
-    return <Typography>{error}</Typography>
+    return <Typography>{error}</Typography>;
   }
 
   if (!isLoading && !dataset?.length) {
-    return <Typography>No data</Typography>
+    return <Typography>No data</Typography>;
   }
 
   return (
-    <FlatList
-      numColumns={numColumns}
-      showsVerticalScrollIndicator={false}
-      data={dataset}
-      keyExtractor={(item, idx) => `${item.id}-${idx}`}
-      renderItem={renderMealItem}
-      contentContainerStyle={{ gap }}
-      columnWrapperStyle={{ gap }}
-    />
+    <View>
+      {isLoading && <ActivityIndicator visible={isLoading} />}
+      <FlatList
+        numColumns={numColumns}
+        showsVerticalScrollIndicator={false}
+        data={dataset}
+        keyExtractor={(item, idx) => `${item.id}-${idx}`}
+        renderItem={({ item }) => {
+          return (
+            <ListItem
+              item={item}
+              onPress={() => {
+                navigation.navigate(routes.PRODUCT_DETAILS, item);
+              }}
+              onPressBuy={() => {
+                navigation.navigate(routes.CART_DETAILS);
+              }}
+            />
+          );
+        }}
+        contentContainerStyle={{ gap }}
+        columnWrapperStyle={{ gap }}
+      />
+    </View>
   );
 };
 

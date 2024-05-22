@@ -3,7 +3,7 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 
 import { categoriesActions } from './slice';
-import { getCategoriesApi } from './api';
+import { getAttributesByCategoryIdApi, getCategoriesApi } from './api';
 
 // Worker Sagas
 export function* fetchCategoriesWorker(action: PayloadAction<{ page?: number; size?: number }>): SagaIterator {
@@ -16,9 +16,20 @@ export function* fetchCategoriesWorker(action: PayloadAction<{ page?: number; si
   }
 }
 
+export function* fetchAttributesByCategoryIdsWorker(action: PayloadAction<number>): SagaIterator {
+  try {
+    const response = yield call(getAttributesByCategoryIdApi, action.payload);
+    yield put(categoriesActions.fetchAttributesByCategoryIdSuccess(response.data));
+  } catch (error: unknown) {
+    console.error('Error in fetchCategoriesWorker:', error);
+    yield put(categoriesActions.fetchAttributesByCategoryIdFailure('Failed to load categories!'))
+  }
+}
+
 // Watcher Saga
 function* categoriesWatcherSaga(): SagaIterator {
   yield takeEvery(categoriesActions.fetchCategoryRequest, fetchCategoriesWorker);
+  yield takeEvery(categoriesActions.fetchAttributesByCategoryIdRequest, fetchAttributesByCategoryIdsWorker);
 }
 
 export default categoriesWatcherSaga;

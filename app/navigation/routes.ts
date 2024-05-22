@@ -5,4 +5,5 @@ export default Object.freeze({
   PRODUCT_DETAILS: 'Product',
   CART_DETAILS: 'Cart',
   ACCOUNT: 'Account',
+  PRODUCTS: 'Products',
 });

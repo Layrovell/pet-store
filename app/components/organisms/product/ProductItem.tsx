@@ -14,7 +14,7 @@ interface Props {
   onPressBuy: () => void;
 }
 
-const ProductItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
+const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy }) => {
   const { name, images, status, price } = item;
 
   return (
@@ -43,7 +43,9 @@ const ProductItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
       </View>
     </View>
   );
-};
+}, (prevProps, nextProps) => {
+  return prevProps.item.id === nextProps.item.id;
+});
 
 const styles = StyleSheet.create({
   item: {

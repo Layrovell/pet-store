@@ -10,9 +10,17 @@ interface ProductsServiceOperators {
     content: CategoryType[];
     count: number;
   };
+  loading: {
+    categories: boolean,
+    attributes: boolean,
+  };
+  error: {
+    categories: string | null,
+    attributes: string | null,
+  };
+  attributes: any[];
   loadCategories: (params: { page: number, size: number }) => void;
-  loading: boolean;
-  error: string | null;
+  loadAttributesByCategory: (categoryId: number) => void;
 }
 
 const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
@@ -23,8 +31,12 @@ const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
     data: useAppSelector(selectCategories),
     loading: categoriesState.loading,
     error: categoriesState.error,
+    attributes: categoriesState.attributes,
     loadCategories: useCallback((params: { page: number, size: number }) => {
       dispatch(categoriesActions.fetchCategoryRequest(params));
+    }, [dispatch]),
+    loadAttributesByCategory: useCallback((categoryId: number) => {
+      dispatch(categoriesActions.fetchAttributesByCategoryIdRequest(categoryId));
     }, [dispatch]),
   };
 };

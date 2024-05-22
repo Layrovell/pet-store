@@ -1,3 +1,3 @@
 export type KeyValuePair = {
-  [key: string]: string;
+  [key: string]: string | number;
 }

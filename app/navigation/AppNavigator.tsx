@@ -15,16 +15,25 @@ import { Tabs } from '@type/navigation';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const HomeNavigator = () => {
+const HomeStack = () => {
   return (
     // mode ('modal'/'card') isn't working
     // modal - slide appears from bottom, card - from right
     <Stack.Navigator
       // mode='modal' // mode='card' - default
       screenOptions={{
+        //   headerStyle: {
+        //     backgroundColor: 'blue',
+        //     shadowOpacity: 0,
+        //   },
+        //   headerBackTitle: 'back',
+        //   headerBackTitleStyle: {
+        //     fontWeight: 'bold',
+        //   },
+        // }}
         headerTitleAlign: 'center',
         // animationEnabled: true,
-        gestureEnabled: true,
+        gestureEnabled: false,
         headerShown: true, // for mode="modal"
         header({ route }) {
           return <PageHeaderNavigation routeName={route.name} />;
@@ -47,13 +56,27 @@ const HomeNavigator = () => {
           },
         }}
       />
-      <Stack.Screen name='Products' component={ProductsScreen} />
+      <Stack.Screen
+        options={{
+          header({ route, navigation }) {
+            return (
+              <PageHeaderNavigation
+                search
+                leftAction={<Icon onPress={() => navigation.goBack()} name='arrow-back-outline' size={26} />}
+                rightAction={<Icon name='shopping-bag-outline' size={26} />}
+              />
+            );
+          },
+        }}
+        name='Products'
+        component={ProductsScreen}
+      />
       <Stack.Screen name='Product' options={{ headerTitle: 'Product' }} component={ProductDetailsScreen} />
     </Stack.Navigator>
   );
 };
 
-const CartNavigator = () => {
+const CartStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -68,14 +91,19 @@ const CartNavigator = () => {
   );
 };
 
-const SettingsNavigator = () => {
+const SettingsStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        gestureEnabled: true,
+        gestureEnabled: false,
         headerTitleAlign: 'center',
-        header({ route }) {
-          return <PageHeaderNavigation routeName={route.name} />;
+        header({ route, navigation }) {
+          return (
+            <PageHeaderNavigation
+              routeName={route.name}
+              leftAction={route.name !== 'Settings' ? <Icon onPress={() => navigation.goBack()} name='arrow-back-outline' size={26} /> : <></>}
+            />
+          );
         },
       }}
       initialRouteName='Settings'
@@ -86,9 +114,10 @@ const SettingsNavigator = () => {
   );
 };
 
-const AppNavigator = () => {
+const BottomTabStack = () => {
   return (
     <Tab.Navigator
+      initialRouteName='Home'
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
@@ -106,6 +135,8 @@ const AppNavigator = () => {
             iconName = focused ? 'shopping-cart' : 'shopping-cart-outline';
           } else if (route.name === Tabs.SETTINGS) {
             iconName = focused ? 'person' : 'person-outline';
+          } else {
+            iconName = focused ? 'behance' : 'behance-outline';
           }
 
           const iconColor = focused ? color : 'black';
@@ -114,11 +145,11 @@ const AppNavigator = () => {
         },
       })}
     >
-      <Tab.Screen name={Tabs.HOME} component={HomeNavigator} options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name={Tabs.CART} component={CartNavigator} options={{ tabBarLabel: 'Cart' }} />
-      <Tab.Screen name={Tabs.SETTINGS} component={SettingsNavigator} options={{ tabBarLabel: 'Settings' }} />
+      <Tab.Screen name={Tabs.HOME} component={HomeStack} options={{ tabBarLabel: 'Home Page' }} />
+      <Tab.Screen name={Tabs.CART} component={CartStack} options={{ tabBarLabel: 'Cart Page' }} />
+      <Tab.Screen name={Tabs.SETTINGS} component={SettingsStack} options={{ tabBarLabel: 'Account' }} />
     </Tab.Navigator>
   );
 };
 
-export default AppNavigator;
+export default BottomTabStack;
