@@ -6,13 +6,14 @@ interface Props {
   visible: boolean;
   width?: number;
   height?: number;
+  overlay?: boolean;
 }
 
-const AppActivityIndicator: React.FC<Props> = ({ visible = false, width = 120, height = 120 }) => {
+const AppActivityIndicator: React.FC<Props> = ({ visible = false, width = 120, height = 120, overlay = true }) => {
   if (!visible) return null;
 
   return (
-    <View style={styles.overlay}>
+    <View style={[styles.block, overlay && styles.overlay]}>
       <LottieView
         source={require('../assets/animations/loader.json')}
         style={{ width, height }}
@@ -26,8 +27,15 @@ const AppActivityIndicator: React.FC<Props> = ({ visible = false, width = 120, h
 const styles = StyleSheet.create({
   overlay: {
     height: '100%',
-    opacity: 0.6,
+    // opacity: 0.6,
     position: 'absolute',
+    // width: '100%',
+    // zIndex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  block: {
+    opacity: 0.6,
     width: '100%',
     zIndex: 1,
     justifyContent: 'center',

@@ -5,15 +5,14 @@ import { Product } from '../../interface/product.interface';
 import { productActions } from './slice';
 
 interface ProductServiceOperators {
-  data: {
-    content: Product[];
-    count: number;
-  } | null;
+  products: Product[];
+  count: number;
   loading: boolean;
   error: string | null;
   loadProducts: (params: { page: number, size: number }) => void;
   loadProductById: (id: number) => void;
   loadProductsByCategoryId: (params: { categoryId: number, page?: number, size?: number }) => void;
+  clearProducts: () => void;
 }
 
 const useProductsService = (): Readonly<ProductServiceOperators> => {
@@ -32,13 +31,19 @@ const useProductsService = (): Readonly<ProductServiceOperators> => {
     dispatch(productActions.fetchProductsByCategoryIdRequest(params));
   }, [dispatch]);
 
+  const clearProducts = useCallback(() => {
+    dispatch(productActions.clearProducts());
+  }, [dispatch]);
+
   return {
-    data: productsState.products,
+    products: productsState.products,
+    count: productsState.count,
     loading: productsState.loading,
     error: productsState.error,
     loadProducts,
     loadProductById,
     loadProductsByCategoryId,
+    clearProducts,
   };
 };
 

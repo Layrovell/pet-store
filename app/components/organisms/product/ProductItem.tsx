@@ -60,8 +60,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 200,
-    borderRadius: 6,
+    height: 100,
   },
   titleSection: {
     alignItems: 'center',

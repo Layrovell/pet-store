@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { DrawerLayout, DrawerPosition, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import useProductsService from 'controllers/product/service';
 import useCategoriesService from 'controllers/category/service';
 import ProductsFilters from '@organisms/product/ProductsFilters';
 import Products from '@organisms/product/Products';
@@ -23,21 +22,7 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   const drawerRef = useRef<DrawerLayout>(null);
   const categoryIdParam = route.params.categoryId;
 
-  const {
-    data: products,
-    error: errorProducts,
-    loading: isLoadingProducts,
-    loadProductsByCategoryId,
-  } = useProductsService();
   const { loadAttributesByCategory, attributes, loading: isLoadingAttrs } = useCategoriesService();
-
-  useEffect(() => {
-    const params = { page: 1, size: 20, categoryId: categoryIdParam };
-
-    if (categoryIdParam) {
-      loadProductsByCategoryId(params);
-    }
-  }, [loadProductsByCategoryId, categoryIdParam]);
 
   useEffect(() => {
     if (categoryIdParam) {
@@ -112,12 +97,10 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
         onDrawerClose={() => setIsDrawerOpen(false)}
         onDrawerOpen={() => setIsDrawerOpen(true)}
       >
-        <View style={{ margin: 16 }}>
+        <View style={{ margin: 16, flex: 1 }}>
           <Products
-            dataset={products?.content}
-            isLoading={isLoadingProducts}
-            error={errorProducts}
             navigation={navigation}
+            selectedCategoryId={categoryIdParam}
           />
         </View>
       </DrawerLayout>
