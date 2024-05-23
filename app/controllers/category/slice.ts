@@ -36,7 +36,7 @@ const categoriesSlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
-    fetchCategoryRequest: (state, action: PayloadAction<{ page: number; size: number }>) => {
+    fetchCategoryRequest: (state, action: PayloadAction<{ page: number; size: number } | undefined>) => {
       state.loading.categories = true;
       state.error.categories = null;
     },

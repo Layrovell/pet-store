@@ -19,7 +19,7 @@ interface ProductsServiceOperators {
     attributes: string | null,
   };
   attributes: any[];
-  loadCategories: (params: { page: number, size: number }) => void;
+  loadCategories: (params?: { page: number, size: number }) => void;
   loadAttributesByCategory: (categoryId: number) => void;
 }
 
@@ -32,7 +32,7 @@ const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
     loading: categoriesState.loading,
     error: categoriesState.error,
     attributes: categoriesState.attributes,
-    loadCategories: useCallback((params: { page: number, size: number }) => {
+    loadCategories: useCallback((params?: { page: number, size: number }) => {
       dispatch(categoriesActions.fetchCategoryRequest(params));
     }, [dispatch]),
     loadAttributesByCategory: useCallback((categoryId: number) => {

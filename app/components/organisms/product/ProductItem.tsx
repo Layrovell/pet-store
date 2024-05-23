@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View, ViewToken } from 'react-native';
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import colors from '../../../config/colors';
 import Typography from '@components/Typography';
@@ -12,13 +13,26 @@ interface Props {
   item: Product;
   onPress?: () => void;
   onPressBuy: () => void;
+  viewableItems: Animated.SharedValue<ViewToken[]>;
 }
 
-const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy }) => {
+const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, viewableItems }) => {
   const { name, images, status, price } = item;
+  
+  const rStyle = useAnimatedStyle(() => {
+    const isVisible = Boolean(
+      viewableItems.value
+        .filter((item: any) => item.isViewable)
+        .find((viewableItem: any) => viewableItem.item.id === item.id)
+    )
+
+    return {
+      opacity: withTiming(isVisible ? 0.6 : 1),
+    }
+  }, []);
 
   return (
-    <View style={styles.item}>
+    <Animated.View style={[styles.item, rStyle && rStyle]}>
       <View style={styles.innerContainer}>
         <Stack spacing={2}>
           <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
@@ -41,7 +55,7 @@ const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy }) 
           </View>
         </Stack>
       </View>
-    </View>
+    </Animated.View>
   );
 }, (prevProps, nextProps) => {
   return prevProps.item.id === nextProps.item.id;

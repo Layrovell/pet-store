@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { DrawerLayout, DrawerPosition, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
+import useProductsService from 'controllers/product/service';
 import useCategoriesService from 'controllers/category/service';
 import ProductsFilters from '@organisms/product/ProductsFilters';
 import Products from '@organisms/product/Products';
@@ -23,16 +24,20 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   const categoryIdParam = route.params.categoryId;
 
   const { loadAttributesByCategory, attributes, loading: isLoadingAttrs } = useCategoriesService();
+  const {
+    products: productsByCategory,
+    count,
+    error: errorProductsByCategory,
+    loading: loadingProductsByCategory,
+    loadProductsByCategoryId,
+    clearProducts,
+  } = useProductsService();
 
   useEffect(() => {
     if (categoryIdParam) {
       loadAttributesByCategory(categoryIdParam);
     }
   }, [loadAttributesByCategory, categoryIdParam]);
-
-  const handleDrawerSlide = (status: any) => {
-    console.log(status); // between 0 and 1
-  };
 
   const closeDrawer = useCallback(() => {
     drawerRef.current?.closeDrawer();
@@ -93,7 +98,6 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
         renderNavigationView={() => {
           return <ProductsFilters data={attributes} isLoading={isLoadingAttrs.attributes} />;
         }}
-        onDrawerSlide={handleDrawerSlide}
         onDrawerClose={() => setIsDrawerOpen(false)}
         onDrawerOpen={() => setIsDrawerOpen(true)}
       >
@@ -101,6 +105,12 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
           <Products
             navigation={navigation}
             selectedCategoryId={categoryIdParam}
+            dataset={productsByCategory}
+            loading={loadingProductsByCategory}
+            error={errorProductsByCategory}
+            loadData={loadProductsByCategoryId}
+            clearData={clearProducts}
+            count={count}
           />
         </View>
       </DrawerLayout>

@@ -7,6 +7,7 @@ import ActionBar from '@components/ActionBar';
 import Products from '@organisms/product/Products';
 import HorizontalNav from '@components/navigation/HorizontalNav';
 import useCategoriesService from '../controllers/category/service';
+import useProductsService from 'controllers/product/service';
 import Input from '@components/atoms/Input';
 import Icon from '@components/atoms/Icon';
 import Stack from '@components/Stack';
@@ -17,14 +18,20 @@ interface Props {
 }
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const { loadCategories, data: categories } = useCategoriesService();
+  const {
+    products: productsByCategory,
+    count,
+    error: errorProductsByCategory,
+    loading: loadingProductsByCategory,
+    loadProductsByCategoryId,
+    clearProducts,
+  } = useProductsService();
+
   const [selectedCategoryId, setSelectedCategoryId] = useState(4);
 
-
-  const { loadCategories, data: categories } = useCategoriesService();
-
   useEffect(() => {
-    const params = { page: 1, size: 20 };
-    loadCategories(params);
+    loadCategories();
   }, [loadCategories]);
 
   return (
@@ -47,6 +54,12 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         <Products
           navigation={navigation}
           selectedCategoryId={selectedCategoryId}
+          dataset={productsByCategory}
+          loading={loadingProductsByCategory}
+          error={errorProductsByCategory}
+          loadData={loadProductsByCategoryId}
+          clearData={clearProducts}
+          count={count}
         />
       </Stack>
     </Screen>
