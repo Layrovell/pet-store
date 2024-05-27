@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 
+import { ProductFiltersContextProvider } from 'context/ProductFiltersContext';
 import HomeScreen from '../screens/HomeScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScreen';
 import PageHeaderNavigation from '@components/organisms/pageNavigation';
@@ -69,8 +70,13 @@ const HomeStack = () => {
           },
         }}
         name='Products'
-        component={ProductsScreen}
-      />
+      >
+        {props => (
+          <ProductFiltersContextProvider>
+            <ProductsScreen {...props} />
+          </ProductFiltersContextProvider>
+        )}
+      </Stack.Screen>
       <Stack.Screen name='Product' options={{ headerTitle: 'Product' }} component={ProductDetailsScreen} />
     </Stack.Navigator>
   );

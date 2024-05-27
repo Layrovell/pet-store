@@ -12,12 +12,15 @@ import Input from '@components/atoms/Input';
 import Icon from '@components/atoms/Icon';
 import Stack from '@components/Stack';
 import routes from 'navigation/routes';
+import { ActivityIndicator } from '@components/index';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const [page, setPage] = useState(1);
+
   const { loadCategories, data: categories } = useCategoriesService();
   const {
     products: productsByCategory,
@@ -26,6 +29,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     loading: loadingProductsByCategory,
     loadProductsByCategoryId,
     clearProducts,
+    maxItemsPerPage,
   } = useProductsService();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(4);
@@ -34,12 +38,36 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     loadCategories();
   }, [loadCategories]);
 
+  useEffect(() => {
+    clearProducts();
+    setPage(1);
+
+    loadProductsByCategoryId({ page: 1, size: maxItemsPerPage, categoryId: selectedCategoryId });
+  }, [loadProductsByCategoryId, selectedCategoryId]);
+
+  const loadMoreProducts = () => {
+    if (page * maxItemsPerPage <= count) {
+      setPage((p) => p + 1);
+      loadProductsByCategoryId({ page: page + 1, size: maxItemsPerPage, categoryId: selectedCategoryId });
+    }
+  };
+
+  const renderFooter = () => {
+    if (page * maxItemsPerPage <= count) {
+      return <ActivityIndicator visible={true} overlay={false} />;
+    }
+  };
+
   return (
     <Screen>
       <Input placeholder='Search Product' accessoryLeft={<Icon name='search-outline' />} />
 
       <Stack spacing={4} style={{ flex: 1 }}>
-        <HorizontalNav menuItems={categories?.content.filter((el) => el.parentId)} onSelect={setSelectedCategoryId} />
+        <HorizontalNav
+          menuItems={categories?.content.filter((el) => el.parentId)}
+          onSelect={setSelectedCategoryId}
+          selectedItemId={selectedCategoryId}
+        />
 
         <ActionBar title='Recommended for You'>
           <Link
@@ -53,13 +81,11 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
         <Products
           navigation={navigation}
-          selectedCategoryId={selectedCategoryId}
           dataset={productsByCategory}
           loading={loadingProductsByCategory}
           error={errorProductsByCategory}
-          loadData={loadProductsByCategoryId}
-          clearData={clearProducts}
-          count={count}
+          loadMoreProducts={loadMoreProducts}
+          renderFooter={renderFooter}
         />
       </Stack>
     </Screen>

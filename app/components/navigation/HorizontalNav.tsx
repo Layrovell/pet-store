@@ -8,13 +8,12 @@ import Typography from '../Typography';
 import { firstUpperLetter } from '../../utils/stringFormatter';
 
 interface Props {
-  onScroll?: any;
   menuItems: any[];
   onSelect?: (v: number) => void;
-  setParentId?: (v?: number) => void;
+  selectedItemId: number;
 }
 
-const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ onScroll, menuItems, onSelect, setParentId }) => {
+const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ menuItems, onSelect, selectedItemId }) => {
   return (
     <Stack>
       <FlatList
@@ -27,14 +26,9 @@ const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ onScroll, menuItems
             <Stack spacing={2} style={styles.cardContainer}>
               <Card
                 onPress={() => {
-                  if (['pet', 'accessories', 'food'].includes(item.name)) {
-                    setParentId && setParentId(item.id);
-                  } else {
-                    setParentId && setParentId();
-                  }
                   onSelect && onSelect(item.id);
                 }}
-                style={styles.card}
+                style={[styles.card, item.id === selectedItemId && styles.activeCard]}
               >
                 <Typography variant='h5'>{item.name.charAt(0).toUpperCase()}</Typography>
               </Card>
@@ -60,6 +54,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  activeCard: {
+    backgroundColor: '#E5E4E3'
+  }
 });
 
 export default HorizontalNav;

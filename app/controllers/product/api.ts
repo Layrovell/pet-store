@@ -22,12 +22,13 @@ type ProductByCategoryIdRequest = {
   size?: number;
   page?: number;
   withAttributes?: boolean;
+  filters?: any[];
 };
 
 export const getProductByCategoryIdApi = (params: ProductByCategoryIdRequest) => {
-  const { categoryId, ...rest } = params;
+  const { categoryId, filters, ...rest } = params;
   
   return axiosInstance.get(`/categories/${categoryId}/products`, {
-    params: rest,
+    params: {...rest, filters: JSON.stringify(filters)}
   });
 };

@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { Product } from '../../interface/product.interface';
+import { FilteredProductsPayload, Product } from '../../interface/product.interface';
 
 interface ProductState {
   products: Product[];
@@ -49,7 +49,7 @@ const productsSlice = createSlice({
       state.error = action.payload;
     },
     // by category:
-    fetchProductsByCategoryIdRequest: (state, action: PayloadAction<{ categoryId: number; page?: number; size?: number }>) => {
+    fetchProductsByCategoryIdRequest: (state, action: PayloadAction<FilteredProductsPayload>) => {
       state.loading = true;
       state.error = null;
     },
@@ -64,6 +64,7 @@ const productsSlice = createSlice({
     },
     clearProducts: (state) => {
       state.products = [];
+      state.count = 0;
     }
   },
 });

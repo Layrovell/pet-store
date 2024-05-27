@@ -4,6 +4,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 import { productActions } from './slice';
 import { getProductByCategoryIdApi, getProductByIdApi, getProductsApi } from './api';
+import { FilteredProductsPayload } from '@type/product.interface';
 
 // Worker Sagas
 function* fetchProducts(action: PayloadAction<{ page?: number; size?: number }>): SagaIterator {
@@ -28,7 +29,7 @@ function* fetchProductById(action: PayloadAction<{ id: number }>): SagaIterator 
   }
 }
 
-function* fetchProductByCategoryId(action: PayloadAction<{ categoryId: number, page?: number; size?: number }>): SagaIterator {
+function* fetchProductByCategoryId(action: PayloadAction<FilteredProductsPayload>): SagaIterator {
   const { categoryId } = action.payload;
 
   try {

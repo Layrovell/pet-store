@@ -1,33 +1,24 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { View, FlatList, Text } from 'react-native';
+import React, { useMemo } from 'react';
+import { FlatList, Text } from 'react-native';
 
 import Checkbox from '@atoms/Checkbox';
 import { ActivityIndicator } from '@components/index';
 import CollapsibleItem from '../collapsible/CollapsibleItem';
 import Button from '@components/atoms/Button';
+import Stack from '@components/Stack';
+import Typography from '@components/Typography';
+import Icon from '@components/atoms/Icon';
+import useProductFiltration from 'hooks/useProductFiltration';
 
 interface Props {
   data?: any[];
   isLoading: boolean;
+  fetchWithFilters?: (options?: any) => void;
+  initialLoadProducts: () => void;
 }
 
-const ProductsFilters: React.FC<Props> = ({ data, isLoading }) => {
-  const [selectedValues, setSelectedValues] = useState<Record<string, string[]>>({});
-
-  const handleCheckboxChange = useCallback((category: string, value: string) => {
-    setSelectedValues((prev: any) => {
-      const newValues: any = { ...prev };
-      if (!newValues[category]) {
-        newValues[category] = [];
-      }
-      if (newValues[category].includes(value)) {
-        newValues[category] = newValues[category].filter((v: any) => v !== value);
-      } else {
-        newValues[category].push(value);
-      }
-      return newValues;
-    });
-  }, []);
+const ProductsFilters: React.FC<Props> = ({ data, isLoading, fetchWithFilters, initialLoadProducts }) => {
+  const { filterOptions, handleCheckboxChange, selectedAttributesValues, clearAllOptions } = useProductFiltration();
 
   const renderedCategories = useMemo(() => {
     return (
@@ -35,14 +26,14 @@ const ProductsFilters: React.FC<Props> = ({ data, isLoading }) => {
         data={data}
         renderItem={({ item, index }) => (
           <CollapsibleItem key={index} title={item.name}>
-            {item.values.map((value: any) => (
+            {item.values.map((value: string) => (
               <Checkbox
                 key={value}
-                checked={selectedValues[item.name]?.includes(value) || false}
+                checked={selectedAttributesValues[item.name]?.includes(value) || false}
                 onChange={() => handleCheckboxChange(item.name, value)}
                 style={{ marginVertical: 5 }}
               >
-                {value}
+                <Typography>{value}</Typography>
               </Checkbox>
             ))}
           </CollapsibleItem>
@@ -50,30 +41,31 @@ const ProductsFilters: React.FC<Props> = ({ data, isLoading }) => {
         keyExtractor={(item) => item.name}
       />
     );
-  }, [data, selectedValues, handleCheckboxChange]);
-
-  // console.log('=== selectedValues ===:', selectedValues);
+  }, [data, selectedAttributesValues, handleCheckboxChange]);
 
   return (
-    <View style={{ margin: 16 }}>
+    <Stack spacing={3} style={{ flex: 1, padding: 16 }}>
       {isLoading ? (
         <ActivityIndicator visible={isLoading} />
       ) : (
         <>
           {renderedCategories}
-          <Button>
-            <Text>load</Text>
-          </Button>
+          <Stack direction='row' spacing={4} style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            <Button style={{ flex: 1 }} onPress={() => fetchWithFilters && fetchWithFilters(filterOptions)}>
+              <Text>Apply filters</Text>
+            </Button>
+            <Icon
+              name='trash-outline'
+              onPress={() => {
+                clearAllOptions();
+                initialLoadProducts();
+              }}
+            />
+          </Stack>
         </>
       )}
-    </View>
+    </Stack>
   );
 };
-
-// const areEqual = (prevProps: Props, nextProps: Props) => {
-//   return prevProps.isLoading === nextProps.isLoading && prevProps.data === nextProps.data;
-// };
-
-// export default React.memo(ProductsFilters, areEqual);
 
 export default ProductsFilters;

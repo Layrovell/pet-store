@@ -19,3 +19,10 @@ export interface Product {
   price: number;
   status: StatusType;
 }
+
+export type FilteredProductsPayload = {
+  categoryId: number;
+  page?: number;
+  size?: number;
+  filters?: any;
+};

@@ -8,42 +8,25 @@ import { ActivityIndicator } from '@components/index';
 import Typography from '@components/Typography';
 import { Product } from '@type/product.interface';
 import { useSharedValue } from 'react-native-reanimated';
+import useProductFiltration from 'hooks/useProductFiltration';
 
 interface Props {
   navigation?: NavigationProp<ParamListBase>;
-  selectedCategoryId: number;
   dataset?: Product[];
   loading: boolean;
   error: string | null;
-  loadData: (v: any) => void;
-  clearData: () => void;
-  count: number;
+  loadMoreProducts: (v?: any) => void;
+  renderFooter?: any;
 }
 
-const Products: React.FC<Props> = ({
-  navigation,
-  selectedCategoryId,
-  dataset,
-  loading,
-  error,
-  loadData,
-  clearData,
-  count,
-}) => {
-  const [page, setPage] = useState(1);
-  const maxItemsPerPage = 10;
-
-  useEffect(() => {
-    clearData && clearData();
-    setPage(1);
-    loadData && loadData({ page: 1, size: maxItemsPerPage, categoryId: selectedCategoryId });
-  }, [loadData, selectedCategoryId]);
+const Products: React.FC<Props> = ({ navigation, dataset, loading, error, loadMoreProducts, renderFooter }) => {
+  const { filterOptions } = useProductFiltration();
 
   if (error) {
     return <Typography>{error}</Typography>;
   }
 
-  const viewableItems = useSharedValue<ViewToken[]>([])
+  const viewableItems = useSharedValue<ViewToken[]>([]);
 
   const renderItem = useCallback(
     ({ item }: any) => (
@@ -61,19 +44,6 @@ const Products: React.FC<Props> = ({
     []
   );
 
-  const loadMoreProducts = () => {
-    if (page * maxItemsPerPage <= count) {
-      setPage((p) => p + 1);
-      loadData && loadData({ page: page + 1, size: maxItemsPerPage, categoryId: selectedCategoryId });
-    }
-  };
-
-  const renderFooter = () => {
-    if (page * maxItemsPerPage <= count) {
-      return <ActivityIndicator visible={true} overlay={false} />;
-    }
-  };
-
   return (
     <View style={{ flex: 1 }}>
       {loading && !dataset?.length && <ActivityIndicator visible={loading} />}
@@ -88,13 +58,17 @@ const Products: React.FC<Props> = ({
           initialNumToRender={6}
           bounces
           onEndReached={() => {
-            loadMoreProducts();
+            loadMoreProducts(filterOptions);
           }}
           numColumns={2}
           ListFooterComponent={renderFooter}
-          ListEmptyComponent={<Typography>No data</Typography>}
+          ListEmptyComponent={
+            <View style={{ flex: 1 }}>
+              <Typography>No data</Typography>
+            </View>
+          }
           onViewableItemsChanged={({ viewableItems: vItems }) => {
-            viewableItems.value = vItems?.slice(0, 2)
+            viewableItems.value = vItems;
           }}
         />
       ) : null}

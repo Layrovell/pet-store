@@ -27,13 +27,14 @@ const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, vi
     )
 
     return {
-      opacity: withTiming(isVisible ? 0.6 : 1),
+      opacity: withTiming(isVisible ? 1 : 0.8),
+      transform: [{ scale: withTiming(isVisible ? 1 : 0.8) }]
     }
   }, []);
 
   return (
     <Animated.View style={[styles.item, rStyle && rStyle]}>
-      <View style={styles.innerContainer}>
+      <View>
         <Stack spacing={2}>
           <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
             <Image
@@ -44,7 +45,7 @@ const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, vi
             />
           </TouchableOpacity>
 
-          <View>
+          <View style={styles.innerContainer}>
             <Typography style={{ textTransform: 'capitalize' }}>{name}</Typography>
             <View style={styles.titleSection}>
               <Typography variant='h4' style={styles.price}>
@@ -65,12 +66,11 @@ const styles = StyleSheet.create({
   item: {
     flex: 0.5,
     backgroundColor: colors.background,
-    borderRadius: 16,
-    padding: 12,
-  },
-  innerContainer: {
     borderRadius: 8,
     overflow: 'hidden',
+  },
+  innerContainer: {
+    padding: 8,
   },
   image: {
     width: '100%',

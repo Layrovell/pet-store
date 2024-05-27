@@ -6,6 +6,8 @@ import { DrawerLayout, DrawerPosition, TouchableWithoutFeedback } from 'react-na
 import useProductsService from 'controllers/product/service';
 import useCategoriesService from 'controllers/category/service';
 import ProductsFilters from '@organisms/product/ProductsFilters';
+import useProductFiltration from 'hooks/useProductFiltration';
+import { ActivityIndicator } from '@components/index';
 import Products from '@organisms/product/Products';
 import Stack from '@components/Stack';
 import colors from 'config/colors';
@@ -19,6 +21,8 @@ interface Props {
 
 const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isPriceDescOrder, setIsPriceDescOrder] = useState(false);
+  const [page, setPage] = useState(1);
 
   const drawerRef = useRef<DrawerLayout>(null);
   const categoryIdParam = route.params.categoryId;
@@ -26,18 +30,31 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   const { loadAttributesByCategory, attributes, loading: isLoadingAttrs } = useCategoriesService();
   const {
     products: productsByCategory,
-    count,
+    count: productsCountByCategory,
     error: errorProductsByCategory,
     loading: loadingProductsByCategory,
     loadProductsByCategoryId,
     clearProducts,
+    maxItemsPerPage,
   } = useProductsService();
+  const { filterOptions } = useProductFiltration();
 
   useEffect(() => {
     if (categoryIdParam) {
       loadAttributesByCategory(categoryIdParam);
     }
   }, [loadAttributesByCategory, categoryIdParam]);
+
+  const initialLoadProducts = useCallback(() => {
+    clearProducts();
+    setPage(1);
+
+    loadProductsByCategoryId({ page: 1, size: maxItemsPerPage, categoryId: categoryIdParam });
+  }, []);
+
+  useEffect(() => {
+    initialLoadProducts();
+  }, [loadProductsByCategoryId, categoryIdParam]);
 
   const closeDrawer = useCallback(() => {
     drawerRef.current?.closeDrawer();
@@ -56,6 +73,31 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
     setIsDrawerOpen(!isDrawerOpen);
   }, [isDrawerOpen]);
 
+  const toggleSortFilter = () => {
+    setIsPriceDescOrder((prev) => !prev);
+  };
+
+  const fetchWithFilters = (options: any) => {
+    if (options?.length) {
+      clearProducts();
+      loadProductsByCategoryId({ page: 1, size: maxItemsPerPage, categoryId: categoryIdParam, filters: options });
+    }
+    closeDrawer();
+  }
+
+  const loadMoreProducts = useCallback(() => {
+    if (page * maxItemsPerPage <= productsCountByCategory) {
+      setPage((p) => p + 1);
+      loadProductsByCategoryId({ page: page + 1, size: maxItemsPerPage, categoryId: categoryIdParam, filters: filterOptions });
+    }
+  }, [filterOptions.length, productsCountByCategory, page]);
+
+  const renderFooter = () => {
+    if (page * maxItemsPerPage <= productsCountByCategory) {
+      return <ActivityIndicator visible={true} overlay={false} />;
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <Stack
@@ -68,13 +110,13 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
         }}
       >
         <TouchableWithoutFeedback
-          onPress={() => {}}
+          onPress={toggleSortFilter}
           style={[styles.button, { borderRightWidth: 1, borderRightColor: colors.grey[10] }]}
         >
           <Card style={{ borderColor: 'transparent' }}>
             <Stack spacing={1} style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Text>Sort</Text>
-              <Icon name='arrow-ios-downward-outline' />
+              <Icon name={isPriceDescOrder ? 'arrow-ios-downward-outline' : 'arrow-ios-upward-outline'} />
             </Stack>
           </Card>
         </TouchableWithoutFeedback>
@@ -96,7 +138,14 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
         drawerBackgroundColor='#fff'
         enableTrackpadTwoFingerGesture={true}
         renderNavigationView={() => {
-          return <ProductsFilters data={attributes} isLoading={isLoadingAttrs.attributes} />;
+          return (
+            <ProductsFilters
+              data={attributes}
+              isLoading={isLoadingAttrs.attributes}
+              fetchWithFilters={fetchWithFilters}
+              initialLoadProducts={initialLoadProducts}
+            />
+          );
         }}
         onDrawerClose={() => setIsDrawerOpen(false)}
         onDrawerOpen={() => setIsDrawerOpen(true)}
@@ -104,13 +153,11 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
         <View style={{ margin: 16, flex: 1 }}>
           <Products
             navigation={navigation}
-            selectedCategoryId={categoryIdParam}
             dataset={productsByCategory}
             loading={loadingProductsByCategory}
             error={errorProductsByCategory}
-            loadData={loadProductsByCategoryId}
-            clearData={clearProducts}
-            count={count}
+            loadMoreProducts={loadMoreProducts}
+            renderFooter={renderFooter}
           />
         </View>
       </DrawerLayout>

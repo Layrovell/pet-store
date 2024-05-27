@@ -1,8 +1,10 @@
 import { useCallback } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { Product } from '../../interface/product.interface';
+import { FilteredProductsPayload, Product } from '../../interface/product.interface';
 import { productActions } from './slice';
+
+const maxItemsPerPage = 10;
 
 interface ProductServiceOperators {
   products: Product[];
@@ -11,8 +13,9 @@ interface ProductServiceOperators {
   error: string | null;
   loadProducts: (params: { page: number, size: number }) => void;
   loadProductById: (id: number) => void;
-  loadProductsByCategoryId: (params: { categoryId: number, page?: number, size?: number }) => void;
+  loadProductsByCategoryId: (params: FilteredProductsPayload) => void;
   clearProducts: () => void;
+  maxItemsPerPage: number;
 }
 
 const useProductsService = (): Readonly<ProductServiceOperators> => {
@@ -27,7 +30,7 @@ const useProductsService = (): Readonly<ProductServiceOperators> => {
     dispatch(productActions.fetchProductByIdRequest({ id }));
   }, [dispatch]);
 
-  const loadProductsByCategoryId = useCallback((params: { page?: number, size?: number, categoryId: number }) => {
+  const loadProductsByCategoryId = useCallback((params: FilteredProductsPayload) => {
     dispatch(productActions.fetchProductsByCategoryIdRequest(params));
   }, [dispatch]);
 
@@ -44,6 +47,7 @@ const useProductsService = (): Readonly<ProductServiceOperators> => {
     loadProductById,
     loadProductsByCategoryId,
     clearProducts,
+    maxItemsPerPage,
   };
 };
 
