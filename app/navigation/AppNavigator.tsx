@@ -12,26 +12,15 @@ import AccountScreen from '../screens/AccountScreen';
 import Icon from '../components/atoms/Icon';
 import ProductsScreen from '../screens/ProductsScreen';
 import { Tabs } from '@type/navigation';
+import CatalogueScreen from 'screens/CatalogueScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
   return (
-    // mode ('modal'/'card') isn't working
-    // modal - slide appears from bottom, card - from right
     <Stack.Navigator
-      // mode='modal' // mode='card' - default
       screenOptions={{
-        //   headerStyle: {
-        //     backgroundColor: 'blue',
-        //     shadowOpacity: 0,
-        //   },
-        //   headerBackTitle: 'back',
-        //   headerBackTitleStyle: {
-        //     fontWeight: 'bold',
-        //   },
-        // }}
         headerTitleAlign: 'center',
         // animationEnabled: true,
         gestureEnabled: false,
@@ -46,7 +35,7 @@ const HomeStack = () => {
         name='Home'
         component={HomeScreen}
         options={{
-          header({ route }) {
+          header({ route, options, layout }) {
             return (
               <PageHeaderNavigation
                 routeName={route.name}
@@ -56,22 +45,42 @@ const HomeStack = () => {
             );
           },
         }}
-      />
-      <Stack.Screen
-        options={{
-          header({ route, navigation }) {
-            return (
-              <PageHeaderNavigation
-                search
-                leftAction={<Icon onPress={() => navigation.goBack()} name='arrow-back-outline' size={26} />}
-                rightAction={<Icon name='shopping-bag-outline' size={26} />}
-              />
-            );
-          },
-        }}
-        name='Products'
-      >
-        {props => (
+      ></Stack.Screen>
+      <Stack.Screen name='Catalogue' component={CatalogueScreen}></Stack.Screen>
+      <Stack.Screen name='Products'>
+        {(props) => (
+          <ProductFiltersContextProvider>
+            <ProductsScreen {...props} />
+          </ProductFiltersContextProvider>
+        )}
+      </Stack.Screen>
+      <Stack.Screen name='Product' options={{ headerTitle: 'Product' }} component={ProductDetailsScreen} />
+    </Stack.Navigator>
+  );
+};
+
+const CatalogueStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerTitleAlign: 'center',
+        gestureEnabled: false,
+        headerShown: true,
+        header({ route, options }) {
+          return (
+            <PageHeaderNavigation
+              routeName={options?.title || route.name}
+              leftAction={<Icon name='bell-outline' size={26} />}
+              rightAction={<Icon name='shopping-bag-outline' size={26} />}
+            />
+          );
+        },
+        ...TransitionPresets.ModalSlideFromBottomIOS,
+      }}
+    >
+      <Stack.Screen name='Catalogue' component={CatalogueScreen}></Stack.Screen>
+      <Stack.Screen name='Products'>
+        {(props) => (
           <ProductFiltersContextProvider>
             <ProductsScreen {...props} />
           </ProductFiltersContextProvider>
@@ -107,7 +116,13 @@ const SettingsStack = () => {
           return (
             <PageHeaderNavigation
               routeName={route.name}
-              leftAction={route.name !== 'Settings' ? <Icon onPress={() => navigation.goBack()} name='arrow-back-outline' size={26} /> : <></>}
+              leftAction={
+                route.name !== 'Settings' ? (
+                  <Icon onPress={() => navigation.goBack()} name='arrow-back-outline' size={26} />
+                ) : (
+                  <></>
+                )
+              }
             />
           );
         },
@@ -142,7 +157,7 @@ const BottomTabStack = () => {
           } else if (route.name === Tabs.SETTINGS) {
             iconName = focused ? 'person' : 'person-outline';
           } else {
-            iconName = focused ? 'behance' : 'behance-outline';
+            iconName = focused ? 'menu-2-outline' : 'menu-2-outline';
           }
 
           const iconColor = focused ? color : 'black';
@@ -152,6 +167,7 @@ const BottomTabStack = () => {
       })}
     >
       <Tab.Screen name={Tabs.HOME} component={HomeStack} options={{ tabBarLabel: 'Home Page' }} />
+      <Tab.Screen name={Tabs.CATALOGUE} component={CatalogueStack} options={{ tabBarLabel: 'Catalogue' }} />
       <Tab.Screen name={Tabs.CART} component={CartStack} options={{ tabBarLabel: 'Cart Page' }} />
       <Tab.Screen name={Tabs.SETTINGS} component={SettingsStack} options={{ tabBarLabel: 'Account' }} />
     </Tab.Navigator>

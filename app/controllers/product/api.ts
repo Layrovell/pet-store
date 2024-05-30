@@ -23,12 +23,21 @@ type ProductByCategoryIdRequest = {
   page?: number;
   withAttributes?: boolean;
   filters?: any[];
+  sort_by?: {
+    id: string;
+    desc: boolean;
+  };
 };
 
 export const getProductByCategoryIdApi = (params: ProductByCategoryIdRequest) => {
-  const { categoryId, filters, ...rest } = params;
-  
+  const { categoryId, filters, sort_by, ...rest } = params;
+
   return axiosInstance.get(`/categories/${categoryId}/products`, {
-    params: {...rest, filters: JSON.stringify(filters)}
+    params: {
+      ...rest,
+      filters: JSON.stringify(filters),
+      sort_by: JSON.stringify(sort_by),
+      'with-attributes': true,
+    },
   });
 };

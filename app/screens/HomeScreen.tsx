@@ -4,7 +4,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import Screen from '@components/Screen';
 import Link from '@components/Link';
 import ActionBar from '@components/ActionBar';
-import Products from '@organisms/product/Products';
+// import Products from '@organisms/product/Products';
 import HorizontalNav from '@components/navigation/HorizontalNav';
 import useCategoriesService from '../controllers/category/service';
 import useProductsService from 'controllers/product/service';
@@ -13,6 +13,8 @@ import Icon from '@components/atoms/Icon';
 import Stack from '@components/Stack';
 import routes from 'navigation/routes';
 import { ActivityIndicator } from '@components/index';
+import ProductsList from '@components/organisms/product/ProductsList';
+import Button from '@atoms/Button';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -23,11 +25,11 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   const { loadCategories, data: categories } = useCategoriesService();
   const {
-    products: productsByCategory,
+    products,
     count,
-    error: errorProductsByCategory,
-    loading: loadingProductsByCategory,
-    loadProductsByCategoryId,
+    error: errorProduct,
+    loading: loadingProducts,
+    loadProducts,
     clearProducts,
     maxItemsPerPage,
   } = useProductsService();
@@ -42,13 +44,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     clearProducts();
     setPage(1);
 
-    loadProductsByCategoryId({ page: 1, size: maxItemsPerPage, categoryId: selectedCategoryId });
-  }, [loadProductsByCategoryId, selectedCategoryId]);
+    loadProducts({ page: 1, size: maxItemsPerPage });
+  }, [loadProducts]);
 
   const loadMoreProducts = () => {
     if (page * maxItemsPerPage <= count) {
       setPage((p) => p + 1);
-      loadProductsByCategoryId({ page: page + 1, size: maxItemsPerPage, categoryId: selectedCategoryId });
+      loadProducts({ page: page + 1, size: maxItemsPerPage });
     }
   };
 
@@ -64,26 +66,28 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
       <Stack spacing={4} style={{ flex: 1 }}>
         <HorizontalNav
-          menuItems={categories?.content.filter((el) => el.parentId)}
+          menuItems={categories?.content}
           onSelect={setSelectedCategoryId}
           selectedItemId={selectedCategoryId}
         />
 
-        <ActionBar title='Recommended for You'>
-          <Link
+        <Button onPress={() => navigation?.navigate(routes.CATALOGUE)}>Catalogue</Button>
+
+        <ActionBar title='New arrivals' />
+          {/* <Link
             text='See more'
             variant='body1'
             onPress={() => {
               navigation.navigate(routes.PRODUCTS, { categoryId: selectedCategoryId });
             }}
-          />
-        </ActionBar>
+          /> */}
+        {/* </ActionBar> */}
 
-        <Products
+        <ProductsList
           navigation={navigation}
-          dataset={productsByCategory}
-          loading={loadingProductsByCategory}
-          error={errorProductsByCategory}
+          dataset={products}
+          loading={loadingProducts}
+          error={errorProduct}
           loadMoreProducts={loadMoreProducts}
           renderFooter={renderFooter}
         />

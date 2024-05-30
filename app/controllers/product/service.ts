@@ -31,6 +31,8 @@ const useProductsService = (): Readonly<ProductServiceOperators> => {
   }, [dispatch]);
 
   const loadProductsByCategoryId = useCallback((params: FilteredProductsPayload) => {
+    console.log('params:', params);
+    
     dispatch(productActions.fetchProductsByCategoryIdRequest(params));
   }, [dispatch]);
 

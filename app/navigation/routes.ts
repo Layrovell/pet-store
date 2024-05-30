@@ -6,4 +6,5 @@ export default Object.freeze({
   CART_DETAILS: 'Cart',
   ACCOUNT: 'Account',
   PRODUCTS: 'Products',
+  CATALOGUE: 'Catalogue'
 });

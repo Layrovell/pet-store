@@ -19,8 +19,10 @@ interface ProductsServiceOperators {
     attributes: string | null,
   };
   attributes: any[];
+  categoryById: CategoryType,
   loadCategories: (params?: { page: number, size: number }) => void;
   loadAttributesByCategory: (categoryId: number) => void;
+  loadCategoryById: (categoryId: number) => void;
 }
 
 const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
@@ -32,11 +34,15 @@ const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
     loading: categoriesState.loading,
     error: categoriesState.error,
     attributes: categoriesState.attributes,
+    categoryById: categoriesState.categoryById,
     loadCategories: useCallback((params?: { page: number, size: number }) => {
       dispatch(categoriesActions.fetchCategoryRequest(params));
     }, [dispatch]),
     loadAttributesByCategory: useCallback((categoryId: number) => {
       dispatch(categoriesActions.fetchAttributesByCategoryIdRequest(categoryId));
+    }, [dispatch]),
+    loadCategoryById: useCallback((categoryId: number) => {
+      dispatch(categoriesActions.fetchCategoryByIdRequest(categoryId));
     }, [dispatch]),
   };
 };

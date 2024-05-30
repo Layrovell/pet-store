@@ -19,7 +19,7 @@ interface Props {
   renderFooter?: any;
 }
 
-const Products: React.FC<Props> = ({ navigation, dataset, loading, error, loadMoreProducts, renderFooter }) => {
+const ProductListWithFilters: React.FC<Props> = ({ navigation, dataset, loading, error, loadMoreProducts, renderFooter }) => {
   const { filterOptions } = useProductFiltration();
 
   if (error) {
@@ -76,4 +76,4 @@ const Products: React.FC<Props> = ({ navigation, dataset, loading, error, loadMo
   );
 };
 
-export default Products;
+export default ProductListWithFilters;

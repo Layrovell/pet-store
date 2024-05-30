@@ -37,7 +37,7 @@ function* fetchProductByCategoryId(action: PayloadAction<FilteredProductsPayload
     yield put(productActions.fetchProductsByCategoryIdSuccess(response.data));
   } catch (error) {
     console.log('fetch product by category id error:', error);
-    yield put(productActions.fetchProductsByCategoryIdFailure(`Failed to load product by id ${categoryId}!`));
+    yield put(productActions.fetchProductsByCategoryIdFailure(`Failed to load product by category id ${categoryId}!`));
   }
 }
 

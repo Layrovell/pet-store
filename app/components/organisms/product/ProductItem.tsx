@@ -17,7 +17,7 @@ interface Props {
 }
 
 const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, viewableItems }) => {
-  const { name, images, status, price } = item;
+  const { name, productAttributeNames, price, categoryId } = item;
   
   const rStyle = useAnimatedStyle(() => {
     const isVisible = Boolean(
@@ -34,8 +34,6 @@ const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, vi
 
   return (
     <Animated.View style={[styles.item, rStyle && rStyle]}>
-      <View>
-        <Stack spacing={2}>
           <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
             <Image
               source={{
@@ -46,7 +44,10 @@ const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, vi
           </TouchableOpacity>
 
           <View style={styles.innerContainer}>
-            <Typography style={{ textTransform: 'capitalize' }}>{name}</Typography>
+            <Stack spacing={1}>
+              <Typography style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{name}</Typography>
+              <Typography variant='body3'>Category: {categoryId}</Typography>
+            </Stack>
             <View style={styles.titleSection}>
               <Typography variant='h4' style={styles.price}>
                 ${price}
@@ -54,8 +55,6 @@ const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, vi
               <Button size='tiny' accessoryLeft={<Icon name='plus-outline' />}></Button>
             </View>
           </View>
-        </Stack>
-      </View>
     </Animated.View>
   );
 }, (prevProps, nextProps) => {
@@ -71,10 +70,12 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     padding: 8,
+    justifyContent: 'space-between',
+    minHeight: 120,
   },
   image: {
     width: '100%',
-    height: 100,
+    height: 60,
   },
   titleSection: {
     alignItems: 'center',

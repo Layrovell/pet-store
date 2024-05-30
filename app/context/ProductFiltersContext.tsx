@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { createContext, useCallback, useState } from 'react';
 
 type SelectedAttributeValues = {
   [key: string]: string[];
@@ -10,23 +10,23 @@ export type FilterOptionsType = {
   value: string[];
 };
 
+type SortOptionsType = {
+  id: string;
+  desc: boolean;
+}
+
 export type ProductFiltersStateType = {
   filterOptions: any;
-  addFilterOptions: any;
-  clearAllOptions: any;
-  setSelectedAttributesValues: any;
+  sortOptions: SortOptionsType | undefined;
+  addFilterOptions: (options: any[]) => void;
+  clearAllOptions: () => void;
+  setSelectedAttributesValues: (attrs: any) => void;
   selectedAttributesValues: any;
   handleCheckboxChange: any;
+  updateSortOptions: (sortKey: string, desc: boolean) => void;
 };
 
-export const ProductFiltersContext = React.createContext<ProductFiltersStateType>({
-  filterOptions: [],
-  addFilterOptions: (options: any) => {},
-  clearAllOptions: () => {},
-  setSelectedAttributesValues: (attrs: any) => {},
-  selectedAttributesValues: {},
-  handleCheckboxChange: (attributeName: string, value: string) => {},
-});
+export const ProductFiltersContext = createContext<ProductFiltersStateType | undefined>(undefined);
 
 type CartProviderProps = {
   children: React.ReactNode;
@@ -35,6 +35,7 @@ type CartProviderProps = {
 export const ProductFiltersContextProvider = ({ children }: CartProviderProps) => {
   const [filterOptions, setFilterOptions] = useState<FilterOptionsType[]>([]);
   const [selectedAttributesValues, setSelectedAttributesValues] = useState<SelectedAttributeValues>({});
+  const [sortOptions, setSortOptions] = useState<SortOptionsType | undefined>(undefined);
 
   const addFilterOptions = useCallback(
     (newOptions: FilterOptionsType[]) => {
@@ -47,6 +48,7 @@ export const ProductFiltersContextProvider = ({ children }: CartProviderProps) =
     console.log('CLEAR');
     setSelectedAttributesValues({});
     setFilterOptions([]);
+    setSortOptions(undefined);
   };
 
   const handleCheckboxChange = (attributeName: string, value: string) => {
@@ -83,6 +85,11 @@ export const ProductFiltersContextProvider = ({ children }: CartProviderProps) =
     });
   };
 
+  const updateSortOptions = (sortKey: string, desc: boolean) => {
+    console.log('updateSortOptions:', desc);
+    setSortOptions({ id: sortKey, desc });
+  };
+
   return (
     <ProductFiltersContext.Provider
       value={{
@@ -92,6 +99,8 @@ export const ProductFiltersContextProvider = ({ children }: CartProviderProps) =
         setSelectedAttributesValues,
         selectedAttributesValues,
         handleCheckboxChange,
+        updateSortOptions,
+        sortOptions,
       }}
     >
       {children}

@@ -12,6 +12,10 @@ export const getCategoriesApi = (params?: CategoryParams) => {
   });
 };
 
+export const getCategoryByIdApi = (categoryId: number) => {
+  return axiosInstance.get(`/categories/${categoryId}`);
+};
+
 export const getAttributesByCategoryIdApi = (categoryId: number) => {
-  return axiosInstance.get(`/categories/${categoryId}/attributes`);
+  return axiosInstance.get(`/categories/${categoryId}/products/attributes`);
 };

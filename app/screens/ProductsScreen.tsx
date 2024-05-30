@@ -8,11 +8,12 @@ import useCategoriesService from 'controllers/category/service';
 import ProductsFilters from '@organisms/product/ProductsFilters';
 import useProductFiltration from 'hooks/useProductFiltration';
 import { ActivityIndicator } from '@components/index';
-import Products from '@organisms/product/Products';
+import ProductListWithFilters from '@organisms/product/ProductListWithFilters';
 import Stack from '@components/Stack';
 import colors from 'config/colors';
 import Icon from '@atoms/Icon';
 import Card from '@atoms/Card';
+import { firstUpperLetter } from 'utils/stringFormatter';
 
 interface Props {
   route: any;
@@ -21,13 +22,12 @@ interface Props {
 
 const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isPriceDescOrder, setIsPriceDescOrder] = useState(false);
   const [page, setPage] = useState(1);
 
   const drawerRef = useRef<DrawerLayout>(null);
   const categoryIdParam = route.params.categoryId;
 
-  const { loadAttributesByCategory, attributes, loading: isLoadingAttrs } = useCategoriesService();
+  const { loadAttributesByCategory, attributes, loading: isLoadingAttrs, loadCategoryById, categoryById } = useCategoriesService();
   const {
     products: productsByCategory,
     count: productsCountByCategory,
@@ -37,7 +37,15 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
     clearProducts,
     maxItemsPerPage,
   } = useProductsService();
-  const { filterOptions } = useProductFiltration();
+  const { filterOptions, updateSortOptions, sortOptions } = useProductFiltration();
+
+  useEffect(() => {
+    loadCategoryById(categoryIdParam);
+  }, [loadCategoryById]);
+
+  useEffect(() => {
+    navigation.setOptions({ title: firstUpperLetter(categoryById?.name) })
+  }, [navigation]);
 
   useEffect(() => {
     if (categoryIdParam) {
@@ -74,23 +82,45 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   }, [isDrawerOpen]);
 
   const toggleSortFilter = () => {
-    setIsPriceDescOrder((prev) => !prev);
+    setPage(1);
+    updateSortOptions('price', !sortOptions?.desc);
+    // fetchWithFilters();
   };
 
-  const fetchWithFilters = (options: any) => {
-    if (options?.length) {
-      clearProducts();
-      loadProductsByCategoryId({ page: 1, size: maxItemsPerPage, categoryId: categoryIdParam, filters: options });
-    }
-    closeDrawer();
-  }
+  useEffect(() => {
+    if (filterOptions.length || sortOptions) {
+      page === 1 && clearProducts();
+      // setPage(1);
+      // clearProducts();
 
-  const loadMoreProducts = useCallback(() => {
+      console.log('sortOptions___:', sortOptions);
+      const filters = filterOptions.length ? filterOptions : undefined;
+      loadProductsByCategoryId({
+        page: page,
+        size: maxItemsPerPage,
+        categoryId: categoryIdParam,
+        filters,
+        sort_by: sortOptions,
+      });
+    }
+    // closeDrawer();
+  }, [filterOptions, sortOptions, loadProductsByCategoryId, clearProducts, page]);
+
+  console.log('sortOptions:', sortOptions);
+
+  const loadMoreProducts = () => {
     if (page * maxItemsPerPage <= productsCountByCategory) {
       setPage((p) => p + 1);
-      loadProductsByCategoryId({ page: page + 1, size: maxItemsPerPage, categoryId: categoryIdParam, filters: filterOptions });
+      // const filters = filterOptions.length ? filterOptions : undefined;
+      // loadProductsByCategoryId({
+      //   page: page + 1,
+      //   size: maxItemsPerPage,
+      //   categoryId: categoryIdParam,
+      //   filters,
+      //   sort_by: sortOptions,
+      // });
     }
-  }, [filterOptions.length, productsCountByCategory, page]);
+  };
 
   const renderFooter = () => {
     if (page * maxItemsPerPage <= productsCountByCategory) {
@@ -100,15 +130,7 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Stack
-        direction='row'
-        style={{
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.grey[10],
-          borderTopColor: colors.grey[10],
-        }}
-      >
+      <Stack direction='row' style={styles.heading}>
         <TouchableWithoutFeedback
           onPress={toggleSortFilter}
           style={[styles.button, { borderRightWidth: 1, borderRightColor: colors.grey[10] }]}
@@ -116,7 +138,7 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
           <Card style={{ borderColor: 'transparent' }}>
             <Stack spacing={1} style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Text>Sort</Text>
-              <Icon name={isPriceDescOrder ? 'arrow-ios-downward-outline' : 'arrow-ios-upward-outline'} />
+              <Icon name={sortOptions?.desc ? 'arrow-ios-downward-outline' : 'arrow-ios-upward-outline'} />
             </Stack>
           </Card>
         </TouchableWithoutFeedback>
@@ -142,7 +164,7 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
             <ProductsFilters
               data={attributes}
               isLoading={isLoadingAttrs.attributes}
-              fetchWithFilters={fetchWithFilters}
+              // fetchWithFilters={fetchWithFilters}
               initialLoadProducts={initialLoadProducts}
             />
           );
@@ -151,7 +173,7 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
         onDrawerOpen={() => setIsDrawerOpen(true)}
       >
         <View style={{ margin: 16, flex: 1 }}>
-          <Products
+          <ProductListWithFilters
             navigation={navigation}
             dataset={productsByCategory}
             loading={loadingProductsByCategory}
@@ -172,6 +194,12 @@ const styles = StyleSheet.create({
   },
   button: {
     minWidth: '50%',
+  },
+  heading: {
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.grey[10],
+    borderTopColor: colors.grey[10],
   },
 });
 
