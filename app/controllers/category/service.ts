@@ -13,10 +13,12 @@ interface ProductsServiceOperators {
   loading: {
     categories: boolean,
     attributes: boolean,
+    categoryById: boolean;
   };
   error: {
     categories: string | null,
     attributes: string | null,
+    categoryById: string | null,
   };
   attributes: any[];
   categoryById: CategoryType,

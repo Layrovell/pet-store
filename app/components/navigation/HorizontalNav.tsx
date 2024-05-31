@@ -1,6 +1,6 @@
 import React from 'react';
 import type { PropsWithChildren } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
 
 import Stack from '../Stack';
 import Card from '../atoms/Card';
@@ -10,13 +10,12 @@ import { getNavItemIcon } from 'config/UI/CustomIcons';
 
 interface Props {
   menuItems: any[];
-  onSelect?: (v: number) => void;
-  selectedItemId: number;
+  onPress: (id: number) => void;
 }
 
-const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ menuItems, onSelect, selectedItemId }) => {
-  console.log('menuItems:', menuItems);
+const { width } = Dimensions.get('screen');
 
+const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ menuItems, onPress }) => {
   return (
     <Stack>
       <FlatList
@@ -27,13 +26,8 @@ const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ menuItems, onSelect
         renderItem={({ item }) => {
           return (
             <Stack spacing={2} style={styles.cardContainer}>
-              <Card
-                onPress={() => {
-                  onSelect && onSelect(item.id);
-                }}
-                style={styles.card}
-              >
-                <View>{getNavItemIcon(item.id)}</View>
+              <Card onPress={() => onPress(item.id)}>
+                <View style={styles.icon}>{getNavItemIcon(item.id)}</View>
               </Card>
               <Typography variant='body3'>{firstUpperLetter(item.name)}</Typography>
             </Stack>
@@ -48,12 +42,11 @@ const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ menuItems, onSelect
 const styles = StyleSheet.create({
   cardContainer: {
     alignItems: 'center',
-    maxWidth: 74,
+    width: width / 3 - 24,
   },
-  card: {
-    width: 74,
-    height: 74,
-    borderRadius: 50,
+  icon: {
+    height: 60,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
   },

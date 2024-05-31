@@ -1,5 +1,5 @@
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import Stack from '@components/Stack';
@@ -10,29 +10,43 @@ import { firstUpperLetter } from 'utils/stringFormatter';
 import { getMenuIcon } from 'config/UI/CustomIcons';
 import routes from 'navigation/routes';
 import colors from 'config/colors';
+import { CategoryType } from '@type/category';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
+  route: any;
 }
 
-// if ID -> id
-// else ALL
-
-const CatalogueScreen: React.FC<Props> = ({ navigation }) => {
+const CatalogueScreen: React.FC<Props> = ({ navigation, route }) => {
   const { loadCategories, data: categories } = useCategoriesService();
+
+  const [menuItems, setMenuItems] = useState<CategoryType[]>([]);
+
+  const parentIdParam = route?.params?.categoryId;
 
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
 
-  console.log('categories:', categories);
+  useEffect(() => {
+    let menu = [];
 
-  const categoriesMenu = useMemo(() => categories?.content.filter((el) => el.parentId), [categories?.content.length]);
+    if (parentIdParam) {
+      menu = categories?.content.filter((c) => c.parentId === parentIdParam);
+    } else {
+      // display all subcategories
+      menu = categories?.content.filter((c) => c.parentId);
+    }
+
+    if (menu.length > 0) {
+      setMenuItems(menu);
+    }
+  }, [parentIdParam]);
 
   return (
     <Stack>
       <FlatList
-        data={categoriesMenu}
+        data={menuItems}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.container}
         renderItem={({ item }) => {

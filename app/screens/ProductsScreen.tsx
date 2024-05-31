@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { DrawerLayout, DrawerPosition, TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -27,7 +27,7 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   const drawerRef = useRef<DrawerLayout>(null);
   const categoryIdParam = route.params.categoryId;
 
-  const { loadAttributesByCategory, attributes, loading: isLoadingAttrs, loadCategoryById, categoryById } = useCategoriesService();
+  const { loadAttributesByCategory, attributes, loading, loadCategoryById, categoryById } = useCategoriesService();
   const {
     products: productsByCategory,
     count: productsCountByCategory,
@@ -43,9 +43,17 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
     loadCategoryById(categoryIdParam);
   }, [loadCategoryById]);
 
-  useEffect(() => {
-    navigation.setOptions({ title: firstUpperLetter(categoryById?.name) })
-  }, [navigation]);
+  useLayoutEffect(() => {
+    if (categoryById && !loading.categoryById) {
+      const title = firstUpperLetter(categoryById.name);
+      navigation.setOptions({ title });
+    }
+
+    return () => {
+      // check on physical device if title flickers from previous to the new one
+      navigation.setOptions({ title: '' });
+    };
+  }, [navigation, categoryById]);
 
   useEffect(() => {
     if (categoryIdParam) {
@@ -90,10 +98,6 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     if (filterOptions.length || sortOptions) {
       page === 1 && clearProducts();
-      // setPage(1);
-      // clearProducts();
-
-      console.log('sortOptions___:', sortOptions);
       const filters = filterOptions.length ? filterOptions : undefined;
       loadProductsByCategoryId({
         page: page,
@@ -103,22 +107,11 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
         sort_by: sortOptions,
       });
     }
-    // closeDrawer();
   }, [filterOptions, sortOptions, loadProductsByCategoryId, clearProducts, page]);
-
-  console.log('sortOptions:', sortOptions);
 
   const loadMoreProducts = () => {
     if (page * maxItemsPerPage <= productsCountByCategory) {
       setPage((p) => p + 1);
-      // const filters = filterOptions.length ? filterOptions : undefined;
-      // loadProductsByCategoryId({
-      //   page: page + 1,
-      //   size: maxItemsPerPage,
-      //   categoryId: categoryIdParam,
-      //   filters,
-      //   sort_by: sortOptions,
-      // });
     }
   };
 
@@ -130,22 +123,19 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Stack direction='row' style={styles.heading}>
-        <TouchableWithoutFeedback
-          onPress={toggleSortFilter}
-          style={[styles.button, { borderRightWidth: 1, borderRightColor: colors.grey[10] }]}
-        >
-          <Card style={{ borderColor: 'transparent' }}>
-            <Stack spacing={1} style={{ flexDirection: 'row', justifyContent: 'center' }}>
+      <Stack direction='row' style={styles.actionBar}>
+        <TouchableWithoutFeedback onPress={toggleSortFilter} style={[styles.button, styles.line]}>
+          <Card style={styles.card}>
+            <Stack spacing={1} style={styles.content}>
               <Text>Sort</Text>
-              <Icon name={sortOptions?.desc ? 'arrow-ios-downward-outline' : 'arrow-ios-upward-outline'} />
+              <Icon name={sortOptions?.desc ? 'arrow-ios-upward-outline' : 'arrow-ios-downward-outline'} />
             </Stack>
           </Card>
         </TouchableWithoutFeedback>
 
         <TouchableWithoutFeedback style={styles.button} onPress={toggleDrawer}>
-          <Card style={{ borderColor: 'transparent' }}>
-            <Stack style={{ alignItems: 'center' }}>
+          <Card style={[styles.card]}>
+            <Stack style={styles.content}>
               <Text>Filter</Text>
             </Stack>
           </Card>
@@ -163,7 +153,7 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
           return (
             <ProductsFilters
               data={attributes}
-              isLoading={isLoadingAttrs.attributes}
+              isLoading={loading.attributes}
               // fetchWithFilters={fetchWithFilters}
               initialLoadProducts={initialLoadProducts}
             />
@@ -195,7 +185,17 @@ const styles = StyleSheet.create({
   button: {
     minWidth: '50%',
   },
-  heading: {
+  card: {
+    borderColor: 'transparent',
+  },
+  line: {
+    borderRightWidth: 1,
+    borderRightColor: colors.grey[10],
+  },
+  content: {
+    flexDirection: 'row', justifyContent: 'center',
+  },
+  actionBar: {
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderBottomColor: colors.grey[10],

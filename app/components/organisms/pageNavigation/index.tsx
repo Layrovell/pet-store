@@ -58,6 +58,7 @@ const styles = (props: any) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       margin: 16,
+      marginBottom: 8,
     },
   });
 

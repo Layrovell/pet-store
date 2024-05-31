@@ -18,11 +18,9 @@ const Input: React.FC<Props> = (props) => {
   };
 
   const renderClearableAttribute = useMemo(() => {
-    if (!props?.handleClear) {
-      return;
+    if (props?.handleClear && props?.value) {
+      return <Icon name='close-circle' onPress={props?.handleClear} />;
     }
-
-    return <Icon name='close-circle' onPress={props?.handleClear} />;
   }, [props?.handleClear]);
 
   return (

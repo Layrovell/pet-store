@@ -22,6 +22,7 @@ interface Props {
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { loadCategories, data: categories } = useCategoriesService();
   const {
@@ -33,8 +34,6 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     clearProducts,
     maxItemsPerPage,
   } = useProductsService();
-
-  const [selectedCategoryId, setSelectedCategoryId] = useState(4);
 
   useEffect(() => {
     loadCategories();
@@ -60,28 +59,32 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  const openNavList = (id: number) => {
+    navigation.navigate(routes.CATALOGUE, { categoryId: id });
+  }
+
+  const handleSearchClear = () => {
+    setSearchTerm('');
+  }
+
   return (
     <Screen>
-      <Input placeholder='Search Product' accessoryLeft={<Icon name='search-outline' />} />
+      <Input
+        handleClear={handleSearchClear}
+        value={searchTerm}
+        onChangeText={(text) => setSearchTerm(text)}
+        placeholder='Search Product'
+        accessoryLeft={<Icon name='search-outline' />}
+      />
 
       <Stack spacing={4} style={{ flex: 1 }}>
         <HorizontalNav
           menuItems={categories?.content}
-          onSelect={setSelectedCategoryId}
-          selectedItemId={selectedCategoryId}
+          onPress={openNavList}
         />
 
         <Button onPress={() => navigation?.navigate(routes.CATALOGUE)}>Catalogue</Button>
-
         <ActionBar title='New arrivals' />
-          {/* <Link
-            text='See more'
-            variant='body1'
-            onPress={() => {
-              navigation.navigate(routes.PRODUCTS, { categoryId: selectedCategoryId });
-            }}
-          /> */}
-        {/* </ActionBar> */}
 
         <ProductsList
           navigation={navigation}

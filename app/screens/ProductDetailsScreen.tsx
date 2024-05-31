@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -13,6 +13,7 @@ import Attributes from '../components/Attributes';
 import PlusMinusButton from '../components/PlusMinusButton';
 import Footer from '../components/Footer';
 import { getRandomImages } from '../api/mock/products';
+import { firstUpperLetter } from 'utils/stringFormatter';
 
 interface Props {
   route: any;
@@ -26,6 +27,10 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const imagesMock = useMemo(() => {
     return getRandomImages();
+  }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: firstUpperLetter(item.name) })
   }, []);
 
   return (
@@ -78,7 +83,8 @@ const styles = StyleSheet.create({
   horizontal: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'baseline',
+    alignItems: 'center',
+    marginVertical: 8,
   },
 });
 

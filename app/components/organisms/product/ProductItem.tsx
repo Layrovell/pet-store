@@ -52,7 +52,7 @@ const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, vi
               <Typography variant='h4' style={styles.price}>
                 ${price}
               </Typography>
-              <Button size='tiny' accessoryLeft={<Icon name='plus-outline' />}></Button>
+              <Button size='tiny' appearance='ghost' accessoryLeft={<Icon name='plus-outline' />}></Button>
             </View>
           </View>
     </Animated.View>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 60,
+    height: 120,
   },
   titleSection: {
     alignItems: 'center',
