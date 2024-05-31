@@ -4,11 +4,12 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 import { categoriesActions } from './slice';
 import { getAttributesByCategoryIdApi, getCategoriesApi, getCategoryByIdApi } from './api';
+import requestSagaWrapper from 'controllers/navigation/saga';
 
 // Worker Sagas
 export function* fetchCategoriesWorker(action: PayloadAction<{ page?: number; size?: number } | undefined>): SagaIterator {
   try {
-    const response = yield call(getCategoriesApi, action.payload);
+    const response = yield call(requestSagaWrapper, getCategoriesApi, 'categories', action.payload);
     yield put(categoriesActions.fetchCategoriesSuccess(response.data));
   } catch (error: unknown) {
     console.error('Error in fetchCategoriesWorker:', error);
@@ -18,7 +19,7 @@ export function* fetchCategoriesWorker(action: PayloadAction<{ page?: number; si
 
 export function* fetchCategoryByIdWorker(action: PayloadAction<number>): SagaIterator {
   try {
-    const response = yield call(getCategoryByIdApi, action.payload);
+    const response = yield call(requestSagaWrapper, getCategoryByIdApi, 'categoryById', action.payload);
     yield put(categoriesActions.fetchCategoryByIdSuccess(response.data));
   } catch (error: unknown) {
     console.error('Error in fetchCategoryByIdWorker:', error);

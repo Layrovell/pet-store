@@ -13,165 +13,85 @@ import Icon from '../components/atoms/Icon';
 import ProductsScreen from '../screens/ProductsScreen';
 import { Tabs } from '@type/navigation';
 import CatalogueScreen from 'screens/CatalogueScreen';
+import Typography from '@components/Typography';
+import routes from './routes';
+import { getTabBarIconName } from 'utils/getTabBarIconName';
+import ErrorScreen from 'screens/ErrorScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const HomeStack = () => {
+function MainStackScreen() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerTitleAlign: 'center',
-        // animationEnabled: true,
-        gestureEnabled: false,
-        headerShown: true, // for mode="modal"
-        header({ route }) {
-          return <PageHeaderNavigation routeName={route.name} />;
-        },
-        ...TransitionPresets.ModalSlideFromBottomIOS,
-      }}
-    >
-      <Stack.Screen
-        name='Home'
-        component={HomeScreen}
-        options={{
-          header({ route, options, layout }) {
-            return (
-              <PageHeaderNavigation
-                routeName={route.name}
-                leftAction={<Icon name='bell-outline' size={26} />}
-                rightAction={<Icon name='shopping-bag-outline' size={26} />}
-              />
-            );
-          },
-        }}
-      ></Stack.Screen>
-      <Stack.Screen name='Catalogue' component={CatalogueScreen}></Stack.Screen>
-      <Stack.Screen name='Products'>
-        {(props) => (
-          <ProductFiltersContextProvider>
-            <ProductsScreen {...props} />
-          </ProductFiltersContextProvider>
-        )}
-      </Stack.Screen>
-      <Stack.Screen name='Product' options={{ headerTitle: 'Product' }} component={ProductDetailsScreen} />
-    </Stack.Navigator>
-  );
-};
-
-const CatalogueStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerTitleAlign: 'center',
-        gestureEnabled: false,
         headerShown: true,
-        header({ route, options }) {
-          return (
-            <PageHeaderNavigation
-              routeName={options?.title || route.name}
-              leftAction={<Icon name='bell-outline' size={26} />}
-              rightAction={<Icon name='shopping-bag-outline' size={26} />}
-            />
-          );
+        headerTitleAlign: 'center',
+        headerTitle(props) {
+          return <Typography variant='h5'>{props?.children}</Typography>;
         },
-        ...TransitionPresets.ModalSlideFromBottomIOS,
       }}
     >
-      <Stack.Screen name='Catalogue' component={CatalogueScreen}></Stack.Screen>
-      <Stack.Screen name='Products'>
+      <Stack.Screen name={routes.HOME} component={HomeScreen} />
+      <Stack.Screen name={'ErrorScreen'} component={ErrorScreen} />
+      <Stack.Screen name={routes.CATALOGUE} component={CatalogueScreen} />
+      <Stack.Screen name={routes.PRODUCTS}>
         {(props) => (
           <ProductFiltersContextProvider>
             <ProductsScreen {...props} />
           </ProductFiltersContextProvider>
         )}
       </Stack.Screen>
-      <Stack.Screen name='Product' options={{ headerTitle: 'Product' }} component={ProductDetailsScreen} />
+      <Stack.Screen name={routes.PRODUCT_DETAILS} component={ProductDetailsScreen} />
+      <Stack.Screen name={routes.CART_DETAILS} component={CartScreen} />
+      <Stack.Screen name={routes.SETTINGS} component={SettingsScreen} />
+      <Stack.Screen name={routes.ACCOUNT} component={AccountScreen} />
     </Stack.Navigator>
   );
-};
+}
 
-const CartStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        gestureEnabled: true,
-        header({ route }) {
-          return <PageHeaderNavigation routeName={route.name} />;
-        },
-      }}
-    >
-      <Stack.Screen name='Cart' component={CartScreen} options={{ headerTitleAlign: 'center' }} />
-    </Stack.Navigator>
-  );
-};
-
-const SettingsStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        gestureEnabled: false,
-        headerTitleAlign: 'center',
-        header({ route, navigation }) {
-          return (
-            <PageHeaderNavigation
-              routeName={route.name}
-              leftAction={
-                route.name !== 'Settings' ? (
-                  <Icon onPress={() => navigation.goBack()} name='arrow-back-outline' size={26} />
-                ) : (
-                  <></>
-                )
-              }
-            />
-          );
-        },
-      }}
-      initialRouteName='Settings'
-    >
-      <Stack.Screen name='Settings' component={SettingsScreen} />
-      <Stack.Screen name='Account' component={AccountScreen} />
-    </Stack.Navigator>
-  );
-};
-
-const BottomTabStack = () => {
+function TabNavigationScreen() {
   return (
     <Tab.Navigator
-      initialRouteName='Home'
+      initialRouteName={routes.HOME}
       screenOptions={({ route }) => ({
-        headerShown: false,
         tabBarHideOnKeyboard: true,
-        tabBarStyle: {
-          height: 80,
-          paddingBottom: 16,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
-        },
+        headerShown: false,
+        tabBarStyle: { height: 80, paddingBottom: 16 },
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          if (route.name === Tabs.HOME) {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === Tabs.CART) {
-            iconName = focused ? 'shopping-cart' : 'shopping-cart-outline';
-          } else if (route.name === Tabs.SETTINGS) {
-            iconName = focused ? 'person' : 'person-outline';
-          } else {
-            iconName = focused ? 'menu-2-outline' : 'menu-2-outline';
-          }
-
+          const iconName = getTabBarIconName(route, focused, routes);
           const iconColor = focused ? color : 'black';
           const iconSize = focused ? 32 : size;
           return <Icon name={iconName} size={iconSize} fill={iconColor} />;
         },
       })}
     >
-      <Tab.Screen name={Tabs.HOME} component={HomeStack} options={{ tabBarLabel: 'Home Page' }} />
-      <Tab.Screen name={Tabs.CATALOGUE} component={CatalogueStack} options={{ tabBarLabel: 'Catalogue' }} />
-      <Tab.Screen name={Tabs.CART} component={CartStack} options={{ tabBarLabel: 'Cart Page' }} />
-      <Tab.Screen name={Tabs.SETTINGS} component={SettingsStack} options={{ tabBarLabel: 'Account' }} />
+      <Tab.Screen
+        name={routes.HOME_TAB}
+        component={MainStackScreen}
+        initialParams={{ screen: routes.HOME }}
+        options={{ tabBarLabel: 'Home Page' }}
+      />
+      <Tab.Screen
+        name={routes.CATALOGUE_TAB}
+        component={MainStackScreen}
+        initialParams={{ screen: routes.CATALOGUE }}
+        options={{ tabBarLabel: 'Catalogue' }}
+      />
+      <Tab.Screen
+        name={routes.CART_TAB}
+        component={MainStackScreen}
+        initialParams={{ screen: routes.CART_DETAILS }}
+        options={{ tabBarLabel: 'Cart Page' }}
+      />
+      <Tab.Screen
+        name={routes.SETTINGS_TAB}
+        component={MainStackScreen}
+        initialParams={{ screen: routes.SETTINGS }}
+        options={{ tabBarLabel: 'Settings' }}
+      />
     </Tab.Navigator>
   );
 };
 
-export default BottomTabStack;
+export default TabNavigationScreen;
