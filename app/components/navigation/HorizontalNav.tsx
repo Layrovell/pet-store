@@ -22,7 +22,7 @@ const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ menuItems, onPress 
         data={menuItems?.filter((el) => !el.parentId)}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ gap: 16, justifyContent: 'center', alignItems: 'center' }}
+        contentContainerStyle={styles.container}
         renderItem={({ item }) => {
           return (
             <Stack spacing={2} style={styles.cardContainer}>
@@ -40,6 +40,11 @@ const HorizontalNav: React.FC<PropsWithChildren<Props>> = ({ menuItems, onPress 
 };
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   cardContainer: {
     alignItems: 'center',
     width: width / 3 - 24,

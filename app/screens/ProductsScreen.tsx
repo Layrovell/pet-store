@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { DrawerLayout, DrawerPosition, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '@type/navigation';
 
 import useProductsService from 'controllers/product/service';
 import useCategoriesService from 'controllers/category/service';
@@ -15,10 +16,7 @@ import Icon from '@atoms/Icon';
 import Card from '@atoms/Card';
 import { firstUpperLetter } from 'utils/stringFormatter';
 
-interface Props {
-  route: any;
-  navigation: NavigationProp<ParamListBase>;
-}
+type Props = StackScreenProps<RootStackParamList, 'Products'>;
 
 const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react';
-import { FlatList, Text } from 'react-native';
+import { FlatList, View } from 'react-native';
 
 import Checkbox from '@atoms/Checkbox';
 import { ActivityIndicator } from '@components/index';
-import CollapsibleItem from '../AccordionItem';
-import Button from '@components/atoms/Button';
 import Stack from '@components/Stack';
 import Typography from '@components/Typography';
 import Icon from '@components/atoms/Icon';
 import useProductFiltration from 'hooks/useProductFiltration';
 import AccordionItem from '../AccordionItem';
+import { firstUpperLetter, splitBeforeUppercase } from 'utils/stringFormatter';
+import RangeDatePicker from '../RangeDatePicker';
 
 interface Props {
   data?: any[];
@@ -18,42 +18,44 @@ interface Props {
 }
 
 const ProductsFilters: React.FC<Props> = ({ data, isLoading, initialLoadProducts }) => {
-  const { handleCheckboxChange, selectedAttributesValues, clearAllOptions } = useProductFiltration();
+  const { handleCheckboxChange, selectedAttributesValues, clearAllOptions, dateRange, handleDateChange } = useProductFiltration();
 
-  const renderedCategories = useMemo(() => {
-    return (
-      <FlatList
-        data={data}
-        renderItem={({ item, index }) => (
-          // <CollapsibleItem key={index} title={item.name}>
-          // {item.values.map((value: string) => (
-          //   <Checkbox
-          //     key={value}
-          //     checked={selectedAttributesValues[item.name]?.includes(value) || false}
-          //     onChange={() => handleCheckboxChange(item.name, value)}
-          //     style={{ marginVertical: 5 }}
-          //   >
-          //     <Typography>{value}</Typography>
-          //   </Checkbox>
-          // ))}
-          // </CollapsibleItem>
-          <AccordionItem key={index} title={item.name}>
+  const renderItem = ({ item, index }: any) => (
+    <AccordionItem key={index} title={splitBeforeUppercase(item.name)}>
+      <>
+        {item.type === 'string' && (
+          <View style={{ marginVertical: 5 }}>
             {item.values.map((value: string) => (
               <Checkbox
                 key={value}
                 checked={selectedAttributesValues[item.name]?.includes(value) || false}
                 onChange={() => handleCheckboxChange(item.name, value)}
-                style={{ marginVertical: 5 }}
               >
-                <Typography>{value}</Typography>
+                <Typography>{firstUpperLetter(value)}</Typography>
               </Checkbox>
             ))}
-          </AccordionItem>
+          </View>
         )}
-        keyExtractor={(item) => item.name}
-      />
-    );
-  }, [data, selectedAttributesValues, handleCheckboxChange]);
+
+        {item.type === 'date' && (
+          <RangeDatePicker
+            key={item.name}
+            label='Date range'
+            range={dateRange}
+            min={new Date(item?.values?.[0])}
+            max={new Date(item?.values?.[1])}
+            onSelect={(nextRange) => handleDateChange(item.name, nextRange)}
+            accessoryRight={<Icon name={'calendar-outline'} />}
+          />
+        )}
+      </>
+    </AccordionItem>
+  );
+
+  const renderedCategories = useMemo(
+    () => <FlatList data={data} renderItem={renderItem} keyExtractor={(item) => item.name} />,
+    [data, selectedAttributesValues, dateRange]
+  );
 
   return (
     <Stack spacing={3} style={{ flex: 1, padding: 16 }}>

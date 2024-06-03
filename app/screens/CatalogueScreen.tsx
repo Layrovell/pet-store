@@ -1,6 +1,7 @@
 import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '@type/navigation';
 
 import Stack from '@components/Stack';
 import Icon from '@components/atoms/Icon';
@@ -12,17 +13,14 @@ import routes from 'navigation/routes';
 import colors from 'config/colors';
 import { CategoryType } from '@type/category';
 
-interface Props {
-  navigation: NavigationProp<ParamListBase>;
-  route: any;
-}
+type Props = StackScreenProps<RootStackParamList, 'Catalogue'>;
 
 const CatalogueScreen: React.FC<Props> = ({ navigation, route }) => {
   const { loadCategories, data: categories } = useCategoriesService();
 
   const [menuItems, setMenuItems] = useState<CategoryType[]>([]);
 
-  const parentIdParam = route?.params?.categoryId;
+  const parentIdParam = route.params.categoryId;
 
   useEffect(() => {
     loadCategories();

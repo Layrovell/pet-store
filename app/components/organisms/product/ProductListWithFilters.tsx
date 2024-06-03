@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { FlatList, View, ViewToken } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -47,7 +47,6 @@ const ProductListWithFilters: React.FC<Props> = ({ navigation, dataset, loading,
   return (
     <View style={{ flex: 1 }}>
       {loading && !dataset?.length && <ActivityIndicator visible={loading} />}
-      {dataset?.length ? (
         <FlatList
           data={dataset}
           renderItem={renderItem}
@@ -71,7 +70,6 @@ const ProductListWithFilters: React.FC<Props> = ({ navigation, dataset, loading,
             viewableItems.value = vItems;
           }}
         />
-      ) : null}
     </View>
   );
 };

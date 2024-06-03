@@ -15,9 +15,10 @@ import Icon from '../components/atoms/Icon';
 import ProductsScreen from '../screens/ProductsScreen';
 import CatalogueScreen from 'screens/CatalogueScreen';
 import routes from './routes';
+import { RootStackParamList } from '@type/navigation';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 function MainStackScreen() {
   return (
