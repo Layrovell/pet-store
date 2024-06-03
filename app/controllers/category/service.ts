@@ -10,9 +10,21 @@ interface ProductsServiceOperators {
     content: CategoryType[];
     count: number;
   };
-  loadCategories: (params: { page: number, size: number }) => void;
-  loading: boolean;
-  error: string | null;
+  loading: {
+    categories: boolean,
+    attributes: boolean,
+    categoryById: boolean;
+  };
+  error: {
+    categories: string | null,
+    attributes: string | null,
+    categoryById: string | null,
+  };
+  attributes: any[];
+  categoryById: CategoryType,
+  loadCategories: (params?: { page: number, size: number }) => void;
+  loadAttributesByCategory: (categoryId: number) => void;
+  loadCategoryById: (categoryId: number) => void;
 }
 
 const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
@@ -23,8 +35,16 @@ const useCategoriesService = (): Readonly<ProductsServiceOperators> => {
     data: useAppSelector(selectCategories),
     loading: categoriesState.loading,
     error: categoriesState.error,
-    loadCategories: useCallback((params: { page: number, size: number }) => {
+    attributes: categoriesState.attributes,
+    categoryById: categoriesState.categoryById,
+    loadCategories: useCallback((params?: { page: number, size: number }) => {
       dispatch(categoriesActions.fetchCategoryRequest(params));
+    }, [dispatch]),
+    loadAttributesByCategory: useCallback((categoryId: number) => {
+      dispatch(categoriesActions.fetchAttributesByCategoryIdRequest(categoryId));
+    }, [dispatch]),
+    loadCategoryById: useCallback((categoryId: number) => {
+      dispatch(categoriesActions.fetchCategoryByIdRequest(categoryId));
     }, [dispatch]),
   };
 };

@@ -4,6 +4,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 import { productActions } from './slice';
 import { getProductByCategoryIdApi, getProductByIdApi, getProductsApi } from './api';
+import { FilteredProductsPayload } from '@type/product.interface';
 
 // Worker Sagas
 function* fetchProducts(action: PayloadAction<{ page?: number; size?: number }>): SagaIterator {
@@ -28,7 +29,7 @@ function* fetchProductById(action: PayloadAction<{ id: number }>): SagaIterator 
   }
 }
 
-function* fetchProductByCategoryId(action: PayloadAction<{ categoryId: number, page?: number; size?: number }>): SagaIterator {
+function* fetchProductByCategoryId(action: PayloadAction<FilteredProductsPayload>): SagaIterator {
   const { categoryId } = action.payload;
 
   try {
@@ -36,7 +37,7 @@ function* fetchProductByCategoryId(action: PayloadAction<{ categoryId: number, p
     yield put(productActions.fetchProductsByCategoryIdSuccess(response.data));
   } catch (error) {
     console.log('fetch product by category id error:', error);
-    yield put(productActions.fetchProductsByCategoryIdFailure(`Failed to load product by id ${categoryId}!`));
+    yield put(productActions.fetchProductsByCategoryIdFailure(`Failed to load product by category id ${categoryId}!`));
   }
 }
 

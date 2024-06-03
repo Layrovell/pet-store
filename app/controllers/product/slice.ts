@@ -1,19 +1,18 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { Product } from '../../interface/product.interface';
+import { FilteredProductsPayload, Product } from '../../interface/product.interface';
 
 interface ProductState {
-  products: {
-    content: Product[];
-    count?: number;
-  } | null;
+  products: Product[];
+  count: number;
   product: Product | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ProductState = {
-  products: null,
+  products: [],
+  count: 0,
   product: null,
   loading: false,
   error: null,
@@ -29,10 +28,8 @@ const productsSlice = createSlice({
     },
     fetchProductsSuccess: (state, action: PayloadAction<{ content: Product[], count: number }>) => {
       state.loading = false;
-      state.products = {
-        content: action.payload.content,
-        count: action.payload.count,
-      };
+      state.products = [...state.products, ...action.payload.content];
+      state.count = action.payload.count;
     },
     fetchProductsFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
@@ -52,18 +49,23 @@ const productsSlice = createSlice({
       state.error = action.payload;
     },
     // by category:
-    fetchProductsByCategoryIdRequest: (state, action: PayloadAction<{ categoryId: number; page?: number; size?: number }>) => {
+    fetchProductsByCategoryIdRequest: (state, action: PayloadAction<FilteredProductsPayload>) => {
       state.loading = true;
       state.error = null;
     },
     fetchProductsByCategoryIdSuccess: (state, action: PayloadAction<{ content: Product[], count: number }>) => {
       state.loading = false;
-      state.products = action.payload;
+      state.products = [...state.products, ...action.payload.content];
+      state.count = action.payload.count;
     },
     fetchProductsByCategoryIdFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
+    clearProducts: (state) => {
+      state.products = [];
+      state.count = 0;
+    }
   },
 });
 
@@ -79,6 +81,8 @@ export const productActions = {
   fetchProductsByCategoryIdRequest: productsSlice.actions.fetchProductsByCategoryIdRequest,
   fetchProductsByCategoryIdSuccess: productsSlice.actions.fetchProductsByCategoryIdSuccess,
   fetchProductsByCategoryIdFailure: productsSlice.actions.fetchProductsByCategoryIdFailure,
+
+  clearProducts: productsSlice.actions.clearProducts,
 };
 
 // Reducer

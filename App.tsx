@@ -6,7 +6,7 @@ import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
@@ -14,7 +14,6 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 
 import AuthNavigator from './app/navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigationTheme';
-import { navigationRef } from './app/navigation/rootNavigation';
 import { store } from './app/store/config.store';
 import AppNavigator from './app/navigation/AppNavigator';
 import useAuthService from './app/controllers/auth/service';
@@ -30,9 +29,7 @@ export default function App() {
     <Provider store={store}>
       <View style={{ flex: 1 }}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <NavigationContainer ref={navigationRef} theme={navigationTheme}>
-            <Routes />
-          </NavigationContainer>
+          <Routes />
         </GestureHandlerRootView>
 
         <StatusBar animated={true} style={'dark'} />
@@ -56,6 +53,8 @@ const Routes = () => {
 
   const [mode, setMode] = React.useState<Mode>('light');
 
+  const navigationRef = useNavigationContainerRef();
+
   const toggleMode = () => {
     const nextMode = mode === 'light' ? 'dark' : 'light';
     setMode(nextMode);
@@ -78,13 +77,13 @@ const Routes = () => {
   }
 
   return (
-    <>
+    <NavigationContainer ref={navigationRef} theme={navigationTheme}>
       <IconRegistry icons={EvaIconsPack} />
       <ThemeContext.Provider value={{ mode, toggleMode }}>
         <ApplicationProvider {...eva} theme={{ ...eva[mode], ...getTheme() }}>
           {user ? <AppNavigator /> : <AuthNavigator />}
         </ApplicationProvider>
       </ThemeContext.Provider>
-    </>
+    </NavigationContainer>
   );
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Icon as UIIcon, IconProps, IconElement } from '@ui-kitten/components';
 
-interface Props extends IconProps {}
+interface Props extends IconProps {
+}
 
 const Icon: React.FC<Props> = (props): IconElement => {
   return (

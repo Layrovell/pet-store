@@ -52,7 +52,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           </Typography>
 
           <Formik
-            initialValues={{ email: '', password: '' }}
+            initialValues={{ email: 'qqq@gmail.com', password: 'qwe123' }}
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
           >
@@ -67,7 +67,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                       <Link text='Create Account' onPress={() => navigation.navigate(routes.REGISTER)} />
                     </Stack>
 
-                    <SubmitButton title={'Login'} disabled={!isValid || !dirty} />
+                    <SubmitButton title={'Login'} disabled={!isValid} />
                   </Stack>
                 </>
               );

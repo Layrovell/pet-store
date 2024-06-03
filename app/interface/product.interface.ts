@@ -8,6 +8,14 @@ export const ProductStatus = {
 
 export type StatusType = keyof typeof ProductStatus;
 
+export type ProductAttributeNames = {
+  birthDate?: string;
+  breed?: string;
+  color?: string;
+  sex?: string;
+  size?: string;
+};
+
 export interface Product {
   id: number;
   attributes: KeyValuePair;
@@ -18,4 +26,13 @@ export interface Product {
   name: string;
   price: number;
   status: StatusType;
+  productAttributeNames?: ProductAttributeNames;
 }
+
+export type FilteredProductsPayload = {
+  categoryId: number;
+  page?: number;
+  size?: number;
+  filters?: any;
+  sort_by?: any;
+};

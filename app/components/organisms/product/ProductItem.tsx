@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View, ViewToken } from 'react-native';
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import colors from '../../../config/colors';
 import Typography from '@components/Typography';
@@ -12,15 +13,27 @@ interface Props {
   item: Product;
   onPress?: () => void;
   onPressBuy: () => void;
+  viewableItems: Animated.SharedValue<ViewToken[]>;
 }
 
-const ProductItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
-  const { name, images, status, price } = item;
+const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, viewableItems }) => {
+  const { name, productAttributeNames, price, categoryId } = item;
+  
+  const rStyle = useAnimatedStyle(() => {
+    const isVisible = Boolean(
+      viewableItems.value
+        .filter((item: any) => item.isViewable)
+        .find((viewableItem: any) => viewableItem.item.id === item.id)
+    )
+
+    return {
+      opacity: withTiming(isVisible ? 1 : 0.8),
+      transform: [{ scale: withTiming(isVisible ? 1 : 0.8) }]
+    }
+  }, []);
 
   return (
-    <View style={styles.item}>
-      <View style={styles.innerContainer}>
-        <Stack spacing={2}>
+    <Animated.View style={[styles.item, rStyle && rStyle]}>
           <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
             <Image
               source={{
@@ -30,36 +43,39 @@ const ProductItem: React.FC<Props> = ({ item, onPress, onPressBuy }) => {
             />
           </TouchableOpacity>
 
-          <View>
-            <Typography style={{ textTransform: 'capitalize' }}>{name}</Typography>
+          <View style={styles.innerContainer}>
+            <Stack spacing={1}>
+              <Typography style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>{name}</Typography>
+              <Typography variant='body3'>Category: {categoryId}</Typography>
+            </Stack>
             <View style={styles.titleSection}>
               <Typography variant='h4' style={styles.price}>
                 ${price}
               </Typography>
-              <Button size='tiny' accessoryLeft={<Icon name='plus-outline' />}></Button>
+              <Button size='tiny' appearance='ghost' accessoryLeft={<Icon name='plus-outline' />}></Button>
             </View>
           </View>
-        </Stack>
-      </View>
-    </View>
+    </Animated.View>
   );
-};
+}, (prevProps, nextProps) => {
+  return prevProps.item.id === nextProps.item.id;
+});
 
 const styles = StyleSheet.create({
   item: {
     flex: 0.5,
     backgroundColor: colors.background,
-    borderRadius: 16,
-    padding: 12,
-  },
-  innerContainer: {
     borderRadius: 8,
     overflow: 'hidden',
   },
+  innerContainer: {
+    padding: 8,
+    justifyContent: 'space-between',
+    minHeight: 120,
+  },
   image: {
     width: '100%',
-    height: 200,
-    borderRadius: 6,
+    height: 120,
   },
   titleSection: {
     alignItems: 'center',
