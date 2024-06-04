@@ -28,8 +28,8 @@ function MainStackScreen() {
           return (
             <PageHeaderNavigation
               routeName={options?.title || route.name}
-              leftAction={<Icon name='bell-outline' size={26} />}
-              rightAction={<Icon name='shopping-cart-outline' size={26} />}
+              leftAction={<Icon isAction name='bell-outline' size={26} onPress={() => console.log(123)} />}
+              rightAction={<Icon isAction name='shopping-cart-outline' size={26} />}
             />
           );
         },

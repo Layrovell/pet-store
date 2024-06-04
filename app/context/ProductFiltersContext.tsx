@@ -46,15 +46,12 @@ export const ProductFiltersContextProvider = ({ children }: CartProviderProps) =
   const addFilterOptions = useCallback(
     (newOptions: FilterOptionsType[]) => {
       setFilterOptions((prev) => {
-        const uniqueOptions = new Map();
-
-        prev.forEach((op) => uniqueOptions.set(op.id, op));
-
-        newOptions.forEach((op: FilterOptionsType) => {
-          uniqueOptions.set(op.id, op);
-        });
-
-        return Array.from(uniqueOptions.values());
+        const uniqueOptions = new Map(
+          prev.concat(newOptions).map(op => [op.id, op])
+        );
+  
+        return Array.from(uniqueOptions.values())
+          .filter(v => Array.isArray(v.value) ? v.value.length > 0 : v.value);
       });
     },
     [filterOptions]
@@ -64,6 +61,7 @@ export const ProductFiltersContextProvider = ({ children }: CartProviderProps) =
     setSelectedAttributesValues({});
     setFilterOptions([]);
     setSortOptions(undefined);
+    setDateRange({ startDate: undefined, endDate: undefined })
   };
 
   const handleCheckboxChange = (attributeName: string, value: string) => {
@@ -80,13 +78,11 @@ export const ProductFiltersContextProvider = ({ children }: CartProviderProps) =
 
       // Update filter options
       const newOptions = Object.keys(updatedValues).reduce((acc: FilterOptionsType[], key) => {
-        if (updatedValues[key].length > 0) {
-          acc.push({
-            id: `productAttributeNames.${key}`,
-            type: 'includesValue',
-            value: updatedValues[key],
-          });
-        }
+        acc.push({
+          id: `productAttributeNames.${key}`,
+          type: 'includesValue',
+          value: updatedValues[key],
+        });
         return acc;
       }, []);
       addFilterOptions(newOptions);
@@ -98,7 +94,7 @@ export const ProductFiltersContextProvider = ({ children }: CartProviderProps) =
   const handleDateChange = (attributeName: string, dates: DatesType) => {
     setDateRange(dates);
 
-    const newOptions = Object.keys(dates).reduce((acc: FilterOptionsType[], key) => {
+    const newOptions = Object.keys(dates).reduce((acc: FilterOptionsType[]) => {
       acc.push({
         id: `productAttributeNames.${attributeName}`,
         type: 'dateBetween',

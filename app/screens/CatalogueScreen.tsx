@@ -20,7 +20,7 @@ const CatalogueScreen: React.FC<Props> = ({ navigation, route }) => {
 
   const [menuItems, setMenuItems] = useState<CategoryType[]>([]);
 
-  const parentIdParam = route.params.categoryId;
+  const parentIdParam = route?.params?.categoryId;
 
   useEffect(() => {
     loadCategories();

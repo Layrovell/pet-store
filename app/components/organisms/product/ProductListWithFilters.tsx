@@ -47,29 +47,31 @@ const ProductListWithFilters: React.FC<Props> = ({ navigation, dataset, loading,
   return (
     <View style={{ flex: 1 }}>
       {loading && !dataset?.length && <ActivityIndicator visible={loading} />}
-        <FlatList
-          data={dataset}
-          renderItem={renderItem}
-          contentContainerStyle={{ gap: 16 }}
-          columnWrapperStyle={{ gap: 16 }}
-          keyExtractor={(item) => `${item.id}-${item.name}`}
-          onEndReachedThreshold={0.1}
-          initialNumToRender={6}
-          bounces
-          onEndReached={() => {
-            loadMoreProducts(filterOptions);
-          }}
-          numColumns={2}
-          ListFooterComponent={renderFooter}
-          ListEmptyComponent={
+      <FlatList
+        data={dataset}
+        renderItem={renderItem}
+        contentContainerStyle={{ gap: 16 }}
+        columnWrapperStyle={{ gap: 16 }}
+        keyExtractor={(item) => `${item.id}-${item.name}`}
+        onEndReachedThreshold={0.1}
+        initialNumToRender={6}
+        bounces
+        onEndReached={() => {
+          loadMoreProducts(filterOptions);
+        }}
+        numColumns={2}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={
+          !loading && !dataset?.length ? (
             <View style={{ flex: 1 }}>
               <Typography>No data</Typography>
             </View>
-          }
-          onViewableItemsChanged={({ viewableItems: vItems }) => {
-            viewableItems.value = vItems;
-          }}
-        />
+          ) : null
+        }
+        onViewableItemsChanged={({ viewableItems: vItems }) => {
+          viewableItems.value = vItems;
+        }}
+      />
     </View>
   );
 };

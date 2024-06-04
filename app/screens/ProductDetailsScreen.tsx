@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -14,6 +14,7 @@ import PlusMinusButton from '../components/PlusMinusButton';
 import Footer from '../components/Footer';
 import { getRandomImages } from '../api/mock/products';
 import { firstUpperLetter } from 'utils/stringFormatter';
+import useCategoriesService from 'controllers/category/service';
 
 interface Props {
   route: any;
@@ -23,11 +24,19 @@ interface Props {
 const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
   const [amount, setAmount] = useState(0);
 
+  const { categoryById, loadCategoryById } = useCategoriesService();
+
   const item = route.params;
 
   const imagesMock = useMemo(() => {
     return getRandomImages();
   }, []);
+
+  useEffect(() => {
+    if (item?.categoryId) {
+      loadCategoryById(item.categoryId);
+    }
+  }, [item?.categoryId]);
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: firstUpperLetter(item.name) })
@@ -38,19 +47,15 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
       <ScrollView>
         <ImageCarousel items={imagesMock} />
 
-        <Screen style={{ minHeight: 300 }}>
+        <Screen style={{ minHeight: 300, marginTop: 24 }}>
           <Stack spacing={4}>
             <Typography variant='h5' style={{ textTransform: 'capitalize' }}>
               {item.name}
             </Typography>
-            <Typography variant='body2'>Category: {item.category || 'no category'}</Typography>
-            <Typography variant='body3'>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem, aliquam? Itaque sint impedit ipsam sunt
-              quo in iste quaerat distinctio, repellendus ullam nesciunt. Impedit nemo ratione incidunt quam itaque
-              doloremque.
-            </Typography>
+            <Typography variant='body2'>Category: {categoryById?.name || 'no category'}</Typography>
+            <Typography variant='body3'>{item?.description}</Typography>
 
-            <Attributes data={item.attributes} />
+            <Attributes data={item.productAttributeNames} />
           </Stack>
         </Screen>
       </ScrollView>
