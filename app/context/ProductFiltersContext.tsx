@@ -94,13 +94,16 @@ export const ProductFiltersContextProvider = ({ children }: CartProviderProps) =
   const handleDateChange = (attributeName: string, dates: DatesType) => {
     setDateRange(dates);
 
+    const startDate = dates.startDate ? dates.startDate : new Date();
+    const endDate = dates.endDate ? dates.endDate: new Date();
+
     const newOptions = Object.keys(dates).reduce((acc: FilterOptionsType[]) => {
       acc.push({
         id: `productAttributeNames.${attributeName}`,
         type: 'dateBetween',
         value: {
-          from: dates.startDate,
-          to: dates.endDate,
+          from: startDate,
+          to: endDate,
         },
       });
       return acc;

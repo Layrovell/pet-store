@@ -46,6 +46,7 @@ const ProductsFilters: React.FC<Props> = ({ data, isLoading, initialLoadProducts
             max={new Date(item?.values?.[1])}
             onSelect={(nextRange) => handleDateChange(item.name, nextRange)}
             accessoryRight={<Icon name={'calendar-outline'} />}
+            initialVisibleDate={item?.values[0] ? new Date(item?.values[0]) : new Date()}
           />
         )}
       </>
