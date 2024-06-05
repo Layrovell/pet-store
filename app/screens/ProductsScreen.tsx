@@ -9,7 +9,7 @@ import useCategoriesService from 'controllers/category/service';
 import ProductsFilters from '@organisms/product/ProductsFilters';
 import useProductFiltration from 'hooks/useProductFiltration';
 import { ActivityIndicator } from '@components/index';
-import ProductListWithFilters from '@organisms/product/ProductListWithFilters';
+import ProductsList from '@components/organisms/product/ProductsList';
 import Stack from '@components/Stack';
 import colors from 'config/colors';
 import Icon from '@atoms/Icon';
@@ -152,7 +152,6 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
             <ProductsFilters
               data={attributes}
               isLoading={loading.attributes}
-              // fetchWithFilters={fetchWithFilters}
               initialLoadProducts={initialLoadProducts}
             />
           );
@@ -161,7 +160,7 @@ const ProductsScreen: React.FC<Props> = ({ route, navigation }) => {
         onDrawerOpen={() => setIsDrawerOpen(true)}
       >
         <View style={{ margin: 16, flex: 1 }}>
-          <ProductListWithFilters
+          <ProductsList
             navigation={navigation}
             dataset={productsByCategory}
             loading={loadingProductsByCategory}

@@ -8,11 +8,12 @@ import Stack from '@components/Stack';
 import Button from '@atoms/Button';
 import Icon from '@atoms/Icon';
 import { Product } from '@type/product.interface';
+import { twoDecimals } from 'utils/numberFormatter';
 
 interface Props {
   item: Product;
   onPress?: () => void;
-  onPressBuy: () => void;
+  onPressBuy: (product: Product) => void;
   viewableItems: Animated.SharedValue<ViewToken[]>;
 }
 
@@ -50,9 +51,14 @@ const ProductItem: React.FC<Props> = React.memo(({ item, onPress, onPressBuy, vi
             </Stack>
             <View style={styles.titleSection}>
               <Typography variant='h4' style={styles.price}>
-                ${price}
+                ${twoDecimals(price)}
               </Typography>
-              <Button size='tiny' appearance='ghost' accessoryLeft={<Icon name='plus-outline' />}></Button>
+              <Button
+                size='tiny'
+                appearance='ghost'
+                onPress={() => onPressBuy(item)}
+                accessoryLeft={<Icon name='plus-outline' />}
+              ></Button>
             </View>
           </View>
     </Animated.View>

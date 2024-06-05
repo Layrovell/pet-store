@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, FlatList, View, Image, TouchableOpacity } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { RectButton } from 'react-native-gesture-handler';
@@ -10,8 +10,13 @@ import Button from '../components/atoms/Button';
 // hooks
 import { Product } from '../interface/product.interface';
 import colors from '../config/colors';
-import useProductsService from '../controllers/product/service';
+import useCartService from 'controllers/basket/service';
+import { twoDecimals } from 'utils/numberFormatter';
+import useCategoriesService from 'controllers/category/service';
 import Icon from '../components/atoms/Icon';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '@type/navigation';
+import routes from 'navigation/routes';
 
 const ListItemDeleteAction = ({ onPress }: any) => {
   return (
@@ -23,16 +28,24 @@ const ListItemDeleteAction = ({ onPress }: any) => {
 
 interface CartItemProps {
   item: Product;
-  onDelete: (id: number) => void;
+  onDelete: (product: Product) => void;
   onView: (id: number) => void;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item, onDelete, onView }) => {
+  const { categoryById, loadCategoryById } = useCategoriesService();
+
+  useEffect(() => {
+    if (item.categoryId) {
+      loadCategoryById(item.categoryId);
+    }
+  }, [item?.categoryId]);
+
   return (
     <View style={styles.itemContainer}>
       <Swipeable
         overshootRight={false}
-        renderRightActions={() => <ListItemDeleteAction onPress={() => onDelete(item.id)} />}
+        renderRightActions={() => <ListItemDeleteAction onPress={() => onDelete(item)} />}
       >
         <TouchableOpacity activeOpacity={0.8} onPress={() => onView(item.id)}>
           <View style={styles.item}>
@@ -47,7 +60,8 @@ const CartItem: React.FC<CartItemProps> = ({ item, onDelete, onView }) => {
                 <Typography variant='h5' style={{ textTransform: 'capitalize' }}>
                   {item?.name}
                 </Typography>
-                <Typography variant='body2'>category</Typography>
+                <Typography variant='body2'>Category: {categoryById?.name}</Typography>
+                <Typography variant='body3'>Quantity: {item?.quantity}</Typography>
               </View>
 
               <Typography variant='h5' color={colors.secondary.main}>
@@ -61,13 +75,13 @@ const CartItem: React.FC<CartItemProps> = ({ item, onDelete, onView }) => {
   );
 };
 
-interface Props {}
+type Props = StackScreenProps<RootStackParamList, 'Cart'>;
 
-const CartScreen: React.FC<Props> = () => {
-  const { loadProducts, data: products } = useProductsService();
+const CartScreen: React.FC<Props> = ({ navigation }) => {
+  const { data, totalPrice, removeFromBasket, totalCount, clearBasket } = useCartService();
 
-  const handleDeleteProduct = (id: number) => {
-    console.log('onDelete product with id:', id);
+  const handleDeleteProduct = (product: Product) => {
+    removeFromBasket(product);
   };
 
   const handleViewProduct = (id: number) => {
@@ -76,33 +90,46 @@ const CartScreen: React.FC<Props> = () => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.container, { paddingHorizontal: 16 }]}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={products?.content?.slice(0, 5)}
-          keyExtractor={(item) => `${item.id}`}
-          renderItem={({ item }) => <CartItem item={item} onDelete={handleDeleteProduct} onView={handleViewProduct} />}
-        />
-      </View>
+      {data.length > 0 ? (
+        <>
+          <View style={[styles.container, { paddingHorizontal: 16 }]}>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={data}
+              keyExtractor={(item) => `${item.id}`}
+              renderItem={({ item }) => (
+                <CartItem item={item} onDelete={handleDeleteProduct} onView={handleViewProduct} />
+              )}
+            />
+          </View>
 
-      <Footer>
-        <Stack spacing={3}>
-          <View style={styles.summaryRow}>
-            <Typography variant='body3'>3 items</Typography>
-            <Typography variant='body3'>$38,97</Typography>
-          </View>
-          <View style={styles.summaryRow}>
-            <Typography variant='body3'>Tax</Typography>
-            <Typography variant='body3'>$1,99</Typography>
-          </View>
-          <View style={styles.summaryRow}>
-            <Typography variant='h5'>Totals</Typography>
-            <Typography variant='h4'>$36,98</Typography>
-          </View>
+          <Footer>
+            <Stack spacing={3}>
+              <View style={styles.summaryRow}>
+                <Typography variant='body3'>{totalCount} items</Typography>
+                <Typography variant='body3'>${twoDecimals(totalPrice)}</Typography>
+              </View>
+              <View style={styles.summaryRow}>
+                <Typography variant='body3'>Tax</Typography>
+                <Typography variant='body3'>${1.99}</Typography>
+              </View>
+              <View style={styles.summaryRow}>
+                <Typography variant='h5'>Totals</Typography>
+                <Typography variant='h4'>${twoDecimals(totalPrice) + 1.99}</Typography>
+              </View>
+            </Stack>
+
+            <Button size='large' onPress={() => {}}>
+              Checkout
+            </Button>
+          </Footer>
+        </>
+      ) : (
+        <Stack spacing={3} style={styles.center}>
+          <Typography variant='h5'>Your cart is empty</Typography>
+          <Button onPress={() => navigation.navigate(routes.HOME)}>Home</Button>
         </Stack>
-
-        <Button size='large' onPress={() => {}}>Checkout</Button>
-      </Footer>
+      )}
     </View>
   );
 };
@@ -140,6 +167,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginLeft: 16,
     backgroundColor: colors.background,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
