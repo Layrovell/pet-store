@@ -3,8 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import Screen from '../components/Screen';
-import colors from '../config/colors';
-import routes from '../navigation/routes';
+import useCartService from 'controllers/basket/service';
 import AppButton from '../components/Button';
 import Typography from '../components/Typography';
 import Stack from '../components/Stack';
@@ -23,6 +22,7 @@ interface Props {
 
 const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
   const [amount, setAmount] = useState(0);
+  const { addToBasket } = useCartService();
 
   const { categoryById, loadCategoryById } = useCategoriesService();
 
@@ -73,7 +73,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ route, navigation }) => {
           radius={30}
           fullWidth
           onPress={() => {
-            navigation.navigate(routes.CART_DETAILS);
+            addToBasket(item);
           }}
         />
       </Footer>

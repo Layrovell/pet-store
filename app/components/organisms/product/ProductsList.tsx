@@ -8,7 +8,7 @@ import { ActivityIndicator } from '@components/index';
 import Typography from '@components/Typography';
 import { Product } from '@type/product.interface';
 import { useSharedValue } from 'react-native-reanimated';
-import useProductFiltration from 'hooks/useProductFiltration';
+import useCartService from 'controllers/basket/service';
 
 interface Props {
   navigation?: NavigationProp<ParamListBase>;
@@ -20,6 +20,8 @@ interface Props {
 }
 
 const ProductsList: React.FC<Props> = ({ navigation, dataset, loading, error, loadMoreProducts, renderFooter }) => {
+  const { addToBasket } = useCartService();
+
   if (error) {
     return <Typography>{error}</Typography>;
   }
@@ -27,13 +29,13 @@ const ProductsList: React.FC<Props> = ({ navigation, dataset, loading, error, lo
   const viewableItems = useSharedValue<ViewToken[]>([]);
 
   const renderItem = useCallback(
-    ({ item }: any) => (
+    ({ item }: { item: Product }) => (
       <ListItem
         onPress={() => {
           navigation?.navigate(routes.PRODUCT_DETAILS, item);
         }}
         onPressBuy={() => {
-          navigation?.navigate(routes.CART_DETAILS);
+          addToBasket({ ...item });
         }}
         item={item}
         viewableItems={viewableItems}

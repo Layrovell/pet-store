@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ProductFiltersContextProvider } from 'context/ProductFiltersContext';
@@ -16,6 +16,7 @@ import ProductsScreen from '../screens/ProductsScreen';
 import CatalogueScreen from 'screens/CatalogueScreen';
 import routes from './routes';
 import { RootStackParamList } from '@type/navigation';
+import useCartService from 'controllers/basket/service';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -85,7 +86,10 @@ const tabArr = [
 
 const TabBarButton = (props: any) => {
   const { item, onPress, accessibilityState } = props;
+  const { totalCount } = useCartService();
+
   const focused = accessibilityState.selected;
+  const scale = useSharedValue(1);
 
   const rStyle = useAnimatedStyle(() => {
     return {
@@ -93,10 +97,44 @@ const TabBarButton = (props: any) => {
     };
   }, [focused]);
 
+  const animatedStyleCount = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+  useEffect(() => {
+    scale.value = withTiming(0.4, { duration: 200, easing: Easing.out(Easing.exp) }, () => {
+      scale.value = withTiming(1.2, { duration: 200, easing: Easing.out(Easing.exp) }, () => {
+        scale.value = withTiming(1, { duration: 200, easing: Easing.out(Easing.exp) });
+      });
+    });
+  }, [totalCount]);
+
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.4}>
       <Animated.View style={rStyle}>
         <Icon name={focused ? item.activeIcon : item.inactiveIcon} fill={'orange'} size={26} />
+        {item.route === routes.CART_TAB && totalCount > 0 && (
+          <Animated.View
+            style={[
+              {
+                position: 'absolute',
+                bottom: '50%',
+                left: '15%',
+                backgroundColor: '#251B37',
+                width: 18,
+                height: 18,
+                borderRadius: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              animatedStyleCount,
+            ]}
+          >
+            <Animated.Text style={{ color: 'white', fontSize: 10 }}>{totalCount}</Animated.Text>
+          </Animated.View>
+        )}
       </Animated.View>
     </TouchableOpacity>
   );
@@ -125,7 +163,6 @@ function TabNavigationScreen() {
             component={MainStackScreen}
             initialParams={{ screen: item.initialRoute }}
             options={{
-              tabBarLabel: item.label,
               tabBarButton: (props) => <TabBarButton {...props} item={item} />,
             }}
           />

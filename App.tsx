@@ -11,6 +11,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useCartService from 'controllers/basket/service';
 
 import AuthNavigator from './app/navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigationTheme';
@@ -54,11 +56,27 @@ const Routes = () => {
   const [mode, setMode] = React.useState<Mode>('light');
 
   const navigationRef = useNavigationContainerRef();
+  const { setCartDataFromLocalStorage } = useCartService();
 
   const toggleMode = () => {
     const nextMode = mode === 'light' ? 'dark' : 'light';
     setMode(nextMode);
   };
+
+  useEffect(() => {
+    const initializeCartData = async () => {
+      try {
+        const cartData = await AsyncStorage.getItem('cartData');
+        if (cartData) {
+          setCartDataFromLocalStorage(JSON.parse(cartData));
+        }
+      } catch (error) {
+        console.log('Error initializing cart data:', error);
+      }
+    };
+
+    initializeCartData();
+  }, []);
 
   useEffect(() => {
     if (error) {

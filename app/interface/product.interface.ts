@@ -16,7 +16,7 @@ export type ProductAttributeNames = {
   size?: string;
 };
 
-export interface Product {
+export type Product = {
   id: number;
   attributes: KeyValuePair;
   categoryId: number;
@@ -27,7 +27,7 @@ export interface Product {
   price: number;
   status: StatusType;
   productAttributeNames?: ProductAttributeNames;
-}
+} & { quantity: number };
 
 export type FilteredProductsPayload = {
   categoryId: number;
