@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 
+import { splitBeforeUppercase } from 'utils/stringFormatter';
 import Typography from '@components/Typography';
 import Input from '@atoms/Input';
 import Icon from '@atoms/Icon';
@@ -39,7 +40,7 @@ const PageHeaderNavigation: React.FC<Props> = ({ routeName, leftAction, rightAct
           )}
           {routeName && (
             <Typography variant='h4' textAlign='center'>
-              {routeName}
+              {splitBeforeUppercase(routeName)}
             </Typography>
           )}
         </View>
