@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Dimensions, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import * as Yup from 'yup';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Formik } from 'formik';
 
 import Screen from '../components/Screen';
-import { SubmitButton } from '../components/forms';
+import { ErrorMessage, SubmitButton } from '../components/forms';
 import { ActivityIndicator } from '../components';
 import useAuthService from '../controllers/auth/service';
 import Stack from '../components/Stack';
-import { AUTH_KEY } from '../store/config.store';
-import usePromiseService from '../controllers/promises/service';
 import Typography from '../components/Typography';
 import Link from '../components/Link';
 import routes from '../navigation/routes';
@@ -26,11 +24,7 @@ interface Props {
 }
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
-  const { login } = useAuthService();
-  const { getIsLoading, getError } = usePromiseService();
-
-  const loading = getIsLoading(AUTH_KEY);
-  const error = getError(AUTH_KEY);
+  const { login, error, loading } = useAuthService();
 
   const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
     await login(email, password);
@@ -52,14 +46,15 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           </Typography>
 
           <Formik
-            initialValues={{ email: 'qqq@gmail.com', password: 'qwe123' }}
+            initialValues={{ email: 'qqq@gmail.com', password: 'qwe1231' }}
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
+            validateOnBlur={false}
           >
             {({ isValid, dirty }) => {
               return (
                 <>
-                  <LoginForm formError={error} />
+                  <LoginForm formError={error.login} />
 
                   <Stack spacing={6} style={[styles.fullWidth, styles.right]}>
                     <Stack spacing={1} direction='row' style={styles.center}>
@@ -74,9 +69,11 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             }}
           </Formik>
         </Stack>
+
+        <ErrorMessage error={error.login} />
       </Screen>
 
-      {loading && <ActivityIndicator visible={loading} />}
+      {loading && <ActivityIndicator visible={loading.login} />}
     </KeyboardAvoidingView>
   );
 };

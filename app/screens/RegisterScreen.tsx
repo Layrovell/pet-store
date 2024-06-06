@@ -5,11 +5,9 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Formik } from 'formik';
 
 import Screen from '../components/Screen';
-import { SubmitButton } from '../components/forms';
+import { ErrorMessage, SubmitButton } from '../components/forms';
 import { ActivityIndicator } from '../components';
 import useAuthService from '../controllers/auth/service';
-import usePromiseService from '../controllers/promises/service';
-import { AUTH_KEY } from '../store/config.store';
 import Stack from '../components/Stack';
 import Typography from '../components/Typography';
 import Link from '../components/Link';
@@ -29,11 +27,7 @@ interface Props {
 }
 
 const RegisterScreen: React.FC<Props> = ({ navigation }) => {
-  const { register } = useAuthService();
-  const { getIsLoading, getError } = usePromiseService();
-
-  const loading = getIsLoading(AUTH_KEY);
-  const error = getError(AUTH_KEY);
+  const { register, error, loading } = useAuthService();
 
   const handleSubmit = async (userInfo: any) => {
     await register(userInfo);
@@ -59,11 +53,13 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
             style={[styles.fullWidth, styles.between]}
+            validateOnChange={false}
+            validateOnBlur={false}
           >
             {({ isValid }) => {
               return (
                 <>
-                  <RegisterForm formError={error} />
+                  <RegisterForm formError={error.register} />
 
                   <Stack spacing={6} style={[styles.fullWidth, styles.right]}>
                     <Stack spacing={1} direction='row' style={styles.center}>
@@ -78,9 +74,11 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             }}
           </Formik>
         </Stack>
+
+        <ErrorMessage error={error.register} />
       </Screen>
 
-      {loading && <ActivityIndicator visible={loading} />}
+      {loading && <ActivityIndicator visible={loading.register} />}
     </KeyboardAvoidingView>
   );
 };

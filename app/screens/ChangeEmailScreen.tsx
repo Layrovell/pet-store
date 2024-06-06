@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import { FormField, SubmitButton } from '../components/forms';
-import Stack from '@components/Stack';
+import { ErrorMessage, FormField, SubmitButton } from '../components/forms';
+import useAuthService from 'controllers/auth/service';
 import Screen from '@components/Screen';
+import Stack from '@components/Stack';
 
 const validationSchema = Yup.object().shape({
   newEmail: Yup.string().label('New email'),
@@ -15,8 +16,16 @@ const validationSchema = Yup.object().shape({
 interface Props {}
 
 const ChangeEmailScreen: React.FC<Props> = () => {
+  const [updatePasswordResponse, setUpdatePasswordResponse] = useState('');
+  const { data: user, updateEmail, error, loading } = useAuthService();
+
   const handleSubmit = async (data: any) => {
-    console.log('handleSubmit');
+    if (user?.id) {
+      const response = updateEmail(user.id, { password: data.password, email: data.newEmail });
+      if (response) {
+        setUpdatePasswordResponse('Email updated successfully');
+      }
+    }
   };
 
   return (
@@ -32,11 +41,14 @@ const ChangeEmailScreen: React.FC<Props> = () => {
               <FormField label='New email' name='newEmail' placeholder='First name' />
               <FormField label='Password' name='password' placeholder='User name' />
               <FormField label='Repeat password' name='repeatPassword' placeholder='Last name' />
-              <SubmitButton title={'Save'} disabled={false} />
+              <SubmitButton title={'Save'} disabled={false} loading={loading.updateEmail} />
             </Stack>
           );
         }}
       </Formik>
+
+      <ErrorMessage error={error.updateEmail} status={'error'} />
+      <ErrorMessage error={updatePasswordResponse} status={'info'} />
     </Screen>
   );
 };
