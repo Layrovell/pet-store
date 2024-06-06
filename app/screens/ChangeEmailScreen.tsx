@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Formik } from 'formik';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FormikProvider, useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { ErrorMessage, FormField, SubmitButton } from '../components/forms';
@@ -8,47 +8,55 @@ import Screen from '@components/Screen';
 import Stack from '@components/Stack';
 
 const validationSchema = Yup.object().shape({
-  newEmail: Yup.string().label('New email'),
-  password: Yup.string().label('Password'),
-  repeatPassword: Yup.string().label('Repeat password'),
+  newEmail: Yup.string().required('New email is required'),
+  password: Yup.string().required('Password is required'),
+  repeatPassword: Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match'),
 });
 
 interface Props {}
 
-const ChangeEmailScreen: React.FC<Props> = () => {
-  const [updatePasswordResponse, setUpdatePasswordResponse] = useState('');
-  const { data: user, updateEmail, error, loading } = useAuthService();
+const initialValues = { newEmail: '', password: '', repeatPassword: '' };
 
-  const handleSubmit = async (data: any) => {
-    if (user?.id) {
-      const response = updateEmail(user.id, { password: data.password, email: data.newEmail });
-      if (response) {
-        setUpdatePasswordResponse('Email updated successfully');
+const ChangeEmailScreen: React.FC<Props> = () => {
+  const [updateEmailMessage, setUpdateEmailMessage] = useState('');
+  const { data: user, updateEmail, error, loading, status } = useAuthService();
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values) => {
+      if (user?.id) {
+        updateEmail(user.id, { password: values.password, email: values.newEmail });
       }
+    },
+    validateOnBlur: false,
+  });
+
+  useEffect(() => {
+    setUpdateEmailMessage('');
+    if (status.updateEmail === 200) {
+      setUpdateEmailMessage('Email updated successfully');
+      formik.resetForm();
     }
-  };
+  }, [status.updateEmail]);
+
+  const disabled = useMemo(() => {
+    return !formik.isValid || !formik.values.newEmail || !formik.values.password || !formik.values.repeatPassword;
+  }, [formik]);
 
   return (
     <Screen>
-      <Formik
-        initialValues={{ newEmail: '', password: '', repeatPassword: '' }}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
-        {({ isValid }) => {
-          return (
-            <Stack spacing={4}>
-              <FormField label='New email' name='newEmail' placeholder='First name' />
-              <FormField label='Password' name='password' placeholder='User name' />
-              <FormField label='Repeat password' name='repeatPassword' placeholder='Last name' />
-              <SubmitButton title={'Save'} disabled={false} loading={loading.updateEmail} />
-            </Stack>
-          );
-        }}
-      </Formik>
+      <FormikProvider value={formik}>
+        <Stack spacing={4}>
+          <FormField label='New email' name='newEmail' />
+          <FormField label='Password' name='password' />
+          <FormField label='Repeat password' name='repeatPassword' />
+          <SubmitButton title={'Save'} disabled={disabled} loading={loading.updateEmail} />
+        </Stack>
+      </FormikProvider>
 
       <ErrorMessage error={error.updateEmail} status={'error'} />
-      <ErrorMessage error={updatePasswordResponse} status={'info'} />
+      <ErrorMessage error={updateEmailMessage} status={'success'} />
     </Screen>
   );
 };

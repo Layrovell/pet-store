@@ -22,7 +22,7 @@ const useAuthService = (): Readonly<AuthServiceOperators> => {
     data: useAppSelector(selectUser),
     loading: authState.loading,
     error: authState.error,
-    notifications: authState.notifications,
+    status: authState.status,
     login: useCallback((email, password) => {
       dispatch(authActions.loginRequest({ email, password }));
     }, [dispatch]),

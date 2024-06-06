@@ -17,8 +17,9 @@ export interface AuthState {
     updatePassword: string | null,
     updateEmail: string | null,
   };
-  notifications: {
-    updatePassword: string;
+  status: {
+    updatePassword: number | null;
+    updateEmail: number | null;
   };
 }
 
@@ -36,8 +37,9 @@ const initialState: AuthState = {
     updatePassword: null,
     updateEmail: null,
   },
-  notifications: {
-    updatePassword: '',
+  status: {
+    updatePassword: null,
+    updateEmail: null,
   },
 };
 
@@ -80,30 +82,31 @@ const authSlice = createSlice({
     updatePasswordRequest: (state, action: PayloadAction<{ id: number, data: { password: string, oldPassword: string } }>) => {
       state.loading.updatePassword = true;
       state.error.updatePassword = null;
-      state.notifications.updatePassword = '';
+      state.status.updatePassword = null;
     },
     updatePasswordSuccess: (state, action: PayloadAction<any>) => {
       state.loading.updatePassword = false;
-      state.notifications.updatePassword = action.payload;
+      state.status.updatePassword = action.payload;
     },
     updatePasswordFailure: (state, action: PayloadAction<string>) => {
       state.loading.updatePassword = false;
       state.error.updatePassword = action.payload;
-      state.notifications.updatePassword = '';
+      state.status.updatePassword = null;
     },
     // updating user email
     updateEmailRequest: (state, action: PayloadAction<{ id: number, data: { password: string, email: string } }>) => {
       state.loading.updateEmail = true;
       state.error.updateEmail = null;
-      // state.notifications.updatePassword = '';
+      state.status.updateEmail = null;
     },
     updateEmailSuccess: (state, action: PayloadAction<any>) => {
       state.loading.updateEmail = false;
+      state.status.updateEmail = action.payload;
     },
     updateEmailFailure: (state, action: PayloadAction<string>) => {
       state.loading.updateEmail = false;
       state.error.updateEmail = action.payload;
-      // state.notifications.updatePassword = '';
+      state.status.updateEmail = null;
     },
   },
 });

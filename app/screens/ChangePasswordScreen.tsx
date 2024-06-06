@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Formik } from 'formik';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FormikProvider, useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { ErrorMessage, FormField, SubmitButton } from '../components/forms';
@@ -9,49 +9,59 @@ import useAuthService from 'controllers/auth/service';
 
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required('Old password is required'),
-  newPassword: Yup.string().required('New password is required'),
-  repeatPassword: Yup.string().oneOf([Yup.ref('newPassword'), ''], 'Passwords must match'),
+  password: Yup.string().required('New password is required'),
+  repeatPassword: Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match'),
 });
 
 interface Props {}
 
+const initialValues = { oldPassword: '', password: '', repeatPassword: '' };
+
 const ChangePasswordScreen: React.FC<Props> = () => {
-  const [updatePasswordResponse, setUpdatePasswordResponse] = useState('');
+  const [updatePasswordMessage, setUpdatePasswordMessage] = useState('');
 
-  const { data: user, updatePassword, error, loading, notifications } = useAuthService();
+  const { data: user, updatePassword, error, loading, status } = useAuthService();
 
-  const handleSubmit = async (data: any) => {
-    if (user?.id) {
-      await updatePassword(user.id, { password: data.newPassword, oldPassword: data.oldPassword });
-    }
-  };
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values) => {
+      if (user?.id) {
+        updatePassword(user.id, { password: values.password, oldPassword: values.oldPassword });
+      }
+    },
+    validateOnBlur: false,
+  });
 
   useEffect(() => {
-    setUpdatePasswordResponse(notifications.updatePassword);
-  }, [notifications.updatePassword]);
+    setUpdatePasswordMessage('');
+    if (status.updatePassword === 200) {
+      setUpdatePasswordMessage('Password updated successfully');
+      formik.resetForm();
+    }
+
+    return () => {
+      setUpdatePasswordMessage('');
+    };
+  }, [status.updatePassword]);
+
+  const disabled = useMemo(() => {
+    return !formik.isValid || !formik.values.oldPassword || !formik.values.password || !formik.values.repeatPassword;
+  }, [formik]);
 
   return (
     <Screen>
-      <Formik
-        initialValues={{ oldPassword: '', newPassword: '', repeatPassword: '' }}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-        validateOnBlur={false}
-      >
-        {({ isValid }) => {
-          return (
-            <Stack spacing={4}>
-              <FormField label='Old password' name='oldPassword' />
-              <FormField label='New password' name='newPassword' />
-              <FormField label='Repeat new password' name='repeatPassword' />
-              <SubmitButton title={'Change Password'} disabled={false} loading={loading.updatePassword} />
-            </Stack>
-          );
-        }}
-      </Formik>
+      <FormikProvider value={formik}>
+        <Stack spacing={4}>
+          <FormField label='Old password' name='oldPassword' />
+          <FormField label='New password' name='password' />
+          <FormField label='Repeat new password' name='repeatPassword' />
+          <SubmitButton title={'Change Password'} disabled={disabled} loading={loading.updatePassword} />
+        </Stack>
+      </FormikProvider>
 
       <ErrorMessage error={error.updatePassword} status={'error'} />
-      <ErrorMessage error={updatePasswordResponse} status={'info'} />
+      <ErrorMessage error={updatePasswordMessage} status={'success'} />
     </Screen>
   );
 };

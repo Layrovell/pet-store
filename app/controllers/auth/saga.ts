@@ -39,9 +39,7 @@ export function* updatePasswordWorker(action: PayloadAction<{ id: number; data: 
   try {
     const { id, data } = action.payload;
     const response = yield call(updatePasswordApi, id, data);
-    if (response.status === 200) {
-      yield put(authActions.updatePasswordSuccess('Password updated successfully'));
-    }
+    yield put(authActions.updatePasswordSuccess(response.status));
   } catch (error: unknown) {
     let errorMessage = 'Failed to update the password';
     if (error instanceof AxiosError) {
@@ -56,13 +54,13 @@ export function* updateEmailWorker(action: PayloadAction<{ id: number; data: { p
   try {
     const { id, data } = action.payload;
     const response = yield call(updateEmailApi, id, data);
-    yield put(authActions.updateEmailSuccess(response.data));
+    yield put(authActions.updateEmailSuccess(response.status));
   } catch (error: unknown) {
     let errorMessage = 'Failed to update the email';
     if (error instanceof AxiosError) {
       errorMessage = error.response?.data?.message || errorMessage;
     }
-    console.error('Error in updatePasswordWorker:', errorMessage, error);
+    console.error('Error in updateEmailWorker:', errorMessage, error);
     yield put(authActions.updateEmailFailure(errorMessage));
   }
 }
