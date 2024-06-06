@@ -17,6 +17,10 @@ import CatalogueScreen from 'screens/CatalogueScreen';
 import routes from './routes';
 import { RootStackParamList } from '@type/navigation';
 import useCartService from 'controllers/basket/service';
+import PrivacyScreen from 'screens/PrivacyScreen';
+import SecurityScreen from 'screens/SecurityScreen';
+import ChangePasswordScreen from 'screens/ChangePasswordScreen';
+import ChangeEmailScreen from 'screens/ChangeEmailScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -49,6 +53,10 @@ function MainStackScreen() {
       <Stack.Screen name={routes.CART_DETAILS} component={CartScreen} />
       <Stack.Screen name={routes.SETTINGS} component={SettingsScreen} />
       <Stack.Screen name={routes.ACCOUNT} component={AccountScreen} />
+      <Stack.Screen name={routes.PRIVACY_POLICY} component={PrivacyScreen} />
+      <Stack.Screen name={routes.SECURITY} component={SecurityScreen} />
+      <Stack.Screen name={routes.CHANGE_PASSWORD} component={ChangePasswordScreen} />
+      <Stack.Screen name={routes.CHANGE_EMAIL} component={ChangeEmailScreen} />
     </Stack.Navigator>
   );
 }

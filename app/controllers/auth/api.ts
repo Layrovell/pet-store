@@ -15,6 +15,14 @@ export const registerApi = (data: User) => {
   return axiosInstance.post(`/auth/register`, JSON.stringify(data));
 };
 
-export const getUserApi = (username: string = 'Marina123') => {
+export const getUserApi = (username: string) => {
   return axiosInstance.get(`/user/${username}`);
+};
+
+export const updatePasswordApi = (id: number, data: { password: string; oldPassword: string }) => {
+  return axiosInstance.patch(`/users/${id}/password`, data);
+};
+
+export const updateEmailApi = (id: number, data: { email: string; password: string }) => {
+  return axiosInstance.patch(`/users/${id}/email`, data);
 };

@@ -1,26 +1,30 @@
 import React from "react";
 
-import Typography from "../Typography";
-import colors from "../../config/colors";
+import Snackbar from '@components/atoms/snackbar';
 
 interface Props {
-  error?: any;
+  error?: string | string[] | null;
   visible?: boolean;
+  status?: 'success' | 'error' | 'warning' | 'info';
 }
 
-const ErrorMessage: React.FC<Props> = ({ error, visible }) => {
-  if (!visible || !error) return null;
+const ErrorMessage: React.FC<Props> = ({ error, status }) => {
+  if (!error) return null;
 
   return (
     <>
       {Array.isArray(error) ? (
         error.map((err: string, idx) => (
-          <Typography color={colors.danger} key={idx}>
-            {err}
-          </Typography>
+          <Snackbar
+            key={idx}
+            message={err}
+            duration={5000}
+            position='top' // 'top'/'bottom'
+            status={status}
+          />
         ))
       ) : (
-        <Typography color={colors.danger}>{error.message || error}</Typography>
+        <Snackbar message={error} duration={5000} position='top' status={status} />
       )}
     </>
   );

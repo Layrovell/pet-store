@@ -2,11 +2,11 @@ import React from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 
 import Icon from '../../atoms/Icon';
-import { ErrorMessage, FormField } from '../../forms';
+import { FormField } from '../../forms';
 import Stack from '../../Stack';
 
 interface Props {
-  formError?: string;
+  formError: string | null;
 }
 
 const LoginForm: React.FC<Props> = ({ formError }) => {
@@ -24,7 +24,6 @@ const LoginForm: React.FC<Props> = ({ formError }) => {
 
   return (
     <Stack spacing={4} style={{ marginBottom: 36 }}>
-      <ErrorMessage error={formError} visible={!!formError} />
       <FormField
         name='email'
         label={'Email'}
