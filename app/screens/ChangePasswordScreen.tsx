@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { ErrorMessage, FormField, SubmitButton } from '../components/forms';
+import { FormField, SubmitButton } from '../components/forms';
 import Screen from '@components/Screen';
 import Stack from '@components/Stack';
 import useAuthService from 'controllers/auth/service';
@@ -18,8 +18,6 @@ interface Props {}
 const initialValues = { oldPassword: '', password: '', repeatPassword: '' };
 
 const ChangePasswordScreen: React.FC<Props> = () => {
-  const [updatePasswordMessage, setUpdatePasswordMessage] = useState('');
-
   const { data: user, updatePassword, error, loading, status } = useAuthService();
 
   const formik = useFormik({
@@ -34,15 +32,9 @@ const ChangePasswordScreen: React.FC<Props> = () => {
   });
 
   useEffect(() => {
-    setUpdatePasswordMessage('');
     if (status.updatePassword === 200) {
-      setUpdatePasswordMessage('Password updated successfully');
       formik.resetForm();
     }
-
-    return () => {
-      setUpdatePasswordMessage('');
-    };
   }, [status.updatePassword]);
 
   const disabled = useMemo(() => {
@@ -59,9 +51,6 @@ const ChangePasswordScreen: React.FC<Props> = () => {
           <SubmitButton title={'Change Password'} disabled={disabled} loading={loading.updatePassword} />
         </Stack>
       </FormikProvider>
-
-      <ErrorMessage error={error.updatePassword} status={'error'} />
-      <ErrorMessage error={updatePasswordMessage} status={'success'} />
     </Screen>
   );
 };

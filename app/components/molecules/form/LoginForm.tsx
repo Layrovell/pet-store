@@ -5,11 +5,9 @@ import Icon from '../../atoms/Icon';
 import { FormField } from '../../forms';
 import Stack from '../../Stack';
 
-interface Props {
-  formError: string | null;
-}
+interface Props {}
 
-const LoginForm: React.FC<Props> = ({ formError }) => {
+const LoginForm: React.FC<Props> = () => {
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
 
   const toggleSecureEntry = (): void => {

@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { ErrorMessage, FormField, SubmitButton } from '../components/forms';
+import { FormField, SubmitButton } from '../components/forms';
 import useAuthService from 'controllers/auth/service';
 import Screen from '@components/Screen';
 import Stack from '@components/Stack';
@@ -18,8 +18,7 @@ interface Props {}
 const initialValues = { newEmail: '', password: '', repeatPassword: '' };
 
 const ChangeEmailScreen: React.FC<Props> = () => {
-  const [updateEmailMessage, setUpdateEmailMessage] = useState('');
-  const { data: user, updateEmail, error, loading, status } = useAuthService();
+  const { data: user, updateEmail, loading, status } = useAuthService();
 
   const formik = useFormik({
     initialValues,
@@ -33,9 +32,7 @@ const ChangeEmailScreen: React.FC<Props> = () => {
   });
 
   useEffect(() => {
-    setUpdateEmailMessage('');
     if (status.updateEmail === 200) {
-      setUpdateEmailMessage('Email updated successfully');
       formik.resetForm();
     }
   }, [status.updateEmail]);
@@ -54,9 +51,6 @@ const ChangeEmailScreen: React.FC<Props> = () => {
           <SubmitButton title={'Save'} disabled={disabled} loading={loading.updateEmail} />
         </Stack>
       </FormikProvider>
-
-      <ErrorMessage error={error.updateEmail} status={'error'} />
-      <ErrorMessage error={updateEmailMessage} status={'success'} />
     </Screen>
   );
 };

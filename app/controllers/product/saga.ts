@@ -5,6 +5,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { productActions } from './slice';
 import { getProductByCategoryIdApi, getProductByIdApi, getProductsApi } from './api';
 import { FilteredProductsPayload } from '@type/product.interface';
+import { handleError } from 'utils/errorHandler';
 
 // Worker Sagas
 function* fetchProducts(action: PayloadAction<{ page?: number; size?: number }>): SagaIterator {
@@ -12,8 +13,7 @@ function* fetchProducts(action: PayloadAction<{ page?: number; size?: number }>)
     const response = yield call(getProductsApi, action.payload);
     yield put(productActions.fetchProductsSuccess(response.data));
   } catch (error) {
-    console.log('fetch products error:', error);
-    yield put(productActions.fetchProductsFailure('Failed to load products!'));
+    yield* handleError(error, 'Failed to load products.', productActions.fetchProductsFailure);
   }
 }
 
@@ -24,8 +24,7 @@ function* fetchProductById(action: PayloadAction<{ id: number }>): SagaIterator 
     const response = yield call(getProductByIdApi, id);
     yield put(productActions.fetchProductByIdSuccess(response.data));
   } catch (error) {
-    console.log('fetch product by id error:', error);
-    yield put(productActions.fetchProductByIdFailure(`Failed to load product by id ${id}!`));
+    yield* handleError(error, `Failed to load product with ID ${id}.`, productActions.fetchProductByIdFailure);
   }
 }
 
@@ -36,8 +35,7 @@ function* fetchProductByCategoryId(action: PayloadAction<FilteredProductsPayload
     const response = yield call(getProductByCategoryIdApi, action.payload);
     yield put(productActions.fetchProductsByCategoryIdSuccess(response.data));
   } catch (error) {
-    console.log('fetch product by category id error:', error);
-    yield put(productActions.fetchProductsByCategoryIdFailure(`Failed to load product by category id ${categoryId}!`));
+    yield* handleError(error, `Failed to load product for category ID ${categoryId}.`, productActions.fetchProductsByCategoryIdFailure);
   }
 }
 

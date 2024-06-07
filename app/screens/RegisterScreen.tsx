@@ -5,7 +5,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Formik } from 'formik';
 
 import Screen from '../components/Screen';
-import { ErrorMessage, SubmitButton } from '../components/forms';
+import { SubmitButton } from '../components/forms';
 import { ActivityIndicator } from '../components';
 import useAuthService from '../controllers/auth/service';
 import Stack from '../components/Stack';
@@ -34,10 +34,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, minHeight: Dimensions.get('window').height - 80 }}
-      contentContainerStyle={{ flex: 1, flexShrink: 0 }}
-    >
+    <KeyboardAvoidingView style={styles.container} contentContainerStyle={styles.content}>
       <Screen>
         <Stack spacing={6} style={{ flex: 1 }}>
           <Stack spacing={2}>
@@ -74,8 +71,6 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
             }}
           </Formik>
         </Stack>
-
-        <ErrorMessage error={error.register} />
       </Screen>
 
       {loading && <ActivityIndicator visible={loading.register} />}
@@ -84,6 +79,14 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    minHeight: Dimensions.get('window').height - 80,
+  },
+  content: {
+    flex: 1,
+    flexShrink: 0,
+  },
   fullWidth: {
     flex: 1,
   },

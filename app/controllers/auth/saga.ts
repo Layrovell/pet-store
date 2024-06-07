@@ -4,14 +4,14 @@ import { type SagaIterator } from '@redux-saga/core';
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { SECRET_KEY } from '@env';
-import { AxiosError } from 'axios';
 
 import { authActions } from './slice';
 import { loginApi, registerApi, updateEmailApi, updatePasswordApi } from './api';
 import { User } from '../../interface/user.interface';
+import { handleError } from 'utils/errorHandler';
 
 // Worker Sagas
-export function* loginWorker(action: any): SagaIterator {
+export function* loginWorker(action: PayloadAction<{ email: string; password: string }>): SagaIterator {
   try {
     const response = yield call(loginApi, action.payload);
     const token = response?.data?.accessToken;
@@ -20,8 +20,7 @@ export function* loginWorker(action: any): SagaIterator {
 
     yield put(authActions.loginSuccess(userData.user));
   } catch (error: unknown) {
-    console.error('Error in loginWorker:', error);
-    yield put(authActions.loginFailure('Failed to login the user'));
+    yield* handleError(error, 'Failed to log in user.', authActions.loginFailure);
   }
 }
 
@@ -30,8 +29,7 @@ export function* registerWorker(action: PayloadAction<User>): SagaIterator {
     yield call(registerApi, action.payload);
     yield put(authActions.loginRequest({ email: action.payload.email, password: action.payload.password }));
   } catch (error: unknown) {
-    console.error('Error in registerWorker:', error);
-    yield put(authActions.registerFailure('Failed to register the user!'));
+    yield* handleError(error, 'Failed to register user.', authActions.registerFailure);
   }
 }
 
@@ -41,12 +39,7 @@ export function* updatePasswordWorker(action: PayloadAction<{ id: number; data: 
     const response = yield call(updatePasswordApi, id, data);
     yield put(authActions.updatePasswordSuccess(response.status));
   } catch (error: unknown) {
-    let errorMessage = 'Failed to update the password';
-    if (error instanceof AxiosError) {
-      errorMessage = error.response?.data?.message || errorMessage;
-    }
-    console.error('Error in updatePasswordWorker:', errorMessage, error);
-    yield put(authActions.updatePasswordFailure(errorMessage));
+    yield* handleError(error, 'Failed to update password.', authActions.updatePasswordFailure);
   }
 }
 
@@ -56,12 +49,7 @@ export function* updateEmailWorker(action: PayloadAction<{ id: number; data: { p
     const response = yield call(updateEmailApi, id, data);
     yield put(authActions.updateEmailSuccess(response.status));
   } catch (error: unknown) {
-    let errorMessage = 'Failed to update the email';
-    if (error instanceof AxiosError) {
-      errorMessage = error.response?.data?.message || errorMessage;
-    }
-    console.error('Error in updateEmailWorker:', errorMessage, error);
-    yield put(authActions.updateEmailFailure(errorMessage));
+    yield* handleError(error, 'Failed to update email.', authActions.updateEmailFailure);
   }
 }
 

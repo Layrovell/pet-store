@@ -5,7 +5,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Formik } from 'formik';
 
 import Screen from '../components/Screen';
-import { ErrorMessage, SubmitButton } from '../components/forms';
+import { SubmitButton } from '../components/forms';
 import { ActivityIndicator } from '../components';
 import useAuthService from '../controllers/auth/service';
 import Stack from '../components/Stack';
@@ -24,7 +24,7 @@ interface Props {
 }
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
-  const { login, error, loading } = useAuthService();
+  const { login, loading } = useAuthService();
 
   const handleSubmit = async ({ email, password }: { email: string; password: string }) => {
     await login(email, password);
@@ -54,7 +54,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             {({ isValid, dirty }) => {
               return (
                 <>
-                  <LoginForm formError={error.login} />
+                  <LoginForm />
 
                   <Stack spacing={6} style={[styles.fullWidth, styles.right]}>
                     <Stack spacing={1} direction='row' style={styles.center}>
@@ -69,8 +69,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             }}
           </Formik>
         </Stack>
-
-        <ErrorMessage error={error.login} />
       </Screen>
 
       {loading && <ActivityIndicator visible={loading.login} />}

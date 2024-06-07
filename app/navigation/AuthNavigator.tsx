@@ -5,41 +5,42 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import colors from '../config/colors';
+import getPublicRoutes from './publicRoutes';
+import routes from './routes';
 
 const Stack = createStackNavigator();
 
 const AuthNavigator = () => {
+  const shared = getPublicRoutes(Stack);
+
   return (
     <Stack.Navigator
       screenOptions={{
-        // headerStyle: { backgroundColor: 'dodgerblue' },
-        headerTintColor: 'white',
+        headerTintColor: colors.secondary.main,
       }}
     >
       <Stack.Screen
-        name='Welcome'
+        name={routes.WELCOME}
         component={WelcomeScreen}
         options={{
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name='Login'
+        name={routes.LOGIN}
         component={LoginScreen}
         options={{
-          headerTintColor: colors.secondary.main,
           headerTitle: '',
         }}
-        // options={({ route }: any) => ({ title: `Something ${route?.params?.id}` })}
       />
       <Stack.Screen
-        name='Register'
+        name={routes.REGISTER}
         component={RegisterScreen}
         options={{
-          headerTintColor: colors.secondary.main,
           headerTitle: '',
         }}
       />
+      {shared}
     </Stack.Navigator>
   );
 };
