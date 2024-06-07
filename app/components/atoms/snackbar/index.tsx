@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     zIndex: 1,
     width: '90%',
-    marginHorizontal: 12,
+    alignSelf: 'flex-end',
   },
   message: {
     width: '80%',

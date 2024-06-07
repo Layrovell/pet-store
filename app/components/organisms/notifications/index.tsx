@@ -35,8 +35,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     zIndex: 1,
-    left: '20%',
-    right: 0,
+    right: 16,
   },
   topContainer: {
     top: 48,
