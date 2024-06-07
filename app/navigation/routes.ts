@@ -12,7 +12,9 @@ export default Object.freeze({
   PRODUCTS: 'Products',
   CATALOGUE: 'Catalogue',
   HOME: 'Home',
+  WELCOME: 'Welcome',
   SETTINGS: 'Settings',
+  ERROR_SCREEN: 'ErrorPage',
 
   HOME_TAB: 'HomeTab',
   SETTINGS_TAB: 'SettingsTab',

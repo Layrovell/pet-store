@@ -4,6 +4,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 import { categoriesActions } from './slice';
 import { getAttributesByCategoryIdApi, getCategoriesApi, getCategoryByIdApi } from './api';
+import { handleError } from 'utils/errorHandler';
 
 // Worker Sagas
 export function* fetchCategoriesWorker(action: PayloadAction<{ page?: number; size?: number } | undefined>): SagaIterator {
@@ -11,8 +12,7 @@ export function* fetchCategoriesWorker(action: PayloadAction<{ page?: number; si
     const response = yield call(getCategoriesApi, action.payload);
     yield put(categoriesActions.fetchCategoriesSuccess(response.data));
   } catch (error: unknown) {
-    console.error('Error in fetchCategoriesWorker:', error);
-    yield put(categoriesActions.fetchCategoriesFailure('Failed to load categories!'))
+    yield* handleError(error, 'Failed to load categories.', categoriesActions.fetchCategoriesFailure);
   }
 }
 
@@ -21,8 +21,7 @@ export function* fetchCategoryByIdWorker(action: PayloadAction<number>): SagaIte
     const response = yield call(getCategoryByIdApi, action.payload);
     yield put(categoriesActions.fetchCategoryByIdSuccess(response.data));
   } catch (error: unknown) {
-    console.error('Error in fetchCategoryByIdWorker:', error);
-    yield put(categoriesActions.fetchCategoryByIdFailure(`Failed to load category with id ${action.payload}!`))
+    yield* handleError(error, `Failed to load category with ID ${action.payload}.`, categoriesActions.fetchCategoryByIdFailure);
   }
 }
 
@@ -31,8 +30,7 @@ export function* fetchAttributesByCategoryIdsWorker(action: PayloadAction<number
     const response = yield call(getAttributesByCategoryIdApi, action.payload);
     yield put(categoriesActions.fetchAttributesByCategoryIdSuccess(response.data));
   } catch (error: unknown) {
-    console.error('Error in fetchAttributesByCategoryIdsWorker:', error);
-    yield put(categoriesActions.fetchAttributesByCategoryIdFailure(`Failed to load category attributes by category id ${action.payload}!`))
+    yield* handleError(error, `Failed to load category attributes for category ID ${action.payload}.`, categoriesActions.fetchAttributesByCategoryIdFailure);
   }
 }
 

@@ -4,9 +4,8 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Provider } from 'react-redux';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainer, useNavigation, useNavigationContainerRef } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
@@ -21,22 +20,26 @@ import AppNavigator from './app/navigation/AppNavigator';
 import useAuthService from './app/controllers/auth/service';
 import { Mode, ThemeContext } from './app/context/ThemeContext';
 import { getTheme } from './app/config/UI/helpers';
+import Notifications from '@components/organisms/notifications';
+import RedirectHandler from '@components/organisms/redirectHandler';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // Keep the splash screen visible while we fetch resources.
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const navigationRef = useNavigationContainerRef();
+
   return (
-    <Provider store={store}>
-      <View style={{ flex: 1 }}>
+    <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+      <Provider store={store}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <Routes />
         </GestureHandlerRootView>
+      </Provider>
 
-        <StatusBar animated={true} style={'dark'} />
-      </View>
-    </Provider>
+      <StatusBar animated={true} style={'dark'} />
+    </NavigationContainer>
   );
 }
 
@@ -55,7 +58,7 @@ const Routes = () => {
 
   const [mode, setMode] = React.useState<Mode>('light');
 
-  const navigationRef = useNavigationContainerRef();
+  const navigation = useNavigation();
   const { setCartDataFromLocalStorage } = useCartService();
 
   const toggleMode = () => {
@@ -95,13 +98,16 @@ const Routes = () => {
   }
 
   return (
-    <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+    <>
       <IconRegistry icons={EvaIconsPack} />
       <ThemeContext.Provider value={{ mode, toggleMode }}>
         <ApplicationProvider {...eva} theme={{ ...eva[mode], ...getTheme() }}>
+          {/* Comment until we need it */}
+          {/* <RedirectHandler navigation={navigation} /> */}
+          <Notifications />
           {user ? <AppNavigator /> : <AuthNavigator />}
         </ApplicationProvider>
       </ThemeContext.Provider>
-    </NavigationContainer>
+    </>
   );
 }

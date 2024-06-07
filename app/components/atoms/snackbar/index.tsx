@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react';
 
 import Typography from '@components/Typography';
 import { getSnackBarStatusColor } from 'utils/theme';
+import { NotificationType } from 'controllers/app/slice';
 
 type Props = {
-  message: string;
+  notification: NotificationType;
   status?: 'success' | 'error' | 'warning' | 'info';
   actionText?: string;
   duration?: number;
@@ -15,19 +16,20 @@ type Props = {
   actionTextStyle?: StyleProp<ViewStyle>;
   textColor?: string;
   actionTextColor?: string;
+  removeNotificationHandler?: () => void;
 };
 
 const Snackbar: React.FC<Props> = ({
-  message,
+  notification,
   status,
   actionText = 'Dismiss',
-  duration = 3000,
-  position = 'bottom',
+  duration = 8000,
   containerStyle,
   messageStyle,
   actionTextStyle,
   textColor = 'white',
   actionTextColor = 'white',
+  removeNotificationHandler,
 }: any) => {
   const [isVisible, setIsVisible] = useState(true);
 
@@ -35,6 +37,7 @@ const Snackbar: React.FC<Props> = ({
     if (isVisible) {
       const timeout = setTimeout(() => {
         setIsVisible(false);
+        removeNotificationHandler && removeNotificationHandler();
       }, duration);
       return () => clearTimeout(timeout);
     }
@@ -44,14 +47,18 @@ const Snackbar: React.FC<Props> = ({
     <View
       style={[
         styles.container,
-        position === 'top' ? styles.topContainer : styles.bottomContainer,
         containerStyle,
         { backgroundColor: getSnackBarStatusColor(status) },
       ]}
     >
-      <Typography style={[styles.message, messageStyle, { color: textColor }]}>{message}</Typography>
+      <Typography style={[styles.message, messageStyle, { color: textColor }]}>{notification.message}</Typography>
       {actionText && (
-        <TouchableOpacity onPress={() => setIsVisible(false)}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsVisible(false);
+            removeNotificationHandler && removeNotificationHandler();
+          }}
+        >
           <Typography style={[styles.actionText, actionTextStyle, { color: actionTextColor }]}>{actionText}</Typography>
         </TouchableOpacity>
       )}
@@ -66,19 +73,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    position: 'absolute',
-    right: 0,
+    zIndex: 1,
     width: '90%',
-    marginHorizontal: 12,
+    alignSelf: 'flex-end',
   },
   message: {
     width: '80%',
-  },
-  topContainer: {
-    top: 8,
-  },
-  bottomContainer: {
-    bottom: 8,
   },
   actionText: {
     marginLeft: 8,

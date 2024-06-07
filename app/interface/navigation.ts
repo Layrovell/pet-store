@@ -10,6 +10,7 @@ export type RootStackParamList = {
   [routes.SECURITY]: undefined;
   [routes.CHANGE_PASSWORD]: undefined;
   [routes.CHANGE_EMAIL]: undefined;
+  [routes.ERROR_SCREEN]: undefined;
   [routes.HOME]: undefined;
   [routes.SETTINGS]: undefined;
 };

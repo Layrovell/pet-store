@@ -21,11 +21,14 @@ import PrivacyScreen from 'screens/PrivacyScreen';
 import SecurityScreen from 'screens/SecurityScreen';
 import ChangePasswordScreen from 'screens/ChangePasswordScreen';
 import ChangeEmailScreen from 'screens/ChangeEmailScreen';
+import getPublicRoutes from './publicRoutes';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
 
 function MainStackScreen() {
+  const shared = getPublicRoutes(Stack);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -57,6 +60,7 @@ function MainStackScreen() {
       <Stack.Screen name={routes.SECURITY} component={SecurityScreen} />
       <Stack.Screen name={routes.CHANGE_PASSWORD} component={ChangePasswordScreen} />
       <Stack.Screen name={routes.CHANGE_EMAIL} component={ChangeEmailScreen} />
+      {shared}
     </Stack.Navigator>
   );
 }
@@ -155,12 +159,7 @@ function TabNavigationScreen() {
       screenOptions={({ route }) => ({
         tabBarHideOnKeyboard: true,
         headerShown: false,
-        tabBarStyle: {
-          height: 60,
-          marginHorizontal: 16,
-          marginBottom: 16,
-          borderRadius: 16,
-        },
+        tabBarStyle: { ...styles.tabBar },
       })}
     >
       {tabArr.map((item) => {
@@ -185,6 +184,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  tabBar: {
+    height: 60,
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 16,
   },
 });
 
