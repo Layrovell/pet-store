@@ -4,8 +4,6 @@
     "slug": "pets-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    // gives an ability to directly debug JavaScript 
-    // running on Hermes thru the Chrome debugger
     "jsEngine": "hermes",
     "icon": "./app/assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/*"
     ],
     "ios": {
       "supportsTablet": true
@@ -24,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.laravell.petsapp"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
@@ -34,14 +33,15 @@
         "expo-font",
         {
           "fonts": [
-            "/app/assets/fonts/MontserratAlternates-Medium.ttf",
-            "/app/assets/fonts/MontserratAlternates-SemiBold.ttf",
-            "/app/assets/fonts/SpaceMono-Regular.ttf",
-            "/app/assets/fonts/ZillaSlabHighlight-Bold.ttf",
-            "/app/assets/fonts/ZillaSlabHighlight-Regular.ttf"
+            
           ]
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ac5b692c-b3fc-467e-8315-afba71c63c30"
+      }
+    }
   }
 }
