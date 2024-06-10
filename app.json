@@ -7,6 +7,7 @@
     "jsEngine": "hermes",
     "icon": "./app/assets/icon.png",
     "userInterfaceStyle": "light",
+    "platforms": ["ios", "android"],
     "splash": {
       "image": "./app/assets/bg.jpg",
       "resizeMode": "cover",
@@ -33,7 +34,6 @@
         "expo-font",
         {
           "fonts": [
-            
           ]
         }
       ]

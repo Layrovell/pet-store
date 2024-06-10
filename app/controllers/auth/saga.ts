@@ -3,12 +3,15 @@ import JWT from 'expo-jwt';
 import { type SagaIterator } from '@redux-saga/core';
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { SECRET_KEY } from '@env';
 
 import { authActions } from './slice';
 import { loginApi, registerApi, updateEmailApi, updatePasswordApi } from './api';
 import { User } from '../../interface/user.interface';
 import { handleError } from 'utils/errorHandler';
+
+// temporarily hardcoding the secret key to check the bundle issue
+const SECRET_KEY = 'jwt-pet-store-app-secret-v1';
+console.log('SECRET_KEY:', SECRET_KEY);
 
 // Worker Sagas
 export function* loginWorker(action: PayloadAction<{ email: string; password: string }>): SagaIterator {
