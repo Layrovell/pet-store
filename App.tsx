@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { NavigationContainer, useNavigation, useNavigationContainerRef } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
@@ -21,7 +21,10 @@ import useAuthService from './app/controllers/auth/service';
 import { Mode, ThemeContext } from './app/context/ThemeContext';
 import { getTheme } from './app/config/UI/helpers';
 import Notifications from '@components/organisms/notifications';
-import RedirectHandler from '@components/organisms/redirectHandler';
+
+// Before rendering any navigation stack
+// import { useScreens } from 'react-native-screens';
+// useScreens();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // Keep the splash screen visible while we fetch resources.
@@ -58,7 +61,7 @@ const Routes = () => {
 
   const [mode, setMode] = React.useState<Mode>('light');
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const { setCartDataFromLocalStorage } = useCartService();
 
   const toggleMode = () => {
