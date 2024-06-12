@@ -3,6 +3,7 @@
     "name": "pets-app",
     "slug": "pets-app",
     "version": "1.0.0",
+    "sdkVersion": "50.0.19",
     "orientation": "portrait",
     "jsEngine": "hermes",
     "icon": "./app/assets/icon.png",
