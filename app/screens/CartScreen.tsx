@@ -78,7 +78,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onDelete, onView }) => {
 type Props = StackScreenProps<RootStackParamList, 'Cart'>;
 
 const CartScreen: React.FC<Props> = ({ navigation }) => {
-  const { data, totalPrice, removeFromBasket, totalCount, clearBasket } = useCartService();
+  const { data, totalPrice, removeFromBasket, totalCount } = useCartService();
 
   const handleDeleteProduct = (product: Product) => {
     removeFromBasket(product);

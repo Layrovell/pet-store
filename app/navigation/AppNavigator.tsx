@@ -4,7 +4,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-// import { ProductFiltersContextProvider } from 'context/ProductFiltersContext';
+import { ProductFiltersContextProvider } from 'context/ProductFiltersContext';
 import HomeScreen from '../screens/HomeScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScreen';
 import PageHeaderNavigation from '@components/organisms/pageNavigation';
@@ -45,13 +45,13 @@ function MainStackScreen() {
     >
       <Stack.Screen name={routes.HOME} component={HomeScreen} />
       <Stack.Screen name={routes.CATALOGUE} component={CatalogueScreen} />
-      {/* <Stack.Screen name={routes.PRODUCTS}>
+      <Stack.Screen name={routes.PRODUCTS}>
         {(props) => (
           <ProductFiltersContextProvider>
             <ProductsScreen {...props} />
           </ProductFiltersContextProvider>
         )}
-      </Stack.Screen> */}
+      </Stack.Screen>
       <Stack.Screen name={routes.PRODUCT_DETAILS} component={ProductDetailsScreen} />
       <Stack.Screen name={routes.CART_DETAILS} component={CartScreen} />
       <Stack.Screen name={routes.SETTINGS} component={SettingsScreen} />

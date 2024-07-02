@@ -11,7 +11,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import useCartService from 'controllers/basket/service';
+import useCartService from 'controllers/basket/service';
 
 import AuthNavigator from './app/navigation/AuthNavigator';
 import navigationTheme from './app/navigation/navigationTheme';
@@ -20,15 +20,11 @@ import AppNavigator from './app/navigation/AppNavigator';
 import useAuthService from './app/controllers/auth/service';
 import { Mode, ThemeContext } from './app/context/ThemeContext';
 import { getTheme } from './app/config/UI/helpers';
-// import Notifications from '@organisms/notifications';
-
-// Before rendering any navigation stack
-// import { useScreens } from 'react-native-screens';
-// useScreens();
+import Notifications from '@organisms/notifications';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // Keep the splash screen visible while we fetch resources.
-// SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const navigationRef = useNavigationContainerRef();
@@ -62,7 +58,7 @@ const Routes = () => {
   const [mode, setMode] = React.useState<Mode>('light');
 
   // const navigation = useNavigation();
-  // const { setCartDataFromLocalStorage } = useCartService();
+  const { setCartDataFromLocalStorage } = useCartService();
 
   const toggleMode = () => {
     const nextMode = mode === 'light' ? 'dark' : 'light';
@@ -74,7 +70,7 @@ const Routes = () => {
       try {
         const cartData = await AsyncStorage.getItem('cartData');
         if (cartData) {
-          // setCartDataFromLocalStorage(JSON.parse(cartData));
+          setCartDataFromLocalStorage(JSON.parse(cartData));
         }
       } catch (error) {
         console.log('Error initializing cart data:', error);
@@ -90,11 +86,11 @@ const Routes = () => {
     }
   }, [error]);
 
-  // useEffect(() => {
-  //   if (loaded) {
-  //     SplashScreen.hideAsync();
-  //   }
-  // }, [loaded]);
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
 
   if (!loaded) {
     return null;
@@ -107,7 +103,7 @@ const Routes = () => {
         <ApplicationProvider {...eva} theme={{ ...eva[mode], ...getTheme() }}>
           {/* Comment until we need it */}
           {/* <RedirectHandler navigation={navigation} /> */}
-          {/* <Notifications /> */}
+          <Notifications />
           {user ? <AppNavigator /> : <AuthNavigator />}
         </ApplicationProvider>
       </ThemeContext.Provider>

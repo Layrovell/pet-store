@@ -33,6 +33,7 @@ const cartSlice = createSlice({
       const itemIndex = state.data.findIndex((item) => item.id === id);
       if (itemIndex !== -1 && state.data[itemIndex].quantity > 1) {
         state.data[itemIndex].quantity -= 1;
+        state.totalPrice -= price;
       } else {
         state.data = state.data.filter((item) => item.id !== id);
       }
@@ -55,6 +56,7 @@ const cartSlice = createSlice({
     },
     setCartDataFromLocalStorage: (state, action: PayloadAction<Product[]>) => {
       state.data = action.payload;
+      // state.totalPrice = .... summary of all prices;
     },
   },
 });
